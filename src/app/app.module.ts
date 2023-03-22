@@ -1,8 +1,18 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { RouterModule, Routes } from '@angular/router';
+import localeES from '@angular/common/locales/es';
+import { LoginComponent } from './seguridad/login/login.component';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localeES, 'es-Pe');
+
+const routes: Routes = [
+  { path: 'login', component: LoginComponent, pathMatch: 'full' },
+  { path: '**', redirectTo: '/login', pathMatch: 'full' },
+];
 
 @NgModule({
   declarations: [
@@ -10,7 +20,9 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    RouterModule.forRoot(routes, {
+      scrollPositionRestoration: 'top'
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
