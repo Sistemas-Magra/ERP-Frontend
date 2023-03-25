@@ -1,1 +1,19 @@
-<p>header works!</p>
+<p-menubar styleClass="custom-menubar">
+    <ng-template pTemplate="start">
+        <div style="display: flex">
+            <p-button type="button" styleClass="p-button-sm left-button" (click)="visibleBar = true" icon="pi pi-bars" *ngIf="isAuthenticated()"></p-button>
+            <span style="margin-left: 10px; margin-top: 4px;">{{ titulo }}</span>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="end">
+        <p-button *ngIf="!isAuthenticated()" type="button" label="Login" styleClass="p-button-sm custom-button" [routerLink]="['/login']"></p-button>
+        <p-splitButton *ngIf="isAuthenticated()" [label]="usuario.username" styleClass="p-button-sm custom-button" [model]="itemsButton"></p-splitButton>
+    </ng-template>
+</p-menubar>
+<p-sidebar [(visible)]="visibleBar" [style]="{width:'25%'}" styleClass="custom-sidebar" [baseZIndex]="10000" [showCloseIcon]="false" [transitionOptions]="'400ms'">
+    <div class="header text-start">
+        <img src="assets/magra.png" height="70px" width="200px">
+    </div>
+    <a href="javascript:void(0)" class="close-sidebar col-form-label" (click)="closeSideBar()">&times;</a>
+    <p-panelMenu [model]="modulos"></p-panelMenu>
+</p-sidebar>

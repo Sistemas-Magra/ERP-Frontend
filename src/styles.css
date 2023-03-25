@@ -1,1 +1,423 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+:root {
+    --marron-base: rgb(187, 112, 0);
+    --marron-hover: rgb(170, 102, 0);
+    --marron-font: white;
+    --fondo-editable: white;
+    --azul-base: #203764;
+    --azul-hover: #0d1527;
+    --verde-base: #22C55E;
+    --verde-hover: #16A34A;
+    --rojo-base: #EF4444;
+    --rojo-hover: #DC2626;
+    --border-table: #DEE2E6;
+    --font-size-default: 12px;
+    --margin-top-icon-toast: 4px;
+    --height-input: 26px;
+    --width-input: 100%;
+    --width-button: 80px;
+    --padding-top-dropdown-label: 3px;
+    --height-table: 1000px;
+}
+
+* {
+    font-size: var(--font-size-default) !important;
+}
+
+/*Header*/
+.custom-menubar.p-menubar.p-component {
+    background-color: rgb(255, 186, 59);
+    border-radius: 0;
+}
+
+/* Tables maestras */
+.p-datatable-table {
+    width: 100%;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    table-layout: auto !important;
+}
+
+.p-datatable-sm, .p-datatable-wrapper {
+    min-height: 0px;
+    height: var(--height-table) !important;
+}
+
+.p-datatable-wrapper {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}
+
+.p-datatable-table .p-datatable-thead > tr > th {
+    background-color: var(--marron-base);
+    color: var(--marron-font);
+    text-align: center;
+    border-left: 1px solid white;
+    min-width: var(--header-table) !important;
+    width: var(--header-table) !important;
+    max-width: var(--header-table) !important;
+    height: 27px !important;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.p-datatable-table .p-datatable-thead > tr > th:hover {
+    color: rgb(170, 96, 0);
+}
+
+.p-datatable tbody > tr > td .p-dropdown {
+    max-width: var(--header-table) !important;
+}
+
+.p-datatable tbody > tr > td .p-dropdown .p-placeholder {
+    padding-right: 0px !important;
+}
+
+.p-datatable-table .p-datatable-thead > tr > th:hover {
+    background-color: var(--marron-base) !important;
+    color: white !important;
+}
+
+.p-datatable .p-sortable-column.p-highlight {
+    background-color: var(--marron-base) !important;
+    color: white !important;
+    box-shadow: 0px;
+}
+
+.p-datatable .p-sortable-column:focus {
+    box-shadow: none;
+}
+
+.p-datatable-table .p-datatable-tbody > tr > td {
+    border-left: 1px solid var(--border-table);
+    position: relative;
+    padding: 0.1rem !important;
+    height: 31px;
+}
+
+
+.p-datatable-table .p-datatable-tbody > tr:hover {
+    background-color: rgb(248, 248, 248);
+}
+
+.p-datatable-table .p-datatable-tbody > tr.selected {
+    background-color: rgb(240, 240, 240);
+}
+
+.p-datatable .p-sortable-column .p-sortable-column-icon {
+    color: white !important;
+}
+
+.p-datatable-table .p-datatable-tbody > tr.p-highlight {
+    background-color: #E5E5E5 !important;
+}
+
+.ng-star-inserted {
+    padding-left: 5px;
+}
+
+.custom-input-table {
+    height: 26px;
+    border: 0px !important;
+    background-color: var(--fondo-editable);
+}
+
+.ps-table-label {
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: absolute;
+    top: 21%;
+    left: 0;
+    right: 0;
+}
+
+.datatable-maestro thead.p-datatable-thead tr:nth-child(1) th:nth-child(1) {
+    border-right: 1px solid var(--border-table);
+    left: 0 !important;
+    z-index: 3;
+}
+
+.datatable-maestro tbody.p-datatable-tbody > tr > td:nth-child(1) {
+    position: sticky;
+    position: -webkit-sticky;
+    border-right: 1px solid var(--border-table);
+    border-left: 1px solid var(--border-table) !important;
+    left: 0 !important;
+    z-index: 1;
+    background-color: white !important;
+}
+
+.datatable-multiheader .p-datatable-thead > tr:nth-child(2){
+    top: 31px;
+    position: -webkit-sticky;
+    position: sticky;
+    z-index: 4;
+}
+/* -- */
+
+/* Paginacion */
+.p-paginator {
+    border: 0px !important;
+}
+
+span.p-paginator-current {
+    padding-left: 0px !important;
+    margin-right: auto !important;
+}
+
+.pagination-disabled button.p-paginator-element, .pagination-disabled div.p-paginator-rpp-options {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+/* -- */
+
+/* Button table */
+.button-table {
+    border-radius: 50%;
+    height: 2.1rem !important;
+    width: 2.1rem !important;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    justify-content: center;
+    display: inline-flex;
+}
+
+.button-table-edit {
+    color: #ffffff;
+    background-color: var(--marron-base);
+    border: 1px solid var(--marron-base);
+}
+
+.button-table-edit:hover {
+    background-color: var(--marron-hover) !important;
+    border: 1px solid var(--marron-base) !important;
+}
+
+.button-table-edit:focus {
+    box-shadow: 0px 0px 5px var(--marron-hover);
+}
+
+.button-table-save {
+    color: #ffffff;
+    background-color: var(--verde-base);
+    border: 1px solid var(--verde-base);
+}
+
+.button-table-save:hover {
+    background-color: var(--verde-hover) !important;
+    border: 1px solid var(--verde-base) !important;
+}
+
+.button-table-save:focus {
+    box-shadow: 0px 0px 5px var(--verde-hover);
+}
+
+.button-table-cancel {
+    color: #ffffff;
+    background-color: var(--rojo-base);
+    border: 1px solid var(--rojo-base);
+}
+
+.button-table-cancel:hover {
+    background-color: var(--rojo-hover) !important;
+    border: 1px solid var(--rojo-base) !important;
+}
+
+.button-table-cancel:focus {
+    box-shadow: 0px 0px 5px var(--rojo-hover);
+}
+
+.button-table-clip {
+    padding-left: 0.5rem;
+    width: 15px;
+    height: 15px;
+}
+/* -- */
+
+/* Modal Dialog */
+/* -- */
+
+.p-toast {
+    opacity: 1 !important;
+}
+
+.p-toast-message-icon {
+    margin-top: var(--margin-top-icon-toast);
+}
+
+.default-button.p-button {
+    background-color: var(--marron-base);
+    border-color: var(--marron-hover);
+    color: white;
+    width: var(--width-button);
+    height: var(--height-input);
+}
+
+.default-button.p-button:hover {
+    background-color: var(--marron-hover);
+    border-color: var(--marron-hover);
+}
+
+.default-button.p-button:focus {
+    box-shadow: 0px 0px 5px var(--marron-hover) !important;
+}
+
+.p-menubar-button {
+    display: none !important;
+}
+
+.p-dropdown-label {
+    padding-top: var(--padding-top-dropdown-label);
+}
+
+.p-inputtext, .p-dropdown {
+    height: var(--height-input);
+    width: var(--width-input);
+}
+
+.p-checkbox {
+    align-items: center !important;
+}
+
+.p-checkbox-box {
+    width: 15px !important;
+    height: 15px !important;
+}
+
+span.p-checkbox-icon {
+    font-size: 10px !important;
+    margin-top: 0.1rem;
+}
+
+.p-calendar .p-datepicker {
+    width: 300px !important;
+}
+
+span.p-calendar > input[type=text].p-inputtext {
+    text-transform: uppercase !important;
+}
+
+span.p-calendar, span.p-autocomplete {
+    width: 100%;
+}
+
+.contenedor-label{
+    position:relative;
+    margin: 0;
+    top: -2.8rem;
+    left: 1rem;
+    color: #7d8185;
+    background-color: white;
+}
+
+.p-card {
+    box-shadow: none !important;
+    border: 1px solid #a6abaf
+}
+/* Floating Label */
+.p-float-label input:focus~label, 
+.p-float-label input.p-filled~label, 
+.p-float-label textarea:focus~label,
+.p-float-label textarea.p-filled~label,
+/* .p-float-label textarea:not(:invalid)~label, */
+.p-float-label .p-inputwrapper-focus~label,
+.p-float-label .p-inputwrapper-filled~label {
+    top: -0.1rem;
+    background: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 1; /* number of lines to show */
+    -webkit-box-orient: vertical;
+}
+
+.p-float-label label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 1; /* number of lines to show */
+    -webkit-box-orient: vertical; 
+}
+
+.ancho {
+    min-width: var(--ancho);
+    max-width: var(--ancho);
+    width: var(--ancho);
+}
+
+.custom-link {
+    color: blue;
+}
+
+.custom-link:hover {
+    color: lightblue;
+    cursor: pointer;
+}
+.p-dialog {
+    background-color: white;
+}
+
+.p-dialog-header {
+    display: none !important;
+}
+
+.custom-dialog-header {
+    display: block;
+    color: white !important;
+    background-color: rgb(255, 186, 59) !important;
+    border-radius: 2px !important;
+    height: 30px;
+    padding: 0px 5px;
+    margin-top: 18px;
+}
+
+.custom-dialog-header > div.float-start {
+    padding-top: 5px;
+}
+
+.custom-dialog-header > div.float-start > span {
+    font-weight: 500;
+    color: rgb(155, 116, 44) !important; 
+}
+
+.dialog-close-button {
+    background-color: transparent;
+    border-color: transparent;
+    color: rgb(155, 116, 44);
+}
+
+.label-modal-header {
+    display: flex;
+    align-items: center;
+    color: rgb(155, 116, 44) !important; 
+    font-weight: bold;
+}
+
+.btn-close-modal {
+    display: flex;
+    align-items: center;
+    color: rgb(155, 116, 44) !important; 
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.btn-close-modal:hover {
+    display: flex;
+    align-items: center;
+    color: rgb(95, 72, 28) !important; 
+    cursor: pointer;
+}

@@ -1,5 +1,5 @@
 export const environment = {
-    production: false,
+    production: true,
     empresa: 'MAGRA',
     blnOcultarWarnings: false,
     apiURL: "http://localhost:8080/",

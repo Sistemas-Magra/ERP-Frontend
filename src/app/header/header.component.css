@@ -1,0 +1,72 @@
+.header {
+    background-color: white !important;
+    height: 60px !important;
+}
+
+:host ::ng-deep .custom-menubar.p-menubar.p-component {
+    background-color: rgb(254, 192, 1);
+    border-radius: 0;
+}
+
+.close-sidebar {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 26px !important;
+    text-decoration: none;
+    color: rgb(255, 186, 59) !important;
+}
+
+:host ::ng-deep .custom-menubar.p-menubar {
+    border: 0px;
+    border-radius: 0px;
+    border-color: rgb(255, 186, 59) !important;
+    padding: 3px;
+}
+
+:host ::ng-deep .custom-sidebar.p-sidebar .p-sidebar-header {
+    display: none;
+}
+
+:host ::ng-deep .custom-sidebar.p-sidebar .p-sidebar-content {
+    padding: 0px !important;
+}
+
+:host ::ng-deep .left-button.p-button {
+    background-color: transparent;
+    border: none !important;
+    color: rgb(139, 84, 0);
+}
+
+:host ::ng-deep .custom-button.p-splitbutton.p-button-sm .p-splitbutton-defaultbutton {
+    background-color: rgb(139, 84, 0);
+    color: white;
+    border-color: rgb(187, 159, 0) !important;
+    height: 26px;
+}
+
+:host ::ng-deep .custom-button.p-splitbutton.p-button-sm .p-splitbutton-menubutton {
+    background-color: rgb(187, 112, 0);
+    color: white;
+    border-color: rgb(187, 159, 0) !important;
+    height: 26px;
+}
+
+:host ::ng-deep .custom-button.p-splitbutton.p-button-sm .p-splitbutton-defaultbutton:focus {
+    box-shadow: 0px 0px 5px var(--marron-hover)!important;
+}
+
+:host ::ng-deep .custom-button.p-splitbutton.p-button-sm .p-splitbutton-menubutton:focus {
+    box-shadow: 0px 0px 5px var(--marron-hover)!important;
+}
+
+:host ::ng-deep .custom-button.p-button-sm {
+    background-color: rgb(187, 112, 0);
+    color: white;
+    border-color: rgb(187, 159, 0) !important;
+    height: 26px;
+}
+
+:host ::ng-deep .custom-button.p-button-sm:focus {
+    box-shadow: 0px 0px 5px var(--marron-base)!important;
+}

@@ -1,0 +1,90 @@
+<div class="container-fluid">
+    <div class="row mt-2">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-2 mt-1">Nombre:</label>
+                <div class="col-10">
+                    <input type="text" pInputText [(ngModel)]="nombreFilter" (input)="filtrar()">
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-2 mt-1">Username:</label>
+                <div class="col-10">
+                    <input type="text" pInputText [(ngModel)]="usernameFilter" (input)="filtrar()">
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-2 mt-1">Correo:</label>
+                <div class="col-10">
+                    <input type="text" pInputText [(ngModel)]="correoFilter" (input)="filtrar()">
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <div class="col-1">
+                    <p-checkbox [(ngModel)]="indVerInactivosFilter" [binary]="true" (onChange)="filtrar()"></p-checkbox>
+                </div>
+                <label class="col-11 mt-1">Ver usuarios inactivos</label>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12" style="--height-table: 65vh">
+            <p-table [value]="usuarios" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 60px" class="text-center">
+                            <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-success p-button-text plus-header" (click)="addUser()"></button>
+                        </th>
+                        <th style="--header-table: 40px">N</th>
+                        <th>Personal Rel.</th>
+                        <th style="--header-table: 140px">Username</th>
+                        <th style="--header-table: 80px">Roles</th>
+                        <th style="--header-table: 100px">Tip. Doc.</th>
+                        <th style="--header-table: 140px">Nro. Doc.</th>
+                        <th style="--header-table: 140px">Fecha Nacimiento</th>
+                        <th style="--header-table: 180px">Celular</th>
+                        <th style="--header-table: 240px">Correo</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-user let-i="rowIndex">
+                    <tr (dblclick)="activarUsuario(i)" [ngClass]="{'selected':indFilaEditada == i}">
+                        <td class="text-center">
+                            <div class="col-12 botones">
+                                <button *ngIf="!blnEditandoCreando || indFilaEditada != i" pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-info btn-body" [disabled]="blnEditandoCreando" (click)="editar(i)"></button>
+                                <button *ngIf="blnEditandoCreando && indFilaEditada == i" pButton pRipple type="button" icon="pi pi-save" class="p-button-rounded p-button-info btn-body" (click)="registrar(i)"></button>
+                                <button [disabled]="indFilaEditada != i && indFilaEditada != -1" pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger btn-body" (click)="cancelar(i)"></button>
+                            </div>
+                        </td>
+                        <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
+                        <td>
+                            <div *ngIf="!blnEditandoCreando || indFilaEditada != i || user.id">{{user.empleado}}</div>
+                            <p-autoComplete *ngIf="blnEditandoCreando && indFilaEditada == i && !user.id" (onSelect)="asignarEmpleado(i)" [(ngModel)]="empleadoSelected" [showEmptyMessage]="true" [suggestions]="empleadosAutocomplete" (completeMethod)="getEmpleadoAutocomplete($event)" field="nombreCompleto" [minLength]="1"></p-autoComplete>
+                        </td>
+                        <td>
+                            <div *ngIf="!blnEditandoCreando || indFilaEditada != i">{{user.username}}</div>
+                            <input type="text" pInputText  class="custom-input-table"  *ngIf="blnEditandoCreando && indFilaEditada == i" [(ngModel)]="user.username">
+                        </td>
+                        <td class="text-center custom-link" (click)="asignarRoles(i)">{{user.cant_roles}}</td>
+                        <td class="text-center">{{user.tip_doc}}</td>   
+                        <td class="text-center">{{user.nro_doc}}</td>
+                        <td class="text-center">{{user.fec_nac}}</td>
+                        <td class="text-center">
+                            <div *ngIf="!blnEditandoCreando || indFilaEditada != i">{{user.celular}}</div>
+                            <input type="text" pInputText class="custom-input-table"  *ngIf="blnEditandoCreando && indFilaEditada == i" [(ngModel)]="user.celular">
+                        </td>
+                        <td>
+                            <div *ngIf="!blnEditandoCreando || indFilaEditada != i">{{user.correo}}</div>
+                            <input type="text" pInputText class="custom-input-table"  *ngIf="blnEditandoCreando && indFilaEditada == i" [(ngModel)]="user.correo">
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

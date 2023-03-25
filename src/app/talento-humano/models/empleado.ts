@@ -32,4 +32,7 @@ export class Empleado {
     idUsuarioModifica: number;
     fechaCrea: Date;
     fechaModifica: Date;
+
+    nombreCompleto: string;
+    fechaNacimiento: Date;
 }
