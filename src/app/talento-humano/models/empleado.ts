@@ -1,7 +1,9 @@
 import { TablaAuxiliarDetalle } from "src/app/auxiliar/models/tabla-auxiliar-detalle";
 import { Cargo } from "src/app/maestros/models/cargo";
 import { SubArea } from "src/app/maestros/models/sub-area";
+import { Banco } from "./banco";
 import { EntidadFondos } from "./entidad-fondos";
+import { HijoEmpleado } from "./hijo-empleado";
 
 export class Empleado {
     id: number;
@@ -35,4 +37,32 @@ export class Empleado {
 
     nombreCompleto: string;
     fechaNacimiento: Date;
+    estado: TablaAuxiliarDetalle;
+    gradoInstruccion: TablaAuxiliarDetalle;
+    estadoCivil:TablaAuxiliarDetalle;
+    
+    ultimoLugarEstudio: string;
+    nacionalidad: string;
+    lugarNacimiento: string;
+    indCasaPropia: boolean;
+    ladoDominante: TablaAuxiliarDetalle;
+    nroCalzado: string;
+    tallaPolo: string;
+    tallaPantalon: string;
+    alergia: string;
+    alergiaMedicamento: string;
+    telefonoEmergencia: string;
+    contactoEmergencia: string;
+    parentescoEmergencia: string;
+
+    edad: number;
+    hijos: HijoEmpleado[] = [];
+
+    bancoCts: Banco;
+    cuentaCts: string;
+    bancoSueldo: Banco;
+    cuentaSueldo: string;
+
+    fechaNacimientoStr: string;
+    fechaIngresoStr: string;
 }

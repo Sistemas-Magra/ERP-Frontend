@@ -99,7 +99,7 @@ body {
 .p-datatable-table .p-datatable-tbody > tr > td {
     border-left: 1px solid var(--border-table);
     position: relative;
-    padding: 0.1rem !important;
+    padding: 0.5rem !important;
     height: 31px;
 }
 
@@ -179,6 +179,10 @@ span.p-paginator-current {
 .pagination-disabled button.p-paginator-element, .pagination-disabled div.p-paginator-rpp-options {
     pointer-events: none;
     cursor: not-allowed;
+}
+
+.p-paginator-bottom.p-paginator.p-component.ng-star-inserted {
+    float: right !important;
 }
 /* -- */
 
@@ -348,6 +352,7 @@ span.p-calendar, span.p-autocomplete {
 .p-float-label label {
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-left: 5px;
     display: -webkit-box !important;
     -webkit-line-clamp: 1; /* number of lines to show */
     -webkit-box-orient: vertical; 
@@ -361,6 +366,10 @@ span.p-calendar, span.p-autocomplete {
 
 .custom-link {
     color: blue;
+    width: 98%;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+    overflow: hidden !important;
 }
 
 .custom-link:hover {
@@ -420,4 +429,20 @@ span.p-calendar, span.p-autocomplete {
     align-items: center;
     color: rgb(95, 72, 28) !important; 
     cursor: pointer;
+}
+
+p-calendar.p-element.p-inputwrapper.ng-tns-c81-5.ng-pristine.ng-valid.ng-star-inserted.ng-touched {
+    padding-left: 0;
+}
+
+p-dropdown.p-element.p-inputwrapper {
+    padding-left: 0;
+}
+
+table {
+    padding-left: 0px !important;
+}
+
+.p-contextmenu.p-component {
+    width: 200px;
 }

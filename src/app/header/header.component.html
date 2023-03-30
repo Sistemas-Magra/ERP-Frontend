@@ -6,8 +6,10 @@
         </div>
     </ng-template>
     <ng-template pTemplate="end">
-        <p-button *ngIf="!isAuthenticated()" type="button" label="Login" styleClass="p-button-sm custom-button" [routerLink]="['/login']"></p-button>
-        <p-splitButton *ngIf="isAuthenticated()" [label]="usuario.username" styleClass="p-button-sm custom-button" [model]="itemsButton"></p-splitButton>
+        <div style="margin-right: 2rem;">
+            <p-button *ngIf="!isAuthenticated()" type="button" label="Login" styleClass="p-button-sm custom-button" [routerLink]="['/login']"></p-button>
+            <p-splitButton *ngIf="isAuthenticated()" [label]="usuario.username" styleClass="p-button-sm custom-button" [model]="itemsButton"></p-splitButton>
+        </div>
     </ng-template>
 </p-menubar>
 <p-sidebar [(visible)]="visibleBar" [style]="{width:'25%'}" styleClass="custom-sidebar" [baseZIndex]="10000" [showCloseIcon]="false" [transitionOptions]="'400ms'">

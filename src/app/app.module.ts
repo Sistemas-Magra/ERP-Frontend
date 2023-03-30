@@ -40,13 +40,23 @@ import { DraggableDirective } from './commons/draggable.directive';
 import { ModalSiNoComponent } from './commons/modal-si-no/modal-si-no.component';
 import { ResetPasswordComponent } from './seguridad/reset-password/reset-password.component';
 import { MaestroEmpleadoComponent } from './talento-humano/maestro-empleado/maestro-empleado.component';
+import { EmpleadoDetalleComponent } from './talento-humano/empleado-detalle/empleado-detalle.component';
+import { ModalAgregarAuxiliarComponent } from './commons/modal-agregar-auxiliar/modal-agregar-auxiliar.component';
+import { ModalHijosEmpleadoComponent } from './talento-humano/empleado-detalle/modal-hijos-empleado/modal-hijos-empleado.component';
+import {ContextMenuModule} from 'primeng/contextmenu';
+import { ModalRegistroVacacionesComponent } from './talento-humano/empleado-detalle/modal-registro-vacaciones/modal-registro-vacaciones.component';
 
 registerLocaleData(localeES, 'es-Pe');
 
 const routes: Routes = [
-  { path: 'user/reestablecerPassword/:token', component: ResetPasswordComponent, pathMatch: 'full' },
-  { path: 'users', component: MaestroUsuariosComponent, pathMatch: 'full' },
-  { path: 'login', component: LoginComponent, pathMatch: 'full' },
+  //Talento Humano
+  { path: 'empleado/detalle/:id', component: EmpleadoDetalleComponent, pathMatch: 'full', data: {title: 'Detalle de personal', menu: 'Talento Humano | Detalle de personal'} },
+  { path: 'empleado', component: MaestroEmpleadoComponent, pathMatch: 'full', data: {title: 'Listado de personal', menu: 'Talento Humano | Listado de personal'}},
+
+  //Seguridad
+  { path: 'user/reestablecerPassword/:token', component: ResetPasswordComponent, pathMatch: 'full', data: {title: 'Reestablecimiento de contraseña', menu: 'Perfil | Reestablecimiento de contraseña'} },
+  { path: 'users', component: MaestroUsuariosComponent, pathMatch: 'full', data: {title: 'Listado de usuarios', menu: 'Tec. de la Información | Listado de usuarios'} },
+  { path: 'login', component: LoginComponent, pathMatch: 'full', data: {title: 'Login', menu: 'Seguridad | Login'}},
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
@@ -60,7 +70,11 @@ const routes: Routes = [
     DraggableDirective,
     ModalSiNoComponent,
     ResetPasswordComponent,
-    MaestroEmpleadoComponent
+    MaestroEmpleadoComponent,
+    EmpleadoDetalleComponent,
+    ModalAgregarAuxiliarComponent,
+    ModalHijosEmpleadoComponent,
+    ModalRegistroVacacionesComponent
   ],
   imports: [
     CardModule,
@@ -88,6 +102,7 @@ const routes: Routes = [
     DynamicDialogModule,
     FormsModule,
     HttpClientModule,
+    ContextMenuModule,
     RouterModule.forRoot(routes, {
       scrollPositionRestoration: 'top'
     })

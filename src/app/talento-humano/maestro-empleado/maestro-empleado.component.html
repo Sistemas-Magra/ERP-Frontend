@@ -1,1 +1,83 @@
-<p>maestro-empleado works!</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-2 mt-1">Nombre:</label>
+                <div class="col-10">
+                    <input type="text" pInputText [(ngModel)]="nombreFilter" [disabled]="blnEditandoCreando || blnCargando" (input)="dt.filter($event.target.value, 'nombre_completo', 'contains')">
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <label class="col-4 mt-1">Nro Documento:</label>
+                <div class="col-8">
+                    <input type="text" pInputText [(ngModel)]="nroDocFilter" [disabled]="blnEditandoCreando || blnCargando" (input)="dt.filter($event.target.value, 'nro_doc', 'contains')">
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <label class="col-3 mt-1">Fechas:</label>
+                <div class="col-9">
+                    <p-calendar (onSelect)="asignarFechas()" [dateFormat]="'dd M yy'" [(ngModel)]="fechas" selectionMode="range"  [disabled]="blnEditandoCreando || blnCargando" [readonlyInput]="true" appendTo="body"></p-calendar>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 mt-1">
+            <div class="row">
+                <div class="col-1"> 
+                    <p-checkbox [(ngModel)]="indVerInactivosFilter" [disabled]="blnEditandoCreando || blnCargando" [binary]="true" (onChange)="dt.filter($event.target, 'nro_doc', 'contains')"></p-checkbox>
+                </div>
+                <label class="col-11">Ver usuarios inactivos</label>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="float-end">
+                <p-button label="Nuevo" styleClass="default-button" (click)="nuevo()" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12" style="--height-table: 75vh">
+            <p-table #dt [value]="empleados" [(contextMenuSelection)]="rowSelected" [contextMenu]="cm" responsiveLayout="scroll" [lazy]="true" (onLazyLoad)="loadEmpleados($event)" [paginator]="true" [rows]="30" [totalRecords]="totalRecords">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 80px">Estado</th>
+                        <th style="--header-table: 110px">Código</th>
+                        <th>Nombre Completo</th>
+                        <th style="--header-table: 200px">Correo</th>
+                        <th style="--header-table: 80px">Tip. Doc.</th>
+                        <th style="--header-table: 80px">Nro. Doc.</th>
+                        <th style="--header-table: 100px">Fecha Ing.</th>
+                        <th style="--header-table: 100px">Fecha Nac.</th>
+                        <th style="--header-table: 140px">Cargo</th>
+                        <th style="--header-table: 140px">Categoría</th>
+                        <th style="--header-table: 140px">Area</th>
+                        <th style="--header-table: 140px">Subarea</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-emp let-i="rowIndex">
+                    <tr (dblclick)="irDetalle(emp)" [ngClass]="{'selected':indFilaEditada == i}" [pContextMenuRow]="emp">
+                        <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
+                        <td class="text-uppercase text-center" [ngClass]="{'activo': emp.estado_id == 1, 'inactivo': emp.estado_id == 0}">{{emp.estado}}</td>
+                        <td class="text-center">{{emp.codigo}}</td>
+                        <td class="text-uppercase">{{emp.nombre_completo}}</td>
+                        <td>{{emp.correo}}</td>
+                        <td class="text-center">{{emp.tipo_doc}}</td>
+                        <td class="text-center">{{emp.nro_doc}}</td>
+                        <td class="text-uppercase text-center">{{emp.fec_ing}}</td>
+                        <td class="text-uppercase text-center">{{emp.fec_nac}}</td>
+                        <td [title]="emp.ncargo">{{emp.cargo}}</td>
+                        <td class="text-center">{{emp.categoria}}</td>
+                        <td>{{emp.area}}</td>
+                        <td [title]="emp.nsubarea">{{emp.subarea}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<p-contextMenu #cm [model]="optionsRc"></p-contextMenu>

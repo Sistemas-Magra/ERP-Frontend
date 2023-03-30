@@ -1,0 +1,9 @@
+.no-valid {
+    background-color: rgb(255, 230, 230);
+    border-radius: 5px;
+}
+
+.valid {
+    background-color: rgb(225, 255, 228);
+    border-radius: 5px;
+}

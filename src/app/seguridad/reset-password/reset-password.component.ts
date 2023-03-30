@@ -42,7 +42,7 @@ export class ResetPasswordComponent implements OnInit {
       this.token = p['token'];
       this.usuarioService.validStayInPage(this.token).subscribe({
         next: res => {
-          if(res.ind == 0) {
+          if(res.ind != 1) {
             this.messageService.add({severity:'warn', summary:'Advertencia', detail: 'Ya se cambió una contraseña con este enlace.'})
             this.router.navigate(['/'])
           }

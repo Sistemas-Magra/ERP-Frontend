@@ -1,0 +1,381 @@
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="float-end">
+                <p-button label="Guardar" styleClass="default-button" (click)="guardar()" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+    <p-card styleClass="p-card-shadow">
+        <div class="row" style="height: 0 !important">
+            <div class="col-12" style="height: 0 !important">
+                <label class="contenedor-label"> <b>Datos Personales</b> </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <div class="row">
+                    <p-card styleClass="p-card-shadow">
+                        <div class="col-12">
+                            <img [src]="rutaFotos" style="width: 250px !important; height: 200px !important;" alt="">
+                        </div>
+                    </p-card>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-9">
+                        <label class="custom-link">{{empleado.foto}}</label>
+                    </div>
+                    <div class="input-file col-1">
+                        <label for="file-input">
+                            <i style="cursor: pointer;" class="pi pi-paperclip"></i>
+                        </label>
+                        <input id="file-input" type="file"  (change)="showPreview($event)" accept="image/*"/>
+                    </div>
+                    <div class="col-1">
+                        <i style="cursor: pointer;color: red" class="pi pi-times ms-3" (click)="quitarFoto()"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-10">
+                <div class="row mt-2">
+                    <div class="col-2">
+                        <span class="p-float-label">
+                            <input type="text" id="cod" pInputText [(ngModel)]="empleado.codigo" disabled> 
+                            <label for="cod">Código</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <div class="row">
+                            <div class="col-10">
+                                <span class="p-float-label">
+                                    <p-dropdown inputId="tipdoc" [autoDisplayFirst]="false" [options]="documentoIdentidadSelect" [(ngModel)]="empleado.tipoDocumentoIdentidad" optionLabel="nombre" appendTo="body"></p-dropdown>
+                                    <label for="tipdoc">Tipo de Doc. de Identidad</label>
+                                </span>
+                            </div>
+                            <div class="col-2">
+                                <i style="cursor: pointer; color: green; font-weight: bold; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar('TIPDOC')"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <span class="p-float-label">
+                            <input type="text" id="nrodoc" pInputText [(ngModel)]="empleado.nroDocumentoIdentidad"> 
+                            <label for="nrodoc">Número de Documento</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="p-float-label">
+                            <input type="text" id="nombres" pInputText [(ngModel)]="empleado.nombres"> 
+                            <label for="nombres">Nombres</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="p-float-label">
+                            <input type="text" id="app" pInputText [(ngModel)]="empleado.apellidoPaterno"> 
+                            <label for="app">Apellido Paterno</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="p-float-label">
+                            <input type="text" id="apm" pInputText [(ngModel)]="empleado.apellidoMaterno"> 
+                            <label for="apm">Apellido Materno</label>
+                        </span>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <span class="p-float-label">
+                            <input type="text" id="dir" pInputText [(ngModel)]="empleado.direccion"> 
+                            <label for="dir">Dirección</label>
+                        </span>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-2">
+                        <span class="p-float-label">
+                            <input type="text" id="correo" pInputText [(ngModel)]="empleado.correo"> 
+                            <label for="correo">Correo</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="p-float-label">
+                            <input type="text" id="telef" pInputText [(ngModel)]="empleado.telefono" > 
+                            <label for="telef">Teléfono</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="p-float-label">
+                            <input type="text" id="cel" pInputText [(ngModel)]="empleado.celular"> 
+                            <label for="cel">Celular</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <div class="row">
+                            <div class="col-9">
+                                <span class="p-float-label">
+                                    <p-calendar inputId="nac" [(ngModel)]="empleado.fechaNacimientoStr" appendTo="body" (onBlur)="setEdad()" (onSelect)="setEdad()" dateFormat="dd M yy"></p-calendar>
+                                    <label for="nac">Fecha Nacimiento</label>
+                                </span>
+                            </div>
+                            <div class="col-3">
+                                <input type="text" id="cel" pInputText [(ngModel)]="empleado.edad" disabled> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="row">
+                            <div class="col-10">
+                                <span class="p-float-label">
+                                    <p-dropdown inputId="eciv" [autoDisplayFirst]="false" [options]="estadoCivilSelect" [(ngModel)]="empleado.estadoCivil" optionLabel="nombre" appendTo="body"></p-dropdown>
+                                    <label for="eciv">Estado Civil</label>
+                                </span>
+                            </div>
+                            <div class="col-2">
+                                <i style="cursor: pointer; color: green; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar('ESTCIV')"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="row">
+                            <div class="col-10">
+                                <span class="p-float-label">
+                                    <p-dropdown inputId="ldom" [autoDisplayFirst]="false" [options]="ladoDominanteSelect" [(ngModel)]="empleado.ladoDominante" optionLabel="nombre" appendTo="body"></p-dropdown>
+                                    <label for="ldom">Lado Dominante</label>
+                                </span>
+                            </div>
+                            <div class="col-2">
+                                <i style="cursor: pointer; color: green; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar('LADDOM')"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-2">
+                        <div class="row">
+                            <div class="col-10">
+                                <span class="p-float-label">
+                                    <p-dropdown inputId="gins" [autoDisplayFirst]="false" [options]="gradoInstruccionSelect" [(ngModel)]="empleado.gradoInstruccion" optionLabel="nombre" appendTo="body"></p-dropdown>
+                                    <label for="gins">Grado de Instrucción</label>
+                                </span>
+                            </div>
+                            <div class="col-2">
+                                <i style="cursor: pointer; color: green; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar('GRDINS')"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <span class="p-float-label">
+                            <input type="text" id="lest" pInputText [(ngModel)]="empleado.ultimoLugarEstudio"> 
+                            <label for="lest">Lugar de Estudio</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="p-float-label">
+                            <input type="text" id="nacio" pInputText [(ngModel)]="empleado.nacionalidad"> 
+                            <label for="nacio">Nacionalidad</label>
+                        </span>
+                    </div>
+                    <div class="col-4">
+                        <span class="p-float-label">
+                            <input type="text" id="lnac" pInputText [(ngModel)]="empleado.lugarNacimiento"> 
+                            <label for="lnac">Lugar de Nacimiento</label>
+                        </span>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="float-end">
+                            <p-button label="Ver Hijos" styleClass="default-button" (click)="verHijos()" [style]="{width: '90px', height: '26px'}"></p-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-card>
+    <p-card styleClass="p-card-shadow mt-4">
+        <div class="row" style="height: 0 !important">
+            <div class="col-12" style="height: 0 !important">
+                <label class="contenedor-label"> <b>Datos Trabajador</b> </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-calendar inputId="ing" [(ngModel)]="empleado.fechaIngresoStr" appendTo="body" dateFormat="dd M yy"></p-calendar>
+                    <label for="ing">Fecha Ingreso</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-dropdown inputId="carg" [autoDisplayFirst]="false" [options]="cargoSelect" [(ngModel)]="empleado.cargo" optionLabel="nombre" appendTo="body"></p-dropdown>
+                    <label for="carg">Cargo</label>
+                </span>
+                <!--
+                <div class="row">
+                    <div class="col-10">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="carg" [autoDisplayFirst]="false" [options]="cargoSelect" [(ngModel)]="empleado.cargo" optionLabel="nombre" appendTo="body"></p-dropdown>
+                            <label for="carg">Cargo</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <i style="cursor: pointer; color: green; font-weight: bold;" class="pi pi-plus mt-2"></i>
+                    </div>
+                </div>
+                -->
+            </div>
+            <div class="col-2">
+                <div class="row">
+                    <div class="col-10">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="cat" [autoDisplayFirst]="false" [options]="categoriaSelect" [(ngModel)]="empleado.categoria" optionLabel="nombre" appendTo="body" (onChange)="setCodigo()"></p-dropdown>
+                            <label for="cat">Categoria</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <i style="cursor: pointer; color: green; font-weight: bold;" class="pi pi-plus mt-2"(click)="agregarAuxiliar('CATEMP')"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-dropdown inputId="cat" [autoDisplayFirst]="false" [options]="areaSelect" [(ngModel)]="areaSelected" optionLabel="nombre" appendTo="body" (onChange)="selectArea()"></p-dropdown>
+                    <label for="cat">Área</label>
+                </span>
+                <!--
+                <div class="row">
+                    <div class="col-10">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="cat" [autoDisplayFirst]="false" [options]="areaSelect" [(ngModel)]="areaSelected" optionLabel="nombre" appendTo="body" (onChange)="selectArea()"></p-dropdown>
+                            <label for="cat">Área</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <i style="cursor: pointer; color: green; font-weight: bold;" class="pi pi-plus mt-2"></i>
+                    </div>
+                </div>
+                -->
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-dropdown inputId="cat" [disabled]="!areaSelected" [autoDisplayFirst]="false" [options]="subareas" [(ngModel)]="empleado.subArea" optionLabel="nombre" appendTo="body" (onChange)="setCodigo()"></p-dropdown>
+                    <label for="cat">Sub Área</label>
+                </span>
+
+                <!--
+                <div class="row">
+                    <div class="col-10">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="cat" [autoDisplayFirst]="false" [options]="subareas" [(ngModel)]="empleado.subArea" optionLabel="nombre" appendTo="body"></p-dropdown>
+                            <label for="cat">Sub Área</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <i style="cursor: pointer; color: green; font-weight: bold;" class="pi pi-plus mt-2"></i>
+                    </div>
+                </div>
+                -->
+            </div>
+            <div class="col-2">
+                <div class="row">
+                    <div class="col-1"> 
+                        <p-checkbox [(ngModel)]="empleado.indCasaPropia" [binary]="true"></p-checkbox>
+                    </div>
+                    <label class="col-11">Tiene vivienda propia</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-2">
+                <span class="p-float-label ms-2">
+                    <input type="text" id="calz" pInputText [(ngModel)]="empleado.nroCalzado"> 
+                    <label for="calz">Nro Calzado</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="pant" pInputText [(ngModel)]="empleado.tallaPantalon"> 
+                    <label for="pant">Talla de Pantalón</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="polo" pInputText [(ngModel)]="empleado.tallaPolo"> 
+                    <label for="polo">Talla de Polo</label>
+                </span>
+            </div>
+        </div>
+    </p-card>
+    <p-card styleClass="p-card-shadow mt-4">
+        <div class="row" style="height: 0 !important">
+            <div class="col-12" style="height: 0 !important">
+                <label class="contenedor-label"> <b>Datos de Emergencia</b> </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="polo" pInputText [(ngModel)]="empleado.alergia"> 
+                    <label for="polo">Alergia</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="polo" pInputText [(ngModel)]="empleado.alergiaMedicamento"> 
+                    <label for="polo">Alergia Medicamento</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="polo" pInputText [(ngModel)]="empleado.contactoEmergencia"> 
+                    <label for="polo">Nombre de Contacto de Emergencia</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="polo" pInputText [(ngModel)]="empleado.telefonoEmergencia"> 
+                    <label for="polo">Teléfono de Emergencia</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="polo" pInputText [(ngModel)]="empleado.parentescoEmergencia"> 
+                    <label for="polo">Parentesco de Contacto de Emergencia</label>
+                </span>
+            </div>
+        </div>
+    </p-card>
+    <p-card styleClass="p-card-shadow mt-4">
+        <div class="row" style="height: 0 !important">
+            <div class="col-12" style="height: 0 !important">
+                <label class="contenedor-label"> <b>Datos de Cuenta</b> </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-dropdown inputId="cts" [autoDisplayFirst]="false" [options]="bancoSelect" [(ngModel)]="empleado.bancoCts" optionLabel="nombre" appendTo="body"></p-dropdown>
+                    <label for="cts">Banco CTS</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="ctsin" pInputText [(ngModel)]="empleado.cuentaCts"> 
+                    <label for="ctsin">Cuenta CTS</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-dropdown inputId="suel" [autoDisplayFirst]="false" [options]="bancoSelect" [(ngModel)]="empleado.bancoSueldo" optionLabel="nombre" appendTo="body"></p-dropdown>
+                    <label for="suel">Banco Sueldo</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="suelstr" pInputText [(ngModel)]="empleado.cuentaSueldo"> 
+                    <label for="suelstr">Cuenta Sueldo</label>
+                </span>
+            </div>
+        </div>
+    </p-card>
+</div>

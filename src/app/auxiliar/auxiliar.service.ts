@@ -15,6 +15,14 @@ export class AuxiliarService {
 
   constructor(private http: HttpClient) { }
 
+  getByCodAux(codAux: string): Observable<TablaAuxiliar> {
+    return this.http.get<TablaAuxiliar>(`${this.urlEndPoint2}/get-cod/${codAux}`).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
   getListTablaAuxiliarFiltro(nombre: string): Observable<TablaAuxiliar[]> {
     let i: number = 0;
     let url: string = `${this.urlEndPoint2}/filtro`;
