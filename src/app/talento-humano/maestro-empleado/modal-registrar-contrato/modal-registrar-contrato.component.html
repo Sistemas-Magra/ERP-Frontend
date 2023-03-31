@@ -1,0 +1,72 @@
+<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
+    <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
+        <div class="col-11 float-start mt-1"><span>Registro de contrato</span></div>
+        <div class="col-1 px-0 mx-0 btn-close-modal dialog-close-button" (click)="close()">
+            <i class="pi pi-times mt-3"></i>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <label><b>Nombre:</b> {{empleado.nombreCompleto}}</label>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-6">Entidad de Fondos:</label>
+                <div class="col-6">
+                    <p-dropdown placeholder="Seleccione" [autoDisplayFirst]="false" [options]="entidadFondos" [(ngModel)]="empleado.entidadFondos" optionLabel="nombre" appendTo="body"></p-dropdown>
+                </div>   
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-5">Fecha Inicio:</label>
+                <div class="col-7">
+                    <p-calendar [(ngModel)]="contrato.fechaInicioVigencia" appendTo="body" dateFormat="dd M yy"></p-calendar>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-5">Fecha Fin:</label>
+                <div class="col-7">
+                    <p-calendar [(ngModel)]="contrato.fechaFinVigencia" appendTo="body" dateFormat="dd M yy" [minDate]="contrato.fechaInicioVigencia"></p-calendar>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-6">Sueldo en bruto:</label>
+                <div class="col-6">
+                    <input type="text" pInputText [(ngModel)]="contrato.sueldo">
+                </div>   
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row float-end">
+                <div class="col-2"> 
+                    <p-checkbox [(ngModel)]="empleado.cobrarComisionAfp" [binary]="true" [disabled]="empleado.entidadFondos?.tipoEntidadFondos?.tablaAuxiliarDetalleId?.id == 1"></p-checkbox>
+                </div>
+                <label class="col-10">Incluir comisión en el descuento</label>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row float-end">
+                <div class="col-2"> 
+                    <p-checkbox [(ngModel)]="contrato.indAsignacionFamiliar" [binary]="true"></p-checkbox>
+                </div>
+                <label class="col-10">Con asignación familiar</label>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="float-end">
+                <p-button label="Registrar" styleClass="default-button" (click)="registrar()" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+</div>

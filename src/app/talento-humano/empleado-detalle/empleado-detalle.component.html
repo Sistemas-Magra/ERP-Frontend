@@ -304,6 +304,18 @@
                     <label for="polo">Talla de Polo</label>
                 </span>
             </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-calendar inputId="ing" [(ngModel)]="empleado.fechaInicioPruebaStr" appendTo="body" dateFormat="dd M yy"></p-calendar>
+                    <label for="ing">Fecha de Inicio de Pruebas</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-calendar inputId="ing" [(ngModel)]="empleado.fechaFinPruebaStr" appendTo="body" dateFormat="dd M yy"></p-calendar>
+                    <label for="ing">Fecha Fin de Pruebas</label>
+                </span>
+            </div>
         </div>
     </p-card>
     <p-card styleClass="p-card-shadow mt-4">
@@ -374,6 +386,40 @@
                 <span class="p-float-label">
                     <input type="text" id="suelstr" pInputText [(ngModel)]="empleado.cuentaSueldo"> 
                     <label for="suelstr">Cuenta Sueldo</label>
+                </span>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-2">
+                <div class="row">
+                    <div class="col-10">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="cts" [autoDisplayFirst]="false" [options]="tipoPagoSelect" [(ngModel)]="empleado.tipoPago" optionLabel="nombre" appendTo="body"></p-dropdown>
+                            <label for="cts">Tipo de Pago</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <i style="cursor: pointer; color: green; font-weight: bold;" class="pi pi-plus mt-2"(click)="agregarAuxiliar('TIPPEM')"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="row">
+                    <div class="col-10">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="cts" [autoDisplayFirst]="false" [options]="periocidadPagoSelect" [(ngModel)]="empleado.periocidadPago" optionLabel="nombre" appendTo="body"></p-dropdown>
+                            <label for="cts">Tipo de Pago</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <i style="cursor: pointer; color: green; font-weight: bold;" class="pi pi-plus mt-2"(click)="agregarAuxiliar('PERPAG')"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="spru" pInputText [(ngModel)]="empleado.sueldoPrueba"> 
+                    <label for="spru">Sueldo en etapa de prueba</label>
                 </span>
             </div>
         </div>

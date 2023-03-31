@@ -1,0 +1,11 @@
+.activo {
+    color: rgb(0, 78, 0);
+    font-weight: bold;
+    background-color: rgb(182, 255, 182);
+}
+
+.inactivo {
+    color: rgb(117, 0, 0);
+    font-weight: bold;
+    background-color: rgb(255, 149, 149);
+}

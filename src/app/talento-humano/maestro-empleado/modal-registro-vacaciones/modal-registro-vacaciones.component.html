@@ -29,7 +29,7 @@
             <label>Fecha de fin de vacaciones</label>
         </div>
         <div class="col-3">
-            <p-calendar [(ngModel)]="fechaFin" appendTo="body" (onSelect)="calcularDiasVacaciones()" dateFormat="dd M yy"></p-calendar>
+            <p-calendar [(ngModel)]="fechaFin" appendTo="body" (onSelect)="calcularDiasVacaciones()" dateFormat="dd M yy" [minDate]="fechaInicio"></p-calendar>
         </div>
     </div>
     <div class="row mt-4">

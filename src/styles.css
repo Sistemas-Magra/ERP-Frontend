@@ -431,7 +431,7 @@ span.p-calendar, span.p-autocomplete {
     cursor: pointer;
 }
 
-p-calendar.p-element.p-inputwrapper.ng-tns-c81-5.ng-pristine.ng-valid.ng-star-inserted.ng-touched {
+p-calendar.p-element.p-inputwrapper {
     padding-left: 0;
 }
 
@@ -445,4 +445,8 @@ table {
 
 .p-contextmenu.p-component {
     width: 200px;
+}
+
+td.last-column {
+    border-right: 1px solid rgb(219, 219, 219) !important;
 }

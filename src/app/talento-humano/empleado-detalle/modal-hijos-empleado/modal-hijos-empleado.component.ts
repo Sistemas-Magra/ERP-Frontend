@@ -26,15 +26,12 @@ export class ModalHijosEmpleadoComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.config.data.hijos.forEach(h => {
-      h.fechaNacimientoStr = this.pipe.transform(h.fechaNacimiento, 'dd MMM yyyy')
-    })
-
     this.hijos = this.config.data.hijos;
 
-    this.hijos.forEach(e => {
-      e.edad = this.funcionesComunes.calcularEdad(this.pipe.transform(e.fechaNacimiento, 'yyyy-mm-dd'))
-    })  
+    this.hijos.forEach(h => {
+      h.fechaNacimientoStr = this.pipe.transform(h.fechaNacimiento, 'dd MMM yyyy')
+      h.edad = this.funcionesComunes.calcularEdad(this.pipe.transform(h.fechaNacimiento, 'yyyy-mm-dd'))
+    })
   }
 
   close() {
@@ -54,6 +51,7 @@ export class ModalHijosEmpleadoComponent implements OnInit {
     this.hijos.forEach( h => {
       h.fechaNacimiento = new Date(h.fechaNacimientoStr);
     })
+    console.log(this.hijos)
 
     this.ref.close(this.hijos);
   }

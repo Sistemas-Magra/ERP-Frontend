@@ -1,0 +1,47 @@
+<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header" *ngIf="cese.periodoGratificacion">
+    <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
+        <div class="col-11 float-start mt-1"><span>Registro de Cese de Personal</span></div>
+        <div class="col-1 btn-close-modal dialog-close-button" style="left: 5px" (click)="close()">
+            <i class="pi pi-times mt-3"></i>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-6">
+            <label>Periodo CTS: <span class="text-uppercase">{{cese.periodoCts.fechaInicio | date: 'dd MMM yyyy'}}</span> - <span class="text-uppercase">{{cese.periodoCts.fechaFin | date: 'dd MMM yyyy'}}</span></label>
+        </div>
+        <div class="col-6">
+            <label>Periodo Gratificación: <span class="text-uppercase">{{cese.periodoGratificacion.fechaInicio | date: 'dd MMM yyyy'}}</span> - <span class="text-uppercase">{{cese.periodoGratificacion.fechaFin | date: 'dd MMM yyyy'}}</span></label>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-6">
+            <label>Fecha de cese de personal</label>
+        </div>
+        <div class="col-6">
+            <p-calendar [(ngModel)]="cese.fechaCese" appendTo="body" dateFormat="dd M yy"></p-calendar>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-6">
+            <label>Motivo del cese</label>
+        </div>
+        <div class="col-5">
+            <p-dropdown placeholder="Seleccione" [autoDisplayFirst]="false" [options]="motivosCese" [(ngModel)]="cese.tipoMotivo" optionLabel="nombre" appendTo="body"></p-dropdown>
+        </div>
+        <div class="col-1">
+            <i style="cursor: pointer; color: green; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar()"></i>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="autoResize" [(ngModel)]="cese.motivo"></textarea>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="float-end">
+                <p-button label="Guardar" styleClass="default-button" [style]="{width: '90px', height: '26px'}" (onClick)="guardar()"></p-button>
+            </div>
+        </div>
+    </div>
+</div>

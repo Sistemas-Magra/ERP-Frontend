@@ -44,7 +44,13 @@ import { EmpleadoDetalleComponent } from './talento-humano/empleado-detalle/empl
 import { ModalAgregarAuxiliarComponent } from './commons/modal-agregar-auxiliar/modal-agregar-auxiliar.component';
 import { ModalHijosEmpleadoComponent } from './talento-humano/empleado-detalle/modal-hijos-empleado/modal-hijos-empleado.component';
 import {ContextMenuModule} from 'primeng/contextmenu';
-import { ModalRegistroVacacionesComponent } from './talento-humano/empleado-detalle/modal-registro-vacaciones/modal-registro-vacaciones.component';
+import { ModalRegistroVacacionesComponent } from './talento-humano/maestro-empleado/modal-registro-vacaciones/modal-registro-vacaciones.component';
+import { ModalRegistroPermisosComponent } from './talento-humano/maestro-empleado/modal-registro-permisos/modal-registro-permisos.component';
+import { ModalRegistroCesesComponent } from './talento-humano/maestro-empleado/modal-registro-ceses/modal-registro-ceses.component';
+import { ModalListadoVacacionesComponent } from './talento-humano/maestro-empleado/modal-listado-vacaciones/modal-listado-vacaciones.component';
+import { ModalListadoPermisosComponent } from './talento-humano/maestro-empleado/modal-listado-permisos/modal-listado-permisos.component';
+import { ModalRegistrarContratoComponent } from './talento-humano/maestro-empleado/modal-registrar-contrato/modal-registrar-contrato.component';
+import { ModalMostrarContratoComponent } from './talento-humano/maestro-empleado/modal-mostrar-contrato/modal-mostrar-contrato.component';
 
 registerLocaleData(localeES, 'es-Pe');
 
@@ -74,7 +80,13 @@ const routes: Routes = [
     EmpleadoDetalleComponent,
     ModalAgregarAuxiliarComponent,
     ModalHijosEmpleadoComponent,
-    ModalRegistroVacacionesComponent
+    ModalRegistroVacacionesComponent,
+    ModalRegistroPermisosComponent,
+    ModalRegistroCesesComponent,
+    ModalListadoVacacionesComponent,
+    ModalListadoPermisosComponent,
+    ModalRegistrarContratoComponent,
+    ModalMostrarContratoComponent
   ],
   imports: [
     CardModule,

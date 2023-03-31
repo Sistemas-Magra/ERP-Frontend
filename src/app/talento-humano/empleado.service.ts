@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Empleado } from './models/empleado';
+import { Permiso } from './models/permiso';
+import { Cese } from './models/cese';
+import { Contrato } from './models/contrato';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +15,22 @@ export class EmpleadoService {
   private urlEndPoint: string = environment.apiURL + "api/empleado";
 
   constructor(private http: HttpClient) { }
+
+  getPeriodosCeseActivos(): Observable<any> {
+    return this.http.get<any>(`${this.urlEndPoint}/get-periodos-cese-activos`);
+  }
+
+  registrarContrato(contrato: Contrato): Observable<any> {
+    return this.http.post<any>(`${this.urlEndPoint}/registrar-contrato`, contrato)
+  }
+
+  registrarCese(cese: Cese, idEmpleado: number): Observable<any> {
+    return this.http.post<any>(`${this.urlEndPoint}/registrar-cese/${idEmpleado}`, cese)
+  }
+
+  registrarPermiso(permiso: Permiso, idEmpleado: number): Observable<any> {
+    return this.http.post<any>(`${this.urlEndPoint}/registrar-permiso/${idEmpleado}`, permiso)
+  }
 
   registrarVacaciones(fechaDesde: string, fechaFin: string, empleadoId: number, cantidadDias: number, userId: number): Observable<any> {
     let url: string = `${this.urlEndPoint}/registrar-vacaciones`

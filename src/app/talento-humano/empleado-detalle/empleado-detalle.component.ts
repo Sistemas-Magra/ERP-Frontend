@@ -36,6 +36,8 @@ export class EmpleadoDetalleComponent implements OnInit {
   gradoInstruccionSelect: TablaAuxiliarDetalle[];
   estadoCivilSelect: TablaAuxiliarDetalle[];
   ladoDominanteSelect: TablaAuxiliarDetalle[];
+  tipoPagoSelect: TablaAuxiliarDetalle[];
+  periocidadPagoSelect: TablaAuxiliarDetalle[];
   bancoSelect: Banco[];
 
   cargoSelect: Cargo[];
@@ -77,7 +79,9 @@ export class EmpleadoDetalleComponent implements OnInit {
       this.areaService.getAll(),
       this.auxiliarService.getListSelect('ESTCIV'),
       this.auxiliarService.getListSelect('LADDOM'),
-      this.bancoService.getBancosActivos()
+      this.bancoService.getBancosActivos(),
+      this.auxiliarService.getListSelect('TIPPEM'),
+      this.auxiliarService.getListSelect('PERPAG')
     )
 
     fork.subscribe(res => {
@@ -86,6 +90,10 @@ export class EmpleadoDetalleComponent implements OnInit {
       this.gradoInstruccionSelect = res[2];
       this.estadoCivilSelect = res[7];
       this.ladoDominanteSelect = res[8];
+
+      this.tipoPagoSelect= res[10];
+      this.periocidadPagoSelect = res[11]
+
       this.bancoSelect = res[9];
 
       this.empleado.estado = res[3];
@@ -97,7 +105,7 @@ export class EmpleadoDetalleComponent implements OnInit {
       this.activatedRoute.params.subscribe(param => {
         this.empleado.id = +param['id'];
         if(this.empleado.id == 0) {
-          this.rutaFotos = 'assets/icon/user.png';
+          this.rutaFotos = 'assets/icons/user.png';
         } else {
           this.empleadoService.getEmpleadoById(this.empleado.id).subscribe({
             next: emp => {
@@ -113,6 +121,9 @@ export class EmpleadoDetalleComponent implements OnInit {
 
                 empl.fechaNacimientoStr = this.pipe.transform(empl.fechaNacimiento, 'dd MMM yyyy');
                 empl.fechaIngresoStr = this.pipe.transform(empl.fechaIngreso, 'dd MMM yyyy');
+                
+                empl.fechaInicioPruebaStr = this.pipe.transform(empl.fechaInicioPrueba, 'dd MMM yyyy');
+                empl.fechaFinPruebaStr = this.pipe.transform(empl.fechaFinPrueba, 'dd MMM yyyy');
 
                 empl.edad = this.funcionesComunes.calcularEdad(this.pipe.transform(empl.fechaNacimiento, 'yyyy-mm-dd'));
 
@@ -245,7 +256,9 @@ export class EmpleadoDetalleComponent implements OnInit {
     })
 
     this.ref.onClose.subscribe(hjs => {
-      this.empleado.hijos = hjs;
+      if(hjs) {
+        this.empleado.hijos = hjs;
+      }
     })
   }
 
@@ -295,7 +308,7 @@ export class EmpleadoDetalleComponent implements OnInit {
       return false;
     }
 
-    if(!this.empleado.fechaNacimiento) {
+    if(!this.empleado.fechaNacimientoStr || this.empleado.fechaNacimientoStr.length == 0) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar una fecha de nacimiento.'})
       return false;
     }
@@ -307,7 +320,7 @@ export class EmpleadoDetalleComponent implements OnInit {
       return false;
     }
 
-    if(!this.empleado.fechaIngreso) {
+    if(!this.empleado.fechaIngresoStr || this.empleado.fechaIngresoStr.length == 0) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar una fecha de ingreso.'})
       return false;
     }
@@ -391,6 +404,19 @@ export class EmpleadoDetalleComponent implements OnInit {
       this.empleado.vacacionesDisponibles = 0;
       this.empleado.vacacionesOcupadas = 0;
 
+      if(!this.empleado.fechaInicioPruebaStr || this.empleado.fechaInicioPruebaStr.length == 0) {
+        this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar una fecha de inicio de pruebas.'})
+        return;
+      }
+
+      if(!this.empleado.fechaFinPruebaStr || this.empleado.fechaFinPruebaStr.length == 0) {
+        this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar una fecha de término de pruebas.'})
+        return;
+      }
+
+      this.empleado.fechaInicioPrueba = new Date(this.empleado.fechaInicioPruebaStr);
+      this.empleado.fechaFinPrueba = new Date(this.empleado.fechaFinPruebaStr);
+
       this.empleadoService.create(this.empleado).subscribe({
         next: res => {
           if(this.foto) {
@@ -408,6 +434,9 @@ export class EmpleadoDetalleComponent implements OnInit {
       })
 
     } else {
+
+      this.empleado.fechaInicioPrueba = new Date(this.empleado.fechaInicioPruebaStr);
+      this.empleado.fechaFinPrueba = new Date(this.empleado.fechaFinPruebaStr);
 
       this.empleadoService.update(this.empleado).subscribe({
         next: res => {

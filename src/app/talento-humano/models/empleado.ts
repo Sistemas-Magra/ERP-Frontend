@@ -63,6 +63,16 @@ export class Empleado {
     bancoSueldo: Banco;
     cuentaSueldo: string;
 
+    fechaInicioPrueba: Date;
+
     fechaNacimientoStr: string;
     fechaIngresoStr: string;
+    fechaInicioPruebaStr: string;
+    fechaFinPruebaStr: string;
+
+    sueldoPrueba: number;
+    tipoPago: TablaAuxiliarDetalle;
+    periocidadPago: TablaAuxiliarDetalle;
+
+    cobrarComisionAfp: boolean;
 }

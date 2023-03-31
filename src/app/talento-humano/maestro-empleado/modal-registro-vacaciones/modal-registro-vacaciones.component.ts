@@ -25,6 +25,8 @@ export class ModalRegistroVacacionesComponent implements OnInit {
 
   tiempoVacaciones: number;
 
+  blnCargando: boolean = false;
+
   constructor(
     private ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
@@ -56,13 +58,34 @@ export class ModalRegistroVacacionesComponent implements OnInit {
   }
 
   guardar() {
+
+    if(!this.fechaInicio) {
+      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar la fecha de inicio de vacaciones.'});
+      return;
+    }
+
+    if(!this.fechaFin) {
+      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar la fecha fin de vacaciones.'});
+      return;
+    }
+
+    if(this.tiempoVacaciones > this.vacacionesDisponibles) {
+      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'El tiempo de vacaciones solicitadas es mayor al tiempo de vacaciones restantes del personal seleccionado.'});
+      return;
+    }
+
     this.fechaInicioStr = this.pipe.transform(this.fechaInicio, 'yyyy-MM-dd');
     this.fechaFinStr = this.pipe.transform(this.fechaFin, 'yyyy-MM-dd');
 
+    this.blnCargando = true;
     this.empleadoService.registrarVacaciones(this.fechaInicioStr, this.fechaFinStr, this.config.data.id, this.tiempoVacaciones, this.authService.usuario.id).subscribe({
       next: res => {
-        this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar un tipo de documento de identidad.'})
+        this.blnCargando = false;
+        this.messageService.add({severity:'success', summary:'Éxito', detail:'Vacaciones registradas correctamente.'})
         this.ref.close();
+      }, error: err => {
+        this.blnCargando = false;
+        this.messageService.add({severity:'error', summary:'Error', detail:'Error al registrar vacaciones.'})
       }
     })
   }

@@ -7,6 +7,7 @@ export class Contrato {
     empleado: Empleado;
     sueldo: number;
     archivo: string;
+    indAsignacionFamiliar: boolean;
     idUsuarioCrea: number;
     idUsuarioModifica: number;
     fechaCrea: Date;

@@ -4,8 +4,13 @@ import { Router } from '@angular/router';
 import { LazyLoadEvent, MenuItem, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ModalSiNoComponent } from 'src/app/commons/modal-si-no/modal-si-no.component';
-import { ModalRegistroVacacionesComponent } from '../empleado-detalle/modal-registro-vacaciones/modal-registro-vacaciones.component';
+import { ModalListadoPermisosComponent } from './modal-listado-permisos/modal-listado-permisos.component';
+import { ModalListadoVacacionesComponent } from './modal-listado-vacaciones/modal-listado-vacaciones.component';
+import { ModalRegistroCesesComponent } from './modal-registro-ceses/modal-registro-ceses.component';
+import { ModalRegistroPermisosComponent } from './modal-registro-permisos/modal-registro-permisos.component';
+import { ModalRegistroVacacionesComponent } from './modal-registro-vacaciones/modal-registro-vacaciones.component';
 import { EmpleadoService } from '../empleado.service';
+import { ModalRegistrarContratoComponent } from './modal-registrar-contrato/modal-registrar-contrato.component';
 
 @Component({
   selector: 'app-maestro-empleado',
@@ -46,9 +51,12 @@ export class MaestroEmpleadoComponent implements OnInit {
   ngOnInit(): void {
 
     this.optionsRc = [
+      {label: 'Ingresar a Planilla', icon: 'pi pi-fw pi-pencil', command: () => this.registrarContrato(this.rowSelected)},
       {label: 'Condición Usuario', icon: 'pi pi-fw pi-user', command: () => this.condicionarUsuario(this.rowSelected)},
-      {label: 'Cesar Personal', icon: 'pi pi-fw pi-times', command: null},
-      {label: 'Registrar Permiso', icon: 'pi pi-fw pi-plus', command: null},
+      {label: 'Cesar Personal', icon: 'pi pi-fw pi-times', command: () => this.registrarCese(this.rowSelected)},
+      {label: 'Ver listado de Permisos', icon: 'pi pi-fw pi-search', command: () => this.verPermisos(this.rowSelected)},
+      {label: 'Registrar Permiso', icon: 'pi pi-fw pi-plus', command: () => this.registrarPermisos(this.rowSelected)},
+      {label: 'Ver listado de Vacaciones', icon: 'pi pi-fw pi-search', command: () => this.verVacaciones(this.rowSelected)},
       {label: 'Registrar Vacaciones', icon: 'pi pi-fw pi-plus', command: () => this.registrarVacaciones(this.rowSelected)}
     ]
 
@@ -67,6 +75,57 @@ export class MaestroEmpleadoComponent implements OnInit {
         this.totalRecords = res2[0].total;
         this.empleados = res2;
       }
+    })
+  }
+
+  registrarContrato(emp: any) {
+    
+    this.ref = this.dialogService.open(ModalRegistrarContratoComponent, {
+      data: {
+        id: emp.id
+      },
+      width:'1000px',
+      height: '400px'
+    })
+  }
+
+  verVacaciones(emp: any) {
+    this.ref = this.dialogService.open(ModalListadoVacacionesComponent, {
+      data: {
+        id: emp.id
+      },
+      width:'550px',
+      height: '400px'
+    })
+  }
+
+  verPermisos(emp: any) {
+    this.ref = this.dialogService.open(ModalListadoPermisosComponent, {
+      data: {
+        id: emp.id
+      },
+      width:'550px',
+      height: '400px'
+    })
+  }
+
+  registrarCese(emp: any) {
+    this.ref = this.dialogService.open(ModalRegistroCesesComponent, {
+      data: {
+        id: emp.id
+      },
+      width:'650px',
+      height: '400px'
+    })
+  }
+
+  registrarPermisos(emp: any) {
+    this.ref = this.dialogService.open(ModalRegistroPermisosComponent, {
+      data: {
+        id: emp.id
+      },
+      width:'750px',
+      height: '310px'
     })
   }
 

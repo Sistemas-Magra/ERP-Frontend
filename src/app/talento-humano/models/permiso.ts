@@ -3,6 +3,7 @@ import { Empleado } from "./empleado";
 
 export class Permiso {
     id: number;
+    motivo: string;
     fechaInicio: Date;
     fechaFin: Date;
     empleado: Empleado;

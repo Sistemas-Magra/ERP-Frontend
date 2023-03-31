@@ -1,6 +1,6 @@
 <div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
     <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
-        <div class="col-11 float-start mt-1"><span>Agregar Registro</span></div>
+        <div class="col-11 float-start mt-1"><span>Agregar Registro de Hijo de Personal</span></div>
         <div class="col-1 px-0 mx-0 btn-close-modal dialog-close-button" (click)="close()">
             <i class="pi pi-times mt-3"></i>
         </div>
@@ -33,7 +33,7 @@
                         <td>
                             <p-calendar class="px-0" [(ngModel)]="hijo.fechaNacimientoStr" appendTo="body" (onSelect)="setEdad(i)" dateFormat="dd M yy"></p-calendar>
                         </td>
-                        <td class="text-center" style="border-right: 1px solid rgb(219, 219, 219);">{{hijo.edad | number: '2.0-0'}}</td>
+                        <td class="text-center last-column">{{hijo.edad | number: '2.0-0'}}</td>
                     </tr>
                 </ng-template>
             </p-table>
