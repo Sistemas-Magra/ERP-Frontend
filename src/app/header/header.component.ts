@@ -4,6 +4,7 @@ import { MenuItem } from 'primeng/api';
 import { filter } from 'rxjs';
 import { AuthService } from '../seguridad/auth.service';
 import { Usuario } from '../seguridad/models/usuario';
+import { Modulo } from '../seguridad/models/modulo';
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,7 @@ import { Usuario } from '../seguridad/models/usuario';
 export class HeaderComponent implements OnInit {
 
   itemsButton: MenuItem[];
-  modulos: MenuItem[];
+  modulos: MenuItem[] = [];
   usuario: Usuario;
 
   visibleBar: boolean = false;
@@ -34,11 +35,10 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.usuario = this.authService.usuario;
-    //this.modulos = this.authService.modulos;
+    let modulos: Modulo[] = this.authService.modulos;
 
     this.router.events.subscribe((val) => {
-        this.usuario = this.authService.usuario;
-        //this.modulos = this.authService.modulos;
+      this.usuario = this.authService.usuario;
     });
 
     this.itemsButton = [
@@ -55,7 +55,28 @@ export class HeaderComponent implements OnInit {
     ];
 
     /*TODO: Adaptar los modulos del backend a la estructura de los MenuItem del PrimeNG*/
-    this.modulos = [];
+      modulos = this.authService.modulos;
+
+      modulos.forEach(m => {
+        let subModulos: MenuItem[] = [];
+
+        m.subModulos.forEach(sm => {
+          let menus: MenuItem[] = [];
+
+          sm.menus.forEach(me => {
+            menus.push({label: me.nombre, routerLink: me.ruta})
+          })
+          
+          let subModulo: MenuItem = {label: sm.nombre, items: menus}
+
+          subModulos.push(subModulo);
+        })
+
+        let modulo: MenuItem = {label: m.nombre, items: subModulos}
+
+        this.modulos.push(modulo);
+
+      })
   }
 
   verBar() {

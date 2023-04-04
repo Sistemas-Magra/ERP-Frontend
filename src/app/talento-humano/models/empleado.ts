@@ -82,5 +82,5 @@ export class Empleado {
     horaInicio: string;
     horaFin: string;
 
-    horarios: EmpleadoHorarios[];
+    horarios: EmpleadoHorarios[] = [];
 }

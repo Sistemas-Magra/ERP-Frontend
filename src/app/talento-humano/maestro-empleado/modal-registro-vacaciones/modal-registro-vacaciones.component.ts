@@ -85,7 +85,11 @@ export class ModalRegistroVacacionesComponent implements OnInit {
         this.ref.close();
       }, error: err => {
         this.blnCargando = false;
-        this.messageService.add({severity:'error', summary:'Error', detail:'Error al registrar vacaciones.'})
+        if(err.status == 409) {            
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail: err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail:'Error al registrar vacaciones.'})
+        }
       }
     })
   }

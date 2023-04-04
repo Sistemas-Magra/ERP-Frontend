@@ -77,7 +77,7 @@ export class ModalRegistroCesesComponent implements OnInit {
   }
   
   agregarAuxiliar() {
-    let id: number;
+    let id: number = this.motivosCese.length + 1;
 
     this.ref = this.dialogService.open(ModalAgregarAuxiliarComponent,{
       data: {

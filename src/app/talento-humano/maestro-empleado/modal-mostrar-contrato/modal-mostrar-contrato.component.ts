@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ParametroService } from 'src/app/auxiliar/parametro.service';
 import { ContratoService } from '../../contrato.service';
-import { Contrato } from '../../models/contrato';
-import { forkJoin } from 'rxjs';
-import { VacacionService } from '../../vacacion.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-modal-mostrar-contrato',
@@ -40,7 +38,7 @@ export class ModalMostrarContratoComponent implements OnInit {
     private config: DynamicDialogConfig,
     private parametroService: ParametroService,
     private contratoService: ContratoService,
-    private vacacionService: VacacionService
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -61,7 +59,12 @@ export class ModalMostrarContratoComponent implements OnInit {
   mostrarDatos() {
     
     this.contratoService.getDatosContrato(this.config.data.id, this.mesSeleccionado.id, this.anioSeleccionado.anio).subscribe({
-      next: res => this.datos = res
+      next: res => {
+        if(!res.sueldo) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:'El empleado no tiene un contrato vigente en esta fecha.'})
+        } 
+        this.datos = res;
+      }
     })
   }
 

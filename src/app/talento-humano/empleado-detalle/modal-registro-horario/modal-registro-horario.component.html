@@ -23,10 +23,10 @@
                         <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
                         <td>{{hor?.dia?.nombre}}</td>
                         <td>
-                            <input type="text" pInputText  class="custom-input-table" [(ngModel)]="hor.horaIngreso">
+                            <input type="text" pInputText  class="custom-input-table" [(ngModel)]="hor.horaIngreso" maxlength="5">
                         </td>
                         <td class="last-column">
-                            <input type="text" pInputText  class="custom-input-table" [(ngModel)]="hor.horaSalida">
+                            <input type="text" pInputText  class="custom-input-table" [(ngModel)]="hor.horaSalida" maxlength="5">
                         </td>
                     </tr>
                 </ng-template>

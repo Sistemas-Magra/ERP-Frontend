@@ -263,4 +263,8 @@ export class MaestroEmpleadoComponent implements OnInit {
     this.router.navigate([`/empleado/detalle/${emp.id}`])
   }
 
+  pagos() {
+    
+  }
+
 }

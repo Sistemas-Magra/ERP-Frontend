@@ -1,3 +1,5 @@
+import { TablaAuxiliarDetalle } from "src/app/auxiliar/models/tabla-auxiliar-detalle";
+
 export class HijoEmpleado {
     id: number;
     nombreCompleto: string;
@@ -9,4 +11,7 @@ export class HijoEmpleado {
     edad: number;
 
     fechaNacimientoStr: string;
+
+    tipoDocumentoIdentidad: TablaAuxiliarDetalle;
+    nroDocumentoIdentidad:string;
 }

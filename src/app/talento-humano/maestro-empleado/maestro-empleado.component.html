@@ -34,6 +34,7 @@
         </div>
         <div class="col-3">
             <div class="float-end">
+                <p-button label="Pagos" styleClass="default-button me-1" (click)="pagos()" [style]="{width: '90px', height: '26px'}"></p-button>
                 <p-button label="Registrar Asistencias" styleClass="default-button me-1" (click)="registrarAsistencia()" [style]="{width: '140px', height: '26px'}"></p-button>
                 <p-button label="Nuevo" styleClass="default-button" (click)="nuevo()" [style]="{width: '90px', height: '26px'}"></p-button>
             </div>
@@ -73,7 +74,7 @@
                         <td [title]="emp.ncargo">{{emp.cargo}}</td>
                         <td class="text-center">{{emp.categoria}}</td>
                         <td>{{emp.area}}</td>
-                        <td [title]="emp.nsubarea">{{emp.subarea}}</td>
+                        <td class="last-column" [title]="emp.nsubarea">{{emp.subarea}}</td>
                     </tr>
                 </ng-template>
             </p-table>

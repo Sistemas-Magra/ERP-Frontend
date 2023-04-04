@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FuncionesComunesService } from 'src/app/commons/funciones-comunes.service';
 import { HijoEmpleado } from '../../models/hijo-empleado';
+import { TablaAuxiliarDetalle } from 'src/app/auxiliar/models/tabla-auxiliar-detalle';
+import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
 
 @Component({
   selector: 'app-modal-hijos-empleado',
@@ -14,6 +16,8 @@ export class ModalHijosEmpleadoComponent implements OnInit {
   hijos: HijoEmpleado[] = [];
   hijoAux: HijoEmpleado;
 
+  tiposDocumento: TablaAuxiliarDetalle[];
+
   blnEditandoCreando: boolean = false;
   indFilaEditada: number = -1;
 
@@ -21,10 +25,17 @@ export class ModalHijosEmpleadoComponent implements OnInit {
     private ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
     private funcionesComunes: FuncionesComunesService,
+    private auxiliarService: AuxiliarService,
     private pipe: DatePipe
   ) { }
 
   ngOnInit(): void {
+
+    this.auxiliarService.getListSelect('TIPDOC').subscribe({
+      next: res => {
+        this.tiposDocumento = res
+      }
+    })
 
     this.hijos = this.config.data.hijos;
 

@@ -16,6 +16,8 @@
                             <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-success p-button-text plus-header" (click)="addHijo()"></button>
                         </th>
                         <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 80px">Tip. Doc.</th>
+                        <th style="--header-table: 140px">Nro. Doc.</th>
                         <th>Nombre</th>
                         <th style="--header-table: 140px">Fecha Nacimiento</th>
                         <th style="--header-table: 80px">Edad</th>
@@ -29,6 +31,12 @@
                             </div>
                         </td>
                         <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
+                        <td>
+                            <p-dropdown style="--header-table: 80px" placeholder="Seleccione" [autoDisplayFirst]="false" [options]="tiposDocumento" [(ngModel)]="hijo.tipoDocumentoIdentidad" optionLabel="nombre" appendTo="body"></p-dropdown>
+                        </td>
+                        <td>
+                            <input type="text" pInputText  class="custom-input-table" [(ngModel)]="hijo.nroDocumentoIdentidad">
+                        </td>
                         <td>
                             <input type="text" pInputText  class="custom-input-table" [(ngModel)]="hijo.nombreCompleto">
                         </td>

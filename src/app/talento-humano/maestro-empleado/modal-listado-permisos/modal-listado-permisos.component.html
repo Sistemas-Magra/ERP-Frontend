@@ -24,8 +24,8 @@
                     <tr [ngClass]="{'selected':indFilaEditada == i}">
                         <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
                         <td class="text-center" [ngClass]="{'activo': per.estado_id == 1, 'inactivo': per.estado_id == 0}">{{per.estado}}</td>
-                        <td class="text-center">{{per.fecha_inicio}}</td>
-                        <td class="text-center">{{per.fecha_fin}}</td>
+                        <td class="text-center text-uppercase">{{per.fecha_inicio}}</td>
+                        <td class="text-center text-uppercase">{{per.fecha_fin}}</td>
                         <td class="text-center">{{per.dias | number: '2.0-0'}}</td>
                         <td class="text-center last-column">{{per.username}}</td>
                     </tr>

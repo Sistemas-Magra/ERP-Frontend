@@ -17,7 +17,7 @@
             <div class="row">
                 <label class="col-6">Entidad de Fondos:</label>
                 <div class="col-6">
-                    <p-dropdown placeholder="Seleccione" [autoDisplayFirst]="false" [options]="entidadFondos" [(ngModel)]="empleado.entidadFondos" optionLabel="nombre" appendTo="body"></p-dropdown>
+                    <p-dropdown placeholder="Seleccione"  (onChange)="validarCheck(empleado.entidadFondos?.tipoEntidadFondos?.tablaAuxiliarDetalleId?.id )"  [autoDisplayFirst]="false" [options]="entidadFondos" [(ngModel)]="empleado.entidadFondos" optionLabel="nombre" appendTo="body"></p-dropdown>
                 </div>   
             </div>
         </div>

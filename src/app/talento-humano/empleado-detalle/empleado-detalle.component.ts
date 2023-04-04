@@ -124,13 +124,14 @@ export class EmpleadoDetalleComponent implements OnInit {
                 empl.fechaIngresoStr = this.pipe.transform(empl.fechaIngreso, 'dd MMM yyyy');
                 
                 empl.fechaInicioPruebaStr = this.pipe.transform(empl.fechaInicioPrueba, 'dd MMM yyyy');
+                //console.log(empl.fechaInicioPruebaStr)
                 empl.fechaFinPruebaStr = this.pipe.transform(empl.fechaFinPrueba, 'dd MMM yyyy');
 
                 empl.edad = this.funcionesComunes.calcularEdad(this.pipe.transform(empl.fechaNacimiento, 'yyyy-mm-dd'));
 
                 this.empleado = JSON.parse(JSON.stringify(empl));
                 this.fotoAux = empl.foto;
-              },200)
+              }, 300)
             }
           })
         }
@@ -269,7 +270,7 @@ export class EmpleadoDetalleComponent implements OnInit {
       data: {
         hijos: this.empleado.hijos
       },
-      width: '600px',
+      width: '800px',
       height: '400px'
     })
 
@@ -403,6 +404,11 @@ export class EmpleadoDetalleComponent implements OnInit {
       return false;
     }
 
+    if(this.empleado?.horarios?.length == 0) {
+      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe registrar el horario del personal.'})
+      return false;
+    }
+
     return true;
   }
 
@@ -449,6 +455,12 @@ export class EmpleadoDetalleComponent implements OnInit {
           } else {
             this.messageService.add({severity:'success', summary:'Éxito', detail:'Personal asignado correctamente.'})
             this.router.navigate(['/empleado'])
+          }
+        }, error: err => {
+          if(err.status == 409) {            
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail: err.error.mensaje});
+          } else {
+            this.messageService.add({severity:'error', summary:'Error', detail: 'Error al registrar por parte del servidor.'});
           }
         }
       })
