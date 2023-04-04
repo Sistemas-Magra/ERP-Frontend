@@ -1,3 +1,4 @@
+import { TablaAuxiliarDetalle } from "src/app/auxiliar/models/tabla-auxiliar-detalle";
 import { Empleado } from "./empleado";
 
 export class AsistenciaPersonal {
@@ -8,4 +9,9 @@ export class AsistenciaPersonal {
     empleado: Empleado;
     idUsuarioCrea: number;
     fechaCrea: Date;
+    tipoMarcacion: TablaAuxiliarDetalle;
+    horasExtras: number;
+    horasTardanza: number;
+    horasTrabajadas: number;
+    horasNoTrabajadas: number;
 }

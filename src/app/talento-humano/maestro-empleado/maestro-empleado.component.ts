@@ -11,6 +11,8 @@ import { ModalRegistroPermisosComponent } from './modal-registro-permisos/modal-
 import { ModalRegistroVacacionesComponent } from './modal-registro-vacaciones/modal-registro-vacaciones.component';
 import { EmpleadoService } from '../empleado.service';
 import { ModalRegistrarContratoComponent } from './modal-registrar-contrato/modal-registrar-contrato.component';
+import { ModalMostrarContratoComponent } from './modal-mostrar-contrato/modal-mostrar-contrato.component';
+import { ModalRegistrarAsistenciaComponent } from './modal-registrar-asistencia/modal-registrar-asistencia.component';
 
 @Component({
   selector: 'app-maestro-empleado',
@@ -52,6 +54,7 @@ export class MaestroEmpleadoComponent implements OnInit {
 
     this.optionsRc = [
       {label: 'Ingresar a Planilla', icon: 'pi pi-fw pi-pencil', command: () => this.registrarContrato(this.rowSelected)},
+      {label: 'Mostrar Planilla', icon: 'pi pi-fw pi-search', command: () => this.mostrarContrato(this.rowSelected)},
       {label: 'Condición Usuario', icon: 'pi pi-fw pi-user', command: () => this.condicionarUsuario(this.rowSelected)},
       {label: 'Cesar Personal', icon: 'pi pi-fw pi-times', command: () => this.registrarCese(this.rowSelected)},
       {label: 'Ver listado de Permisos', icon: 'pi pi-fw pi-search', command: () => this.verPermisos(this.rowSelected)},
@@ -78,14 +81,33 @@ export class MaestroEmpleadoComponent implements OnInit {
     })
   }
 
+  registrarAsistencia() {
+    
+    this.ref = this.dialogService.open(ModalRegistrarAsistenciaComponent, {
+      width:'1000px',
+      height: '900px'
+    })
+  }
+
+  mostrarContrato(emp: any) {
+    
+    this.ref = this.dialogService.open(ModalMostrarContratoComponent, {
+      data: {
+        id: emp.id
+      },
+      width:'500px',
+      height: '550px'
+    })
+  }
+
   registrarContrato(emp: any) {
     
     this.ref = this.dialogService.open(ModalRegistrarContratoComponent, {
       data: {
         id: emp.id
       },
-      width:'1000px',
-      height: '400px'
+      width:'800px',
+      height: '250px'
     })
   }
 

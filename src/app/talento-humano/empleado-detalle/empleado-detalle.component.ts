@@ -21,6 +21,7 @@ import { Banco } from '../models/banco';
 import { Empleado } from '../models/empleado';
 import { EntidadFondos } from '../models/entidad-fondos';
 import { ModalHijosEmpleadoComponent } from './modal-hijos-empleado/modal-hijos-empleado.component';
+import { ModalRegistroHorarioComponent } from './modal-registro-horario/modal-registro-horario.component';
 
 @Component({
   selector: 'app-empleado-detalle',
@@ -246,6 +247,23 @@ export class EmpleadoDetalleComponent implements OnInit {
 
   }
 
+  registrarHorarios() {
+    this.ref = this.dialogService.open(ModalRegistroHorarioComponent, {
+      data: {
+        horarios: JSON.parse(JSON.stringify(this.empleado.horarios)) 
+      },
+      width: '500px',
+      height: '450px'
+    })
+
+    this.ref.onClose.subscribe(hjs => {
+      if(hjs) {
+        console.log(hjs)
+        this.empleado.horarios = hjs;
+      }
+    })
+  }
+
   verHijos() {
     this.ref = this.dialogService.open(ModalHijosEmpleadoComponent, {
       data: {
@@ -416,6 +434,8 @@ export class EmpleadoDetalleComponent implements OnInit {
 
       this.empleado.fechaInicioPrueba = new Date(this.empleado.fechaInicioPruebaStr);
       this.empleado.fechaFinPrueba = new Date(this.empleado.fechaFinPruebaStr);
+
+      this.empleado.indEstaEnPlanilla = false;
 
       this.empleadoService.create(this.empleado).subscribe({
         next: res => {

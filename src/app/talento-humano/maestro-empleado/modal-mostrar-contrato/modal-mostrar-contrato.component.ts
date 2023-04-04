@@ -13,15 +13,27 @@ import { VacacionService } from '../../vacacion.service';
 })
 export class ModalMostrarContratoComponent implements OnInit {
 
-  contrato: Contrato = new Contrato();
+  datos: any;
 
-  porcAsignacionFamiliar: number;
-  sueldoMinimo: number;
+  meses: any[] = [
+    {id: 1, nombre: 'Enero'},
+    {id: 2, nombre: 'Febrero'},
+    {id: 3, nombre: 'Marzo'},
+    {id: 4, nombre: 'Abril'},
+    {id: 5, nombre: 'Mayo'},
+    {id: 6, nombre: 'Junio'},
+    {id: 7, nombre: 'Julio'},
+    {id: 8, nombre: 'Agosto'},
+    {id: 9, nombre: 'Setiembre'},
+    {id: 10, nombre: 'Octubre'},
+    {id: 11, nombre: 'Noviembre'},
+    {id: 12, nombre: 'Diciembre'}
+  ];
 
-  diasVacacionesMes: number;
+  mesSeleccionado: any;
 
-  totalAfecto: number = 0;
-  descuento: number = 0;
+  anios: any[] = [];
+  anioSeleccionado: any;
 
   constructor(
     private ref: DynamicDialogRef,
@@ -32,23 +44,24 @@ export class ModalMostrarContratoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+    this.mesSeleccionado = this.meses.find(m => m.id == (new Date()).getMonth() + 1);
+
+    this.anios.push({anio: (new Date()).getFullYear() - 4});
+    this.anios.push({anio: (new Date()).getFullYear() - 3});
+    this.anios.push({anio: (new Date()).getFullYear() - 2});
+    this.anios.push({anio: (new Date()).getFullYear() - 1});
+    this.anios.push({anio: (new Date()).getFullYear()});
+
+    this.anioSeleccionado = this.anios[4];
+
+    this.mostrarDatos()
+  }
+
+  mostrarDatos() {
     
-    let fork = forkJoin(
-      this.contratoService.getContratoByEmpleado(this.config.data.id),
-      this.parametroService.getParametroById(1),
-      this.parametroService.getParametroById(2),
-      this.vacacionService.getByUserId(this.config.data.id)
-    )
-
-    fork.subscribe(res => {
-      this.porcAsignacionFamiliar = +res[1].valor;
-      this.sueldoMinimo = +res[2].valor;
-      this.contrato = res[0];
-
-      let listadoVacacionesMes
-      
-      this.totalAfecto = this.contrato.sueldo + this.contrato.empleado.vacacionesDisponibles + (this.contrato.indAsignacionFamiliar?this.sueldoMinimo*this.porcAsignacionFamiliar/10:0)
-      this.descuento = this.contrato?.empleado?.entidadFondos?.aporte*this.totalAfecto/100 + this.contrato?.empleado?.entidadFondos?.comision*this.totalAfecto/100 + this.contrato?.empleado?.entidadFondos?.prima*this.totalAfecto/100
+    this.contratoService.getDatosContrato(this.config.data.id, this.mesSeleccionado.id, this.anioSeleccionado.anio).subscribe({
+      next: res => this.datos = res
     })
   }
 

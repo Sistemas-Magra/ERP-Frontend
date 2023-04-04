@@ -1,8 +1,10 @@
 <div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
     <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
         <div class="col-11 float-start mt-1"><span>Registro de contrato</span></div>
-        <div class="col-1 px-0 mx-0 btn-close-modal dialog-close-button" (click)="close()">
-            <i class="pi pi-times mt-3"></i>
+        <div class="col-1 btn-close-modal" (click)="close()">
+            <div class="float-end">
+                <i class="pi pi-times me-1"></i>
+            </div>
         </div>
     </div>
     <div class="row mt-3">
@@ -11,7 +13,7 @@
         </div>
     </div>
     <div class="row mt-3">
-        <div class="col-3">
+        <div class="col-4">
             <div class="row">
                 <label class="col-6">Entidad de Fondos:</label>
                 <div class="col-6">
@@ -19,7 +21,7 @@
                 </div>   
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <div class="row">
                 <label class="col-5">Fecha Inicio:</label>
                 <div class="col-7">
@@ -27,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <div class="row">
                 <label class="col-5">Fecha Fin:</label>
                 <div class="col-7">
@@ -37,7 +39,7 @@
         </div>
     </div>
     <div class="row mt-3">
-        <div class="col-3">
+        <div class="col-4">
             <div class="row">
                 <label class="col-6">Sueldo en bruto:</label>
                 <div class="col-6">
@@ -45,7 +47,7 @@
                 </div>   
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <div class="row float-end">
                 <div class="col-2"> 
                     <p-checkbox [(ngModel)]="empleado.cobrarComisionAfp" [binary]="true" [disabled]="empleado.entidadFondos?.tipoEntidadFondos?.tablaAuxiliarDetalleId?.id == 1"></p-checkbox>
@@ -53,7 +55,7 @@
                 <label class="col-10">Incluir comisión en el descuento</label>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <div class="row float-end">
                 <div class="col-2"> 
                     <p-checkbox [(ngModel)]="contrato.indAsignacionFamiliar" [binary]="true"></p-checkbox>

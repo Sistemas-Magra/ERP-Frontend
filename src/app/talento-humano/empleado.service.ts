@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError, map } from 'rxjs';
 import { Empleado } from './models/empleado';
 import { Permiso } from './models/permiso';
 import { Cese } from './models/cese';
 import { Contrato } from './models/contrato';
+import { TablaAuxiliar } from '../auxiliar/models/tabla-auxiliar';
+import { TablaAuxiliarDetalle } from '../auxiliar/models/tabla-auxiliar-detalle';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +17,21 @@ export class EmpleadoService {
   private urlEndPoint: string = environment.apiURL + "api/empleado";
 
   constructor(private http: HttpClient) { }
+
+  getActivos(fecha:string, ind: number): Observable<any[]> {
+    let url: string = `${this.urlEndPoint}/get-activos?fecha=${fecha}&indVerActiv=${ind}`
+    
+    return this.http.get<any[]>(url).pipe(
+      map((response) => {
+
+        response.forEach(res => {
+          res.marcacion_entity = res.marcacion_entity as TablaAuxiliarDetalle;
+        });
+
+        return response;
+      })
+    )
+  }
 
   getPeriodosCeseActivos(): Observable<any> {
     return this.http.get<any>(`${this.urlEndPoint}/get-periodos-cese-activos`);

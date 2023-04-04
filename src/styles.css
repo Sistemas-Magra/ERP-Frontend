@@ -73,7 +73,7 @@ body {
     color: rgb(170, 96, 0);
 }
 
-.p-datatable tbody > tr > td .p-dropdown {
+.p-datatable tbody > tr > td > p-dropdown > div {
     max-width: var(--header-table) !important;
 }
 
@@ -385,7 +385,6 @@ span.p-calendar, span.p-autocomplete {
 }
 
 .custom-dialog-header {
-    display: block;
     color: white !important;
     background-color: rgb(255, 186, 59) !important;
     border-radius: 2px !important;
@@ -417,7 +416,7 @@ span.p-calendar, span.p-autocomplete {
 }
 
 .btn-close-modal {
-    display: flex;
+    margin-top: 9px;
     align-items: center;
     color: rgb(155, 116, 44) !important; 
     font-weight: bold;
@@ -425,7 +424,7 @@ span.p-calendar, span.p-autocomplete {
 }
 
 .btn-close-modal:hover {
-    display: flex;
+    margin-top: 9px;
     align-items: center;
     color: rgb(95, 72, 28) !important; 
     cursor: pointer;

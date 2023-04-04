@@ -47,6 +47,7 @@ export class ModalRegistrarContratoComponent implements OnInit {
   }
 
   registrar() {
+    this.contrato.empleado.indEstaEnPlanilla = true;
     this.empleadoService.registrarContrato(this.contrato).subscribe({
       next: res => {
         this.messageService.add({severity:'success', summary:'Éxito', detail:'Contrato registrado correctamente.'})

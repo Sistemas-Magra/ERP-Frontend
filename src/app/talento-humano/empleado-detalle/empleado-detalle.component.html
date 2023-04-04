@@ -288,19 +288,19 @@
         <div class="row mt-5">
             <div class="col-2">
                 <span class="p-float-label ms-2">
-                    <input type="text" id="calz" pInputText [(ngModel)]="empleado.nroCalzado"> 
+                    <input class="text-uppercase" type="text" id="calz" pInputText [(ngModel)]="empleado.nroCalzado"> 
                     <label for="calz">Nro Calzado</label>
                 </span>
             </div>
             <div class="col-2">
                 <span class="p-float-label">
-                    <input type="text" id="pant" pInputText [(ngModel)]="empleado.tallaPantalon"> 
+                    <input class="text-uppercase" type="text" id="pant" pInputText [(ngModel)]="empleado.tallaPantalon"> 
                     <label for="pant">Talla de Pantalón</label>
                 </span>
             </div>
             <div class="col-2">
                 <span class="p-float-label">
-                    <input type="text" id="polo" pInputText [(ngModel)]="empleado.tallaPolo"> 
+                    <input class="text-uppercase" type="text" id="polo" pInputText [(ngModel)]="empleado.tallaPolo"> 
                     <label for="polo">Talla de Polo</label>
                 </span>
             </div>
@@ -315,6 +315,11 @@
                     <p-calendar inputId="ing" [(ngModel)]="empleado.fechaFinPruebaStr" appendTo="body" dateFormat="dd M yy"></p-calendar>
                     <label for="ing">Fecha Fin de Pruebas</label>
                 </span>
+            </div>
+            <div class="col-2">
+                <div class="float-end">
+                    <p-button label="Horarios" styleClass="default-button" (click)="registrarHorarios()" [style]="{width: '90px', height: '26px'}"></p-button>
+                </div>
             </div>
         </div>
     </p-card>

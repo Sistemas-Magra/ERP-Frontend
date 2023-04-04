@@ -79,7 +79,7 @@ export class MaestroUsuariosComponent implements OnInit {
           botonDeclinacion: "No"
         },
         width: '400px',
-        height: '160px',
+        height: '180px',
       })
 
       this.ref.onClose.subscribe(res => {

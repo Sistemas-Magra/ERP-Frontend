@@ -1,63 +1,98 @@
-<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
+<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header" *ngIf="datos">
     <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
-        <div class="col-11 float-start mt-1"><span>Listado de vacaciones del personal</span></div>
-        <div class="col-1 px-0 mx-0 btn-close-modal dialog-close-button" (click)="close()">
-            <i class="pi pi-times mt-3"></i>
+        <div class="col-11 float-start mt-1"><span>Datos de planilla del personal</span></div>
+        <div class="col-1 btn-close-modal" (click)="close()">
+            <div class="float-end">
+                <i class="pi pi-times me-1"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-4">
+            <div class="row">
+                <label class="col-2 mt-1">Mes</label>
+                <div class="col-10">
+                    <p-dropdown placeholder="Seleccione" [autoDisplayFirst]="false" [options]="meses" [(ngModel)]="mesSeleccionado" optionLabel="nombre" appendTo="body" (onChange)="mostrarDatos()"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <label class="col-2 mt-1">Año</label>
+                <div class="col-10">
+                    <p-dropdown placeholder="Seleccione" [autoDisplayFirst]="false" [options]="anios" [(ngModel)]="anioSeleccionado" optionLabel="anio" appendTo="body" (onChange)="mostrarDatos()"></p-dropdown>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-12">
-            <label>Nombre: {{contrato?.empleado?.nombreCompleto}}</label>
+            <label>Nombre: {{datos.empleado}}</label>
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-12">
-            <label>Remuneración Básica: S/. {{contrato?.sueldo | number: '2.2-2'}}</label>
-        </div>
-    </div>
-    <div class="row mt-3" *ngIf="contrato.indAsignacionFamiliar">
-        <div class="col-12">
-            <label>Asignación Familiar: S/. {{contrato?.sueldo*porcAsignacionFamiliar/100 | number: '2.2-2'}}</label>
+            <label>Remuneración Básica: S/. {{datos.sueldo | number: '2.2-2':'es-Pe'}}</label>
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-12">
-            <label>Vacaciones: S/. {{contrato?.empleado?.vacacionesDisponibles*porcAsignacionFamiliar/100 | number: '2.2-2'}}</label>
+            <label>Asignación Familiar: S/. {{datos.asignacion_familiar | number: '2.2-2':'es-Pe'}}</label>
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-12">
-            <label><b>Total Afecto: </b> S/. {{totalAfecto | number: '2.2-2'}}</label>
+            <label>N° días de vacaciones: {{datos.dias_vacaciones}}</label>
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-12">
-            <label><b>Entidad de Fondos: </b> {{contrato?.empleado?.entidadFondos?.nombre}}</label>
+            <label>Pago Vacaciones: S/. {{datos.pago_vacaciones | number: '2.2-2':'es-Pe'}}</label>
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-12">
-            <label>Aporte: S/. {{contrato?.empleado?.entidadFondos?.aporte*totalAfecto/100}}</label>
+            <label>N° días de inasistencias: {{datos.inasistencias}}</label>
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-12">
-            <label>Comisión: S/. {{contrato?.empleado?.entidadFondos?.comision*totalAfecto/100}}</label>
+            <label>Descuento inasistencias: {{datos.desc_asistencias | number: '2.2-2':'es-Pe'}}</label>
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-12">
-            <label>Prima: S/. {{contrato?.empleado?.entidadFondos?.prima*totalAfecto/100}}</label>
+            <label><b>Total Afecto: </b> S/. {{datos.total_afecto | number: '2.2-2':'es-Pe'}}</label>
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-12">
-            <label><b>Descuento: </b> S/. {{descuento | number: '2.2-2'}}</label>
+            <label><b>Entidad de Fondos: </b> {{datos.entidad_fondos}}</label>
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-12">
-            <label><b>Total a pagar (sin partes inafectas): </b> S/. {{totalAfecto - descuento | number: '2.2-2'}}</label>
+            <label>Aporte: S/. {{datos.aporte | number: '2.2-2':'es-Pe'}}</label>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <label>Comisión: S/. {{datos.comision | number: '2.2-2':'es-Pe'}}</label>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <label>Prima: S/. {{datos.prima | number: '2.2-2':'es-Pe'}}</label>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <label><b>Descuento: </b> S/. {{datos.descuento | number: '2.2-2':'es-Pe'}}</label>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <label><b>Total a pagar (sin partes inafectas): </b> S/. {{datos.pago | number: '2.2-2':'es-Pe'}}</label>
         </div>
     </div>
 </div>

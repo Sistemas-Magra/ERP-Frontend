@@ -1,0 +1,43 @@
+<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
+    <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
+        <div class="col-11 float-start mt-1"><span>Registro de Hijos de Personal</span></div>
+        <div class="col-1 btn-close-modal" (click)="close()">
+            <div class="float-end">
+                <i class="pi pi-times me-1"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12 px-0" style="--height-table: 30vh">
+            <p-table [value]="horario" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px">N</th>
+                        <th>Día</th>
+                        <th style="--header-table: 100px">Hora Ingreso</th>
+                        <th style="--header-table: 100px">Hora Salida</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-hor let-i="rowIndex">
+                    <tr (dblclick)="activarUsuario(i)" [ngClass]="{'selected':indFilaEditada == i}">
+                        <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
+                        <td>{{hor?.dia?.nombre}}</td>
+                        <td>
+                            <input type="text" pInputText  class="custom-input-table" [(ngModel)]="hor.horaIngreso">
+                        </td>
+                        <td class="last-column">
+                            <input type="text" pInputText  class="custom-input-table" [(ngModel)]="hor.horaSalida">
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="float-end">
+                <p-button label="Guardar" styleClass="default-button" (click)="guardar()" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+</div>

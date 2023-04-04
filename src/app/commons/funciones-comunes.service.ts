@@ -8,6 +8,18 @@ export class FuncionesComunesService {
   constructor() { }
 
   //Funciones con fechas
+  diferenciaHoras(horaInicio: string, horaFin: string): number {
+    let hInicio: number = Number(horaInicio.split(':')[0]);
+    let mInicio: number = Number(horaInicio.split(':')[1]);
+    let hFin: number = Number(horaFin.split(':')[0]);
+    let mFin: number = Number(horaFin.split(':')[1]);
+
+    let inicio: number = hInicio*60 + mInicio;
+    let fin: number = hFin*60 + mFin;
+
+    return (fin - inicio)/60
+  }
+
   diasEntreFechas(fechaInicio: Date, fechaFin: Date): number {
     let days: number = Math.floor((fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60 * 24)) + 1;
 

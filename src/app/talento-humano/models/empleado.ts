@@ -4,6 +4,7 @@ import { SubArea } from "src/app/maestros/models/sub-area";
 import { Banco } from "./banco";
 import { EntidadFondos } from "./entidad-fondos";
 import { HijoEmpleado } from "./hijo-empleado";
+import { EmpleadoHorarios } from "./empleado-horarios";
 
 export class Empleado {
     id: number;
@@ -75,4 +76,11 @@ export class Empleado {
     periocidadPago: TablaAuxiliarDetalle;
 
     cobrarComisionAfp: boolean;
+
+    indEstaEnPlanilla: boolean;
+
+    horaInicio: string;
+    horaFin: string;
+
+    horarios: EmpleadoHorarios[];
 }

@@ -16,4 +16,8 @@ export class ContratoService {
   getContratoByEmpleado(empleadoId: number): Observable<Contrato> {
     return this.http.get<Contrato>(`${this.urlEndPoint}/get-by-empleado/${empleadoId}`)
   }
+
+  getDatosContrato(empleadoId: number, mes: number, anio: number): Observable<Contrato> {
+    return this.http.get<Contrato>(`${this.urlEndPoint}/get-datos/${empleadoId}/${mes}/${anio}`)
+  }
 }

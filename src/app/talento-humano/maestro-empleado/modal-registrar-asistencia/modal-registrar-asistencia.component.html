@@ -1,0 +1,90 @@
+<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
+    <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
+        <div class="col-11 float-start mt-1"><span>Registro de Asistencia de Personal</span></div>
+        <div class="col-1 btn-close-modal" (click)="close()">
+            <div class="float-end">
+                <i class="pi pi-times me-1"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-2 mt-1">Año</label>
+                <div class="col-10">
+                    <p-dropdown [disabled]="blnEditando" placeholder="Seleccione" [autoDisplayFirst]="false" [options]="anios" [(ngModel)]="anioSeleccionado" optionLabel="anio" appendTo="body" (onChange)="[changeAnio(), traerDatos()]"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-2 mt-1">Mes</label>
+                <div class="col-10">
+                    <p-dropdown [disabled]="blnEditando" placeholder="Seleccione" [autoDisplayFirst]="false" [options]="meses" [(ngModel)]="mesSeleccionado" optionLabel="nombre" appendTo="body" (onChange)="traerDatos()"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <div class="contenedor">
+                    <button (click)="menos()" [disabled]="blnEditando || dia==inicioDiaMes" pButton pRipple type="button" icon="pi pi-angle-left" class="p-button-rounded p-button-outlined float-start"></button>
+                    <label class="mt-2"><b>{{dia | number:'2.0-0'}}</b></label>
+                    <button (click)="mas()" [disabled]="blnEditando || dia==mesSeleccionado.ultimoDia" pButton pRipple type="button" icon="pi pi-angle-right" class="p-button-rounded p-button-outlined float-start"></button>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="float-end">
+                <p-button *ngIf="(!blnEditando && empleados.length > 0) && blnEditar" label="Editar" styleClass="default-button me-1" [style]="{width: '90px', height: '26px'}" (onClick)="editar()"></p-button>
+                <p-button *ngIf="blnEditando" label="Guardar" styleClass="default-button me-1" [style]="{width: '90px', height: '26px'}" (onClick)="guardar()"></p-button>
+                <p-button *ngIf="blnEditando" label="Cancelar" styleClass="default-button" [style]="{width: '90px', height: '26px'}" (onClick)="cancelar()"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2" *ngIf="empleados.length > 0">
+        <div style="--height-table: 75vh;">
+            <p-table #dt [value]="empleados" responsiveLayout="scroll" [lazy]="true">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px">N</th>
+                        <th>Nombre</th>
+                        <th style="--header-table: 100px">Hora Ing.</th>
+                        <th style="--header-table: 100px">Hora Sal.</th>
+                        <th style="--header-table: 80px">H.E.</th>
+                        <th style="--header-table: 80px">H.T.</th>
+                        <th style="--header-table: 80px">H.S.T.</th>
+                        <th style="--header-table: 80px">H.T.</th>
+                        <th style="--header-table: 120px">Tip. Marcación</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-emp let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
+                        <td class="text-uppercase">{{emp.nombre_completo}}</td>
+                        <td class="text-center">
+                            <label *ngIf="!blnEditando || emp.marcacion_id == 11">{{emp.hora_ingreso}}</label>
+                            <input *ngIf="blnEditando && emp.marcacion_id != 11" type="text" pInputText  class="custom-input-table" (blur)="validarHoras(i)" maxlength="5" [(ngModel)]="emp.incio_ing">
+                        </td>
+                        <td class="text-center">
+                            <label *ngIf="!blnEditando || emp.marcacion_id == 11">{{emp.hora_fin}}</label>
+                            <input *ngIf="blnEditando && emp.marcacion_id != 11" type="text" pInputText  class="custom-input-table" (blur)="validarHoras(i)" maxlength="5" [(ngModel)]="emp.fin_ing">
+                        </td>
+                        <td class="text-center">{{emp.horas_extras | number: '2.0-2':'en'}}</td>
+                        <td class="text-center">{{emp.horas_tardanza | number: '2.0-2':'en'}}</td>  
+                        <td class="text-center">{{emp.horas_sin_trabajar | number: '2.0-2':'en'}}</td>  
+                        <td class="text-center">{{emp.horas_trabajadas | number: '2.0-2':'en'}}</td>  
+                        <td class="text-center last-column" style="--header-table: 120px">
+                            <label *ngIf="!blnEditando || emp.marcacion_id == 11">{{emp.marcacion}}</label>
+                            <p-dropdown *ngIf="blnEditando && emp.marcacion_id != 11" placeholder="Seleccione" (onChange)="get($event, i)" [autoDisplayFirst]="false" [options]="tiposMarcacion" [(ngModel)]="emp.marcacion_entity" optionLabel="nombre" appendTo="body"></p-dropdown>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-2" *ngIf="empleados.length == 0">
+        <div class="col-12 text-center">
+            <i>No hay personal con horarios en esta fecha</i>
+        </div>
+    </div>
+</div>

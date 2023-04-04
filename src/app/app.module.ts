@@ -51,6 +51,8 @@ import { ModalListadoVacacionesComponent } from './talento-humano/maestro-emplea
 import { ModalListadoPermisosComponent } from './talento-humano/maestro-empleado/modal-listado-permisos/modal-listado-permisos.component';
 import { ModalRegistrarContratoComponent } from './talento-humano/maestro-empleado/modal-registrar-contrato/modal-registrar-contrato.component';
 import { ModalMostrarContratoComponent } from './talento-humano/maestro-empleado/modal-mostrar-contrato/modal-mostrar-contrato.component';
+import { ModalRegistrarAsistenciaComponent } from './talento-humano/maestro-empleado/modal-registrar-asistencia/modal-registrar-asistencia.component';
+import { ModalRegistroHorarioComponent } from './talento-humano/empleado-detalle/modal-registro-horario/modal-registro-horario.component';
 
 registerLocaleData(localeES, 'es-Pe');
 
@@ -86,7 +88,9 @@ const routes: Routes = [
     ModalListadoVacacionesComponent,
     ModalListadoPermisosComponent,
     ModalRegistrarContratoComponent,
-    ModalMostrarContratoComponent
+    ModalMostrarContratoComponent,
+    ModalRegistrarAsistenciaComponent,
+    ModalRegistroHorarioComponent
   ],
   imports: [
     CardModule,
