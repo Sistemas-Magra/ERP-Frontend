@@ -26,6 +26,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { PasswordModule } from 'primeng/password';
 import { CheckboxModule } from 'primeng/checkbox';
+import {MultiSelectModule} from 'primeng/multiselect';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import { CardModule } from 'primeng/card';
@@ -53,10 +54,22 @@ import { ModalRegistrarContratoComponent } from './talento-humano/maestro-emplea
 import { ModalMostrarContratoComponent } from './talento-humano/maestro-empleado/modal-mostrar-contrato/modal-mostrar-contrato.component';
 import { ModalRegistrarAsistenciaComponent } from './talento-humano/maestro-empleado/modal-registrar-asistencia/modal-registrar-asistencia.component';
 import { ModalRegistroHorarioComponent } from './talento-humano/empleado-detalle/modal-registro-horario/modal-registro-horario.component';
+import { CotizacionesComponent } from './ventas/cotizaciones/cotizaciones.component';
+import { CotizacionesDetalleComponent } from './ventas/cotizaciones-detalle/cotizaciones-detalle.component';
+import { AlmacenComponent } from './logistica/almacen/almacen.component';
+import { MaestroRequerimientoCompraComponent } from './logistica/maestro-requerimiento-compra/maestro-requerimiento-compra.component';
+import { RegistroRequerimientoCompraComponent } from './logistica/registro-requerimiento-compra/registro-requerimiento-compra.component';
+import { ReporteActosComponent } from './seguridad-trabajo/reporte-actos/reporte-actos.component';
+import { RegistroReporteActosComponent } from './seguridad-trabajo/reporte-actos/registro-reporte-actos/registro-reporte-actos.component';
+import { ModalAgregarActoCondicionComponent } from './seguridad-trabajo/reporte-actos/registro-reporte-actos/modal-agregar-acto-condicion/modal-agregar-acto-condicion.component';
 
 registerLocaleData(localeES, 'es-Pe');
 
 const routes: Routes = [
+  //Seguridad
+  { path: 'seguridad', component: ReporteActosComponent, pathMatch: 'full', data: {title: 'Listado de Reportes', menu: 'Seguridad y salud del trabajo | Listado de Reportes'} },
+  { path: 'seguridad/registro/:id', component: RegistroReporteActosComponent, pathMatch: 'full', data: {title: 'Registro de Reporte', menu: 'Seguridad y salud del trabajo | Registro de Reporte'} },
+  
   //Talento Humano
   { path: 'empleado/detalle/:id', component: EmpleadoDetalleComponent, pathMatch: 'full', data: {title: 'Detalle de personal', menu: 'Talento Humano | Detalle de personal'} },
   { path: 'empleado', component: MaestroEmpleadoComponent, pathMatch: 'full', data: {title: 'Listado de personal', menu: 'Talento Humano | Listado de personal'}},
@@ -90,7 +103,15 @@ const routes: Routes = [
     ModalRegistrarContratoComponent,
     ModalMostrarContratoComponent,
     ModalRegistrarAsistenciaComponent,
-    ModalRegistroHorarioComponent
+    ModalRegistroHorarioComponent,
+    CotizacionesComponent,
+    CotizacionesDetalleComponent,
+    AlmacenComponent,
+    MaestroRequerimientoCompraComponent,
+    RegistroRequerimientoCompraComponent,
+    ReporteActosComponent,
+    RegistroReporteActosComponent,
+    ModalAgregarActoCondicionComponent,
   ],
   imports: [
     CardModule,
@@ -109,6 +130,7 @@ const routes: Routes = [
     PanelMenuModule,
     PasswordModule,
     CheckboxModule,
+    MultiSelectModule,
     ColorPickerModule,
     InputTextareaModule,
     CardModule,

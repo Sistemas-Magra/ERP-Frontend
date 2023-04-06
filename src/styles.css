@@ -449,3 +449,28 @@ table {
 td.last-column {
     border-right: 1px solid rgb(219, 219, 219) !important;
 }
+
+.p-multiselect {
+    display: inline-flex;
+    cursor: pointer;
+    height: 27px;
+    min-width: 15rem;
+    width: 18rem;
+    position: relative;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.p-multiselect .p-multiselect-label.p-placeholder {
+    color: #6c757d;
+    padding-top: 3px;
+}
+
+.p-multiselect .p-multiselect-label {
+    padding: 0.3rem;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.ng-star-inserted .no-affect {
+    padding-left: 10px !important;
+}

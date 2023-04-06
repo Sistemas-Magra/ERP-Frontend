@@ -86,10 +86,8 @@ export class AuthService {
     let payload = this.obtenerDatosToken(accessToken);
     this._usuario = new Usuario();
     this._usuario.id = payload.id;
-    this._usuario.apellidoPaterno = payload.apellidoPaterno;
-    this._usuario.apellidoMaterno = payload.apellidoMaterno;
-    this._usuario.nombres = payload.nombres;
     this._usuario.email = payload.email;
+    this._usuario.nombreCompleto = payload.nombreCompleto;
     this._usuario.username = payload.user_name;
 
     this._usuario.rolesDetallado = payload.role_detallado;

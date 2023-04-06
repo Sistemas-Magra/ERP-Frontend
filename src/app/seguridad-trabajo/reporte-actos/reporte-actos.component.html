@@ -1,0 +1,40 @@
+<div class="container-fluid">
+    <div class="row mt-2">
+        <!--Filtros-->
+    </div>
+    <div class="row mt-2">
+        <!--Tabla-->
+        <div class="col-12" style="--height-table: 65vh">
+            <p-table [value]="reportes" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 80px">Estado</th>
+                        <th style="--header-table: 140px">Fecha Oc.</th>
+                        <th style="--header-table: 80px">Hora Oc.</th>
+                        <th style="--header-table: 200px">Tipos de Evento</th>
+                        <th style="--header-table: 200px">Afectaciones</th>
+                        <th>Descripción</th>
+                        <th style="--header-table: 250px">Personal Infractor</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rep let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
+                        <td class="text-center text-uppercase">{{rep.estado}}</td>  
+                        <td class="text-center text-uppercase">{{rep.fecha_ocurrencia}}</td>  
+                        <td class="text-center">{{rep.hora_ocurrencia}}</td>   
+                        <td [title]="rep.tipos_evento">
+                            <label class="puntos-suspensivos">{{rep.tipos_evento}}</label>
+                        </td>  
+                        <td [title]="rep.afectaciones">
+                            <label class="puntos-suspensivos">{{rep.afectaciones}}</label>
+                        </td>  
+                        <td [title]="rep.descripcion">{{rep.descripcion}}</td> 
+                        <td class="last-column">{{rep.personal}}</td>  
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

@@ -8,15 +8,20 @@ export class ReporteActosCondiciones {
     id: number;
     idUsuarioReporta: number;
     empleado: Empleado;
-    tipoEvento: TablaAuxiliarDetalle;
+    fechaOcurrencia: Date
+    tipoEvento: string;
+    estado: TablaAuxiliarDetalle;
     descripcion: string;
-    afectacion: TablaAuxiliarDetalle;
+    afectacion: string;
     planta: Planta;
     medidaMejora: string;
-    condiciones: ReporteCondicionEncontrada[];
-    caracteristicas: ReporteCaracteristicaEncontrada[];
+    condiciones: ReporteCondicionEncontrada[] = [];
+    caracteristicas: ReporteCaracteristicaEncontrada[]=[];
+    indCompromisoPersonal:boolean;
     idUsuarioCrea: number;
     idUsuarioModifica: number;
     fechaCrea: Date;
     fechaModifica: Date;
+
+    fechaOcurrenciaStr: string;
 }

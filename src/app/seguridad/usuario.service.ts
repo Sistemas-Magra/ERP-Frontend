@@ -12,6 +12,14 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) { }
 
+  getDatosEmpleado(id: number): Observable<any> {
+    return this.http.get<any>(`${this.urlEndPoint}/datos-empleado/${id}`).pipe(
+      catchError(err => {
+        return throwError(() => {return err})
+      })
+    )
+  }
+
   changePassword(token: string, password: string): Observable<any> {
     return this.http.put(`${this.urlEndPoint}/changedPassword/${token}/${password}`, null).pipe(
       catchError(err => {

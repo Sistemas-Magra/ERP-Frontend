@@ -1,0 +1,13 @@
+.pen {
+    background-color: rgb(213, 213, 255);
+    color: rgb(0, 0, 226);
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.conc {
+    background-color: rgb(219, 255, 228);
+    color: rgb(0, 126, 42);
+    font-weight: bold;
+    border-radius: 5px;
+}

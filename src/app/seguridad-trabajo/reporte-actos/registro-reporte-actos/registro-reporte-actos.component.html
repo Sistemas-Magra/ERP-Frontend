@@ -1,0 +1,150 @@
+<div class="container-fluid" *ngIf="usuario">
+    <div class="row">
+        <div class="col-12">
+            <div class="float-end">
+                <p-button label="Guardar" styleClass="default-button" (click)="guardar()" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+    <p-card styleClass="p-card-shadow mt-3">
+        <div class="row" style="height: 0 !important">
+            <div class="col-12" style="height: 0 !important">
+                <label class="contenedor-label"> <b>Información General de Reporte</b> </label>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-2">
+                <div class="row">
+                    <label class="col-3"><b>Personal:</b></label>
+                    <label class="col-9">{{usuario.nombre_completo}}</label>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="row">
+                    <label class="col-2"><b>Cargo:</b></label>
+                    <label class="col-10">{{usuario.cargo}}</label>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="row">
+                    <label class="col-4"><b>Fecha:</b></label>
+                    <div class="col-8">
+                        <p-calendar [(ngModel)]="reporte.fechaOcurrenciaStr" appendTo="body" dateFormat="dd M yy" [showTime]="true"></p-calendar>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="row">
+                    <label class="col-4"><b>Planta:</b></label>
+                    <div class="col-8">
+                        <p-dropdown placeholder="Seleccione" [autoDisplayFirst]="false" [options]="plantas" [(ngModel)]="reporte.planta" optionLabel="nombre" appendTo="body"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="row">
+                    <label class="col-4"><b>Fecha Registro:</b></label>
+                    <label class="col-8 text-uppercase">{{fecha | date:'dd MMM yyyy HH:mm'}}</label>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="text-center">
+                    <label [ngClass]="{'pen': reporte.estado?.tablaAuxiliarDetalleId.id == 1, 'conc': reporte.estado?.tablaAuxiliarDetalleId.id == 2}" class="text-uppercase px-3 py-2">{{reporte.estado?.nombre}}</label>                    
+                </div>
+            </div>
+        </div>
+    </p-card>
+    <p-card styleClass="p-card-shadow mt-3">
+        <div class="row" style="height: 0 !important">
+            <div class="col-12" style="height: 0 !important">
+                <label class="contenedor-label"> <b>Detalle del reporte</b> </label>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-3">
+                <div class="row">
+                    <label class="col-5"><b>Tipos de Evento:</b></label>
+                    <div class="col-7">
+                        <p-multiSelect [options]="tiposEventoSelect" [(ngModel)]="tiposEventoSelected" defaultLabel="Seleccione" optionLabel="nombre" (onChange)="setBools()"></p-multiSelect>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="row">
+                    <label class="col-5"><b>Afectación:</b></label>
+                    <div class="col-7">
+                        <p-multiSelect [options]="tiposAfectacionSelect" [(ngModel)]="tiposAfectacionSelected" defaultLabel="Seleccione" optionLabel="nombre"></p-multiSelect>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-2"><b>Personal:</b></label>
+                    <div class="col-10">
+                        <p-autoComplete [(ngModel)]="reporte.empleado" [showEmptyMessage]="true" [suggestions]="empleadosAutocomplete" (completeMethod)="getEmpleadoAutocomplete($event)" field="nombreCompleto" [minLength]="0"></p-autoComplete>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="row">
+                    <div class="col-1">
+                        <p-checkbox [disabled]="!reporte.empleado" [(ngModel)]="reporte.indCompromisoPersonal" [binary]="true"></p-checkbox>
+                    </div>
+                    <label class="col-11">Compromiso de mejora de personal</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-3 no-affect" *ngIf="blnActos">
+                <div class="row">
+                    <div class="col-5">
+                        <label><b>Características Encontradas:</b></label>
+                    </div>
+                    <div class="col-5">
+                        <p-multiSelect [options]="caracteristicasSelect" [(ngModel)]="caracteristicasSelected" defaultLabel="Seleccione" optionLabel="nombre"></p-multiSelect>
+                    </div>
+                    <div class="col-2">
+                        <div class="float-end">
+                            <i style="cursor: pointer; color: green; font-weight: bold;" class="pi pi-plus mt-2"(click)="addCaracteristica()"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 no-affect" *ngIf="blnCondiciones">
+                <div class="row">
+                    <label class="col-5"><b>Condiciones Encontradas:</b></label>
+                    <div class="col-5">
+                        <p-multiSelect [options]="condicionSelect" [(ngModel)]="condicionSelected" defaultLabel="Seleccione" optionLabel="nombre"></p-multiSelect>
+                    </div>
+                    <div class="col-2">
+                        <div class="float-end">
+                            <i style="cursor: pointer; color: green; font-weight: bold;" class="pi pi-plus mt-2"(click)="addCondicion()"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-6">
+                <div class="row mt-2">
+                    <label class="col-4"><b>Descripción:</b></label>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="autoResize" [(ngModel)]="reporte.descripcion"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row mt-2">
+                    <label class="col-2"><b>Medida de Mejora:</b></label>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="autoResize" [(ngModel)]="reporte.medidaMejora"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-card>
+</div>

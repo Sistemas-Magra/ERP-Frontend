@@ -5,9 +5,7 @@ import { Role } from "./role";
 
 export class Usuario {
     id: number;
-    nombres: string;
-    apellidoPaterno: string;
-    apellidoMaterno: string;
+    nombreCompleto: string;
     username: string;
     email: string;
     telefono: string;
