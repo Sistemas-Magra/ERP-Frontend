@@ -1,5 +1,6 @@
 import { TablaAuxiliarDetalle } from "src/app/auxiliar/models/tabla-auxiliar-detalle";
 import { Empleado } from "./empleado";
+import { Empresa } from "src/app/gestion/models/empresa";
 
 export class Contrato {
     id: number;
@@ -14,4 +15,6 @@ export class Contrato {
     fechaCrea: Date;
     fechaModifica: Date;
     estado:TablaAuxiliarDetalle;
+
+    empresa: Empresa;
 }

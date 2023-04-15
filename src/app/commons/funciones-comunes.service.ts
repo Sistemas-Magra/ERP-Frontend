@@ -58,6 +58,8 @@ export class FuncionesComunesService {
   agregarTiempo(fecha: string, ind: number, cantidad: number): string {
     let fechaResult: string;
 
+    console.log(fecha)
+
     let dia: number = fecha.split[2];
     let mes: number = fecha.split[1];
     let anio: number = fecha.split[0];
@@ -99,6 +101,40 @@ export class FuncionesComunesService {
     fechaResult = `${anio}-${mes}-${dia}`
 
     return fechaResult;
+  }
+
+  agregarDias(fecha: string, n: number): string{
+    return this.numberToDate(this.dateToNumber(fecha) + n);
+  }
+
+  dateToNumber(fecha: string) {
+
+    let dia: number = Number(fecha.split('-')[2])
+    let mes: number = Number(fecha.split('-')[1])
+    let anio: number = Number(fecha.split('-')[0])
+
+    mes = (mes + 9)%12
+    anio = anio - Math.floor(mes/10)
+
+    return anio*365 + Math.floor(anio/4) - Math.floor(anio/100) + Math.floor(anio/400) + Math.floor((mes*306 + 5)/10) + dia - 1
+
+  }
+
+  numberToDate(num: number): string {
+    let anio: number = Math.floor((10000*num + 14780)/3652425);
+    let diaAux: number = num - (365*anio + Math.floor(anio/4) - Math.floor(anio/100) + Math.floor(anio/400))
+    
+    if(diaAux < 0) {
+      anio = anio - 1;
+      diaAux = num - (365*anio + Math.floor(anio/4) - Math.floor(anio/100) + Math.floor(anio/400))
+    }
+
+    let mes: number = (Math.floor((100*diaAux + 52)/3060) + 2)%12 + 1;
+
+    anio = anio + Math.floor((Math.floor((100*diaAux + 52)/3060) + 2)/12);
+    let dia: number = diaAux - Math.floor((Math.floor((100*diaAux + 52)/3060)*306 + 5)/10) + 1
+
+    return `${anio}-${mes}-${dia}`;
   }
 
   tiene31dias(mes: number): boolean {

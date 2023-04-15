@@ -22,6 +22,9 @@ import { Empleado } from '../models/empleado';
 import { EntidadFondos } from '../models/entidad-fondos';
 import { ModalHijosEmpleadoComponent } from './modal-hijos-empleado/modal-hijos-empleado.component';
 import { ModalRegistroHorarioComponent } from './modal-registro-horario/modal-registro-horario.component';
+import { Departamento } from 'src/app/ubicacion/models/departamento';
+import { Provincia } from 'src/app/ubicacion/models/provincia';
+import { DepartamentoService } from 'src/app/ubicacion/departamento.service';
 
 @Component({
   selector: 'app-empleado-detalle',
@@ -47,6 +50,10 @@ export class EmpleadoDetalleComponent implements OnInit {
   areaSelected: Area;
   subareas: SubArea[];
 
+  departamentos: Departamento[];
+  departamentoSeleccionado: Departamento = new Departamento();
+  provinciaSeleccionada: Provincia = new Provincia();
+
   rutaFotos: string = 'assets/icons/user.png'//environment.apiURL + 'api/getFotoPersonal/';
   fotoAux: string;
 
@@ -62,10 +69,11 @@ export class EmpleadoDetalleComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private empleadoService: EmpleadoService,
     private bancoService: BancoService,
+    private departamentoService: DepartamentoService,
     private dialogService: DialogService,
     private pipe: DatePipe,
     private router: Router,
-    private funcionesComunes: FuncionesComunesService
+    private funcionesComunes: FuncionesComunesService,
   ) { }
 
   ngOnInit(): void {
@@ -82,7 +90,8 @@ export class EmpleadoDetalleComponent implements OnInit {
       this.auxiliarService.getListSelect('LADDOM'),
       this.bancoService.getBancosActivos(),
       this.auxiliarService.getListSelect('TIPPEM'),
-      this.auxiliarService.getListSelect('PERPAG')
+      this.auxiliarService.getListSelect('PERPAG'),
+      this.departamentoService.getAll(),
     )
 
     fork.subscribe(res => {
@@ -102,6 +111,7 @@ export class EmpleadoDetalleComponent implements OnInit {
       this.cargoSelect = res[4];
       this.entidadFondosSelect = res[5];
       this.areaSelect = res[6];
+      this.departamentos = res[12]
 
       this.activatedRoute.params.subscribe(param => {
         this.empleado.id = +param['id'];
@@ -118,6 +128,25 @@ export class EmpleadoDetalleComponent implements OnInit {
 
                 if(empl.foto && empl.foto.length > 0) {
                   this.rutaFotos = `${environment.apiURL}api/empleado/get-foto/${empl.foto}`
+                }
+
+                let enc: boolean = false;
+
+                for(let i: number = 0; i < this.departamentos.length; i++) {
+                  for(let j: number = 0; j < this.departamentos[i].provincias.length; j++) {
+                    if(this.departamentos[i].provincias[j].distritos.find(d => d.id == empl.distrito.id)) {
+                      this.departamentoSeleccionado = this.departamentos[i];
+                      setTimeout(() => {
+                        this.provinciaSeleccionada = this.departamentos[i].provincias[j];
+                        enc = true;
+                      }, 200)
+                      break;
+                    }
+
+                    if(enc) {
+                      break;
+                    }
+                  }
                 }
 
                 empl.fechaNacimientoStr = this.pipe.transform(empl.fechaNacimiento, 'dd MMM yyyy');

@@ -83,7 +83,25 @@
                     </div>
                 </div>
                 <div class="row mt-5">
-                    <div class="col-12">
+                    <div class="col-2">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="dep" [autoDisplayFirst]="false" [options]="departamentos" [(ngModel)]="departamentoSeleccionado" optionLabel="nombre" appendTo="body"></p-dropdown>
+                            <label for="dep">Departamento</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="prov" [disabled]="!departamentoSeleccionado" [autoDisplayFirst]="false" [options]="departamentoSeleccionado?.provincias" [(ngModel)]="provinciaSeleccionada" optionLabel="nombre" appendTo="body"></p-dropdown>
+                            <label for="prov">Provincia</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="dist" [disabled]="!provinciaSeleccionada" [autoDisplayFirst]="false" [options]="provinciaSeleccionada?.distritos" [(ngModel)]="empleado.distrito" optionLabel="nombre" appendTo="body"></p-dropdown>
+                            <label for="dist">Distrito</label>
+                        </span>
+                    </div>
+                    <div class="col-6">
                         <span class="p-float-label">
                             <input type="text" id="dir" pInputText [(ngModel)]="empleado.direccion"> 
                             <label for="dir">Dirección</label>
@@ -287,7 +305,7 @@
         </div>
         <div class="row mt-5">
             <div class="col-2">
-                <span class="p-float-label ms-2">
+                <span class="p-float-label">
                     <input class="text-uppercase" type="text" id="calz" pInputText [(ngModel)]="empleado.nroCalzado"> 
                     <label for="calz">Nro Calzado</label>
                 </span>

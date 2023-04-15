@@ -10,4 +10,6 @@ export class ClienteContacto {
     idUsuarioModifica: number;
     fechaCrea: Date;
     fechaModifica: Date;
+
+    nombreCompleto: string;
 }

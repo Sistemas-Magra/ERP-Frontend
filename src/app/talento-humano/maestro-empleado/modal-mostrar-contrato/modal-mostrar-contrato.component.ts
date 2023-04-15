@@ -3,6 +3,8 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ParametroService } from 'src/app/auxiliar/parametro.service';
 import { ContratoService } from '../../contrato.service';
 import { MessageService } from 'primeng/api';
+import { EmpresaService } from 'src/app/gestion/empresa.service';
+import { Empresa } from 'src/app/gestion/models/empresa';
 
 @Component({
   selector: 'app-modal-mostrar-contrato',
@@ -36,7 +38,6 @@ export class ModalMostrarContratoComponent implements OnInit {
   constructor(
     private ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
-    private parametroService: ParametroService,
     private contratoService: ContratoService,
     private messageService: MessageService
   ) { }

@@ -1,0 +1,47 @@
+<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
+    <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
+        <div class="col-11 float-start mt-1"><span>Registro de Despacho</span></div>
+        <div class="col-1 btn-close-modal" (click)="close()">
+            <div class="float-end">
+                <i class="pi pi-times me-1"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12 px-0" style="--height-table: 17.5vh">
+            <p-table [value]="despachos" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 30px" class="text-center">
+                            <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-success p-button-text plus-header" (click)="addDespacho()"></button>
+                        </th>
+                        <th style="--header-table: 30px">N</th>
+                        <th style="--header-table: 80px">Fecha</th>
+                        <th style="--header-table: 40px">Prods.</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-despacho let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">
+                            <div class="col-12 botones">
+                                <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger btn-body" (click)="quitar(i)"></button>
+                            </div>
+                        </td>
+                        <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
+                        <td>
+                            <p-calendar class="px-0" [(ngModel)]="despacho.fechaPropuesta" appendTo="body" dateFormat="dd M yy" [minDate]="despacho.minDate"></p-calendar>
+                        </td>
+                        <td class="text-center custom-link last-column" style="--header-table: 40px" (click)="registrarProductos(i)">{{despacho.detalle.length}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="float-end">
+                <p-button label="Asignar" styleClass="default-button" [style]="{width: '90px', height: '26px'}" (onClick)="asignar()"></p-button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,6 +6,9 @@ import { EmpleadoService } from '../../empleado.service';
 import { Contrato } from '../../models/contrato';
 import { Empleado } from '../../models/empleado';
 import { EntidadFondos } from '../../models/entidad-fondos';
+import { EmpresaService } from 'src/app/gestion/empresa.service';
+import { Empresa } from 'src/app/gestion/models/empresa';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-modal-registrar-contrato',
@@ -19,25 +22,33 @@ export class ModalRegistrarContratoComponent implements OnInit {
 
   entidadFondos: EntidadFondos[];
 
+  empresasSelect: Empresa[] = [];
+
   constructor(
     private ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
     private empleadoService: EmpleadoService,
     private entidadFondosService: EntidadFondosService,
+    private empresaService: EmpresaService,
     private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
-    this.empleadoService.getEmpleadoById(this.config.data.id).subscribe({
-      next: res => {
-        this.empleado = res.empleado;
-        this.contrato.empleado = this.empleado;
-      }
-    })
+    let fork = forkJoin(
+      this.empresaService.getEmpresasActivas(),
+      this.entidadFondosService.getAll(),
+      this.empleadoService.getEmpleadoById(this.config.data.id)
+    )
 
-    this.entidadFondosService.getAll().subscribe({
+    fork.subscribe({
       next: res => {
-        this.entidadFondos = res;
+        this.empresasSelect = res[0];
+        this.entidadFondos = res[1];
+
+        setTimeout(() => {
+          this.empleado = res[2].empleado;
+          this.contrato.empleado = this.empleado;
+        },300)
       }
     })
   }

@@ -1,0 +1,69 @@
+<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
+    <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
+        <div class="col-11 float-start mt-1"><span>Registro de Contacto de Cliente</span></div>
+        <div class="col-1 btn-close-modal" (click)="close()">
+            <div class="float-end">
+                <i class="pi pi-times me-1"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-4">
+            <div class="row">
+                <label class="col-5">Nombres:</label>
+                <div class="col-7">
+                    <input type="text" pInputText [(ngModel)]="contacto.nombres">
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <label class="col-5">Apellido Paterno:</label>
+                <div class="col-7">
+                    <input type="text" pInputText [(ngModel)]="contacto.apellidoPaterno">
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <label class="col-5">Apellido Materno:</label>
+                <div class="col-7">
+                    <input type="text" pInputText [(ngModel)]="contacto.apellidoMaterno">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-4">
+            <div class="row">
+                <label class="col-5">Celular:</label>
+                <div class="col-7">
+                    <input type="text" pInputText [(ngModel)]="contacto.celular">
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <label class="col-5">Teléfono:</label>
+                <div class="col-7">
+                    <input type="text" pInputText [(ngModel)]="contacto.telefono">
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <label class="col-5">Correo:</label>
+                <div class="col-7">
+                    <input type="text" pInputText [(ngModel)]="contacto.correo">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="float-end">
+                <p-button label="Guardar" styleClass="default-button" (click)="guardar()" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+</div>

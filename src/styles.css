@@ -62,7 +62,7 @@ body {
     min-width: var(--header-table) !important;
     width: var(--header-table) !important;
     max-width: var(--header-table) !important;
-    height: 27px !important;
+    height: 15px !important;
     position: sticky;
     position: -webkit-sticky;
     top: 0;
@@ -366,14 +366,14 @@ span.p-calendar, span.p-autocomplete {
 
 .custom-link {
     color: blue;
-    width: 98%;
+    width: .98rem;
     white-space: nowrap !important;
     text-overflow: ellipsis !important;
     overflow: hidden !important;
 }
 
 .custom-link:hover {
-    color: lightblue;
+    color: rgb(70, 178, 214);
     cursor: pointer;
 }
 .p-dialog {

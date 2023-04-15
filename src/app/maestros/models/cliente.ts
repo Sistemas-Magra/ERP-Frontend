@@ -21,5 +21,5 @@ export class Cliente {
     idUsuarioModifica: number;
     fechaCrea: Date;
     fechaModifica: Date;
-    contactos: ClienteContacto[];
+    contactos: ClienteContacto[] = [];
 }

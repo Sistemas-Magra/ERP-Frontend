@@ -8,8 +8,16 @@
         </div>
     </div>
     <div class="row mt-3">
-        <div class="col-12">
+        <div class="col-8">
             <label><b>Nombre:</b> {{empleado.nombreCompleto}}</label>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <label class="col-6">Empresa asignada:</label>
+                <div class="col-6">
+                    <p-dropdown placeholder="Seleccione" [autoDisplayFirst]="false" [options]="empresasSelect" [(ngModel)]="contrato.empresa" optionLabel="razonSocial" appendTo="body"></p-dropdown>
+                </div>   
+            </div>
         </div>
     </div>
     <div class="row mt-3">

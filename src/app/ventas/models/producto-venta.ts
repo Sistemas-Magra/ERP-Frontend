@@ -16,4 +16,6 @@ export class ProductoVenta {
     idUsuarioModifica: number;
     fechaCrea: Date;
     fechaModifica: Date;
+
+    busqueda: string;
 }

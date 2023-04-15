@@ -1,1 +1,284 @@
-<p>cotizaciones-detalle works!</p>
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="float-end">
+                <p-button label="Guardar" styleClass="default-button" (click)="guardar()" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+    <p-card styleClass="p-card-shadow">
+        <div class="row" style="height: 0 !important">
+            <div class="col-12" style="height: 0 !important">
+                <label class="contenedor-label"> <b>Datos del Cliente</b> </label>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-2">
+                <div class="row">
+                    <div class="col-10">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="tipdoc" [autoDisplayFirst]="false" [options]="documentoIdentidadSelect" [(ngModel)]="cliente.tipoDocumentoIdentidad" optionLabel="nombre" appendTo="body"></p-dropdown>
+                            <label for="tipdoc">Tipo de Doc. de Identidad</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <i style="cursor: pointer; color: green; font-weight: bold; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar('TIPDOC')"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-autoComplete [(ngModel)]="cliente.nroDocumentoIdentidad" (keydown.enter)="buscarRuc()" [suggestions]="clientesAutocomplete" (completeMethod)="getClienteAutocomplete($event)"></p-autoComplete>
+                    
+                    <label for="nrodoc">Número de Documento</label>
+                </span>
+            </div>
+            <div class="col-6">
+                <span class="p-float-label">
+                    <input type="text" id="nombre" pInputText [(ngModel)]="cliente.razonSocial"> 
+                    <label for="nombre">Nombre</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <div class="d-flex justify-content-between">
+                    <label *ngIf="cliente?.situacionSunat" [ngClass]="{'habido': cliente?.situacionSunat?.toUpperCase() == 'HABIDO', 'no-habido':cliente?.situacionSunat?.toUpperCase() != 'HABIDO'}" class="col-6 me-1 px-2 py-2 text-center">{{cliente.situacionSunat}}</label>
+                    <label *ngIf="cliente?.estadoSunat" [ngClass]="{'activo': cliente?.estadoSunat?.toUpperCase() == 'ACTIVO', 'no-activo':cliente?.estadoSunat?.toUpperCase() != 'ACTIVO'}" class="col-6 px-2 py-2 text-center">{{cliente.estadoSunat}}</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-dropdown inputId="dep" [autoDisplayFirst]="false" [options]="departamentos" [(ngModel)]="departamentoSeleccionado" optionLabel="nombre" appendTo="body"></p-dropdown>
+                    <label for="dep">Departamento</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-dropdown inputId="prov" [disabled]="!departamentoSeleccionado" [autoDisplayFirst]="false" [options]="departamentoSeleccionado?.provincias" [(ngModel)]="provinciaSeleccionada" optionLabel="nombre" appendTo="body"></p-dropdown>
+                    <label for="prov">Provincia</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-dropdown inputId="dist" [disabled]="!provinciaSeleccionada" [autoDisplayFirst]="false" [options]="provinciaSeleccionada?.distritos" [(ngModel)]="cliente.distrito" optionLabel="nombre" appendTo="body"></p-dropdown>
+                    <label for="dist">Distrito</label>
+                </span>
+            </div>
+            <div class="col-4">
+                <span class="p-float-label">
+                    <input type="text" id="dir" pInputText [(ngModel)]="cliente.direccion"> 
+                    <label for="dir">Dirección</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <div class="row">
+                    <div class="col-10">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="cntct" [autoDisplayFirst]="false" [options]="cliente?.contactos" [(ngModel)]="ordenVenta.contacto" optionLabel="nombreCompleto" appendTo="body"></p-dropdown>
+                            <label for="cntct">Contacto</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <i style="cursor: pointer; color: green; font-weight: bold; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarContacto()"></i>
+                    </div>
+                </div>
+                <div class="row" *ngIf="ordenVenta.contacto">
+                    <div class="col-12">
+                        <div class="row">
+                            <label><b>Celular:</b> {{ordenVenta.contacto.celular}}</label>
+                        </div>
+                        <div class="row">
+                            <label><b>Correo:</b> {{ordenVenta.contacto.correo}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-card>
+    <p-card styleClass="p-card-shadow mt-3">
+        <div class="row" style="height: 0 !important">
+            <div class="col-12" style="height: 0 !important">
+                <label class="contenedor-label"> <b>Datos de la Venta</b> </label>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-2">
+                <div class="row">
+                    <div class="col-10">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="fpago" [autoDisplayFirst]="false" [options]="formasPagoSelect" [(ngModel)]="ordenVenta.formaPago" optionLabel="nombre" appendTo="body"></p-dropdown>
+                            <label for="fpago">Forma de Pago</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <i style="cursor: pointer; color: green; font-weight: bold; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar('TIPFPG')"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="row">
+                    <div class="col-10">
+                        <span class="p-float-label">
+                            <p-dropdown inputId="fpago" [autoDisplayFirst]="false" [options]="saldosPagoSelect" [(ngModel)]="ordenVenta.saldoPago" optionLabel="nombre" appendTo="body"></p-dropdown>
+                            <label for="fpago">Saldo de Pago</label>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <i style="cursor: pointer; color: green; font-weight: bold; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar('TIPSPG')"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-calendar inputId="fecha" [(ngModel)]="ordenVenta.fechaEntregaBase" appendTo="body" dateFormat="dd M yy"></p-calendar>
+                    <label for="fecha">Fecha</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="spago" pInputText [(ngModel)]="ordenVenta.referencia"> 
+                    <label for="spago">Referencia</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <p-dropdown inputId="fpago" [autoDisplayFirst]="false" [options]="monedaSelect" [(ngModel)]="ordenVenta.tipoMoneda" optionLabel="nombre" appendTo="body" (onChange)="setMoneda()"></p-dropdown>
+                    <label for="fpago">Moneda de Pago</label>
+                </span>
+            </div>
+            <div class="col-1" *ngIf="ordenVenta?.tipoMoneda">
+                <span class="p-float-label">
+                    <input type="text" id="spago" pInputText [(ngModel)]="ordenVenta.tipoCambio"> 
+                    <label for="spago">Tipo de Cambio</label>
+                </span>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="spago" pInputText [(ngModel)]="ordenVenta.diasValidez"> 
+                    <label for="spago">Validez (días)</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="spago" pInputText [(ngModel)]="ordenVenta.aniosGarantia"> 
+                    <label for="spago">Garantía (años)</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <span class="p-float-label">
+                    <input type="text" id="spago" pInputText [(ngModel)]="ordenVenta.plazoEntrega"> 
+                    <label for="spago">Plazo de Entrega</label>
+                </span>
+            </div>
+            <div class="col-2">
+                <div class="row">
+                    <div class="col-1"> 
+                        <p-checkbox [(ngModel)]="ordenVenta.indIncluyeIgv" [binary]="true" (onChange)="calcularTotal2()"></p-checkbox>
+                    </div>
+                    <label class="col-5">Incluye Igv</label>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="float-end">
+                    <p-button label="Despachos" styleClass="default-button" (click)="registrarDespachos()" [style]="{width: '90px', height: '26px'}"></p-button>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3" *ngIf="ordenVenta.tipoMoneda">
+            <div class="col-10 no-affect">
+                <div style="--height-table: 45vh">
+                    <p-table [value]="ordenVenta.detalle" responsiveLayout="scroll">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="--header-table: 60px" class="text-center">
+                                    <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-success p-button-text plus-header" (click)="addItem()"></button>
+                                </th>
+                                <th style="--header-table: 40px">N</th>
+                                <th>Producto</th>
+                                <th style="--header-table: 110px">Cant.</th>
+                                <th style="--header-table: 110px">Prec. Unit. ({{ordenVenta.tipoMoneda.simbolo}})</th>
+                                <th style="--header-table: 110px">Desc. (%)</th>
+                                <th style="--header-table: 110px">Desc. ({{ordenVenta.tipoMoneda.simbolo}})</th>
+                                <th style="--header-table: 110px">Prec. Total ({{ordenVenta.tipoMoneda.simbolo}})</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-det let-i="rowIndex">
+                            <tr [ngClass]="{'selected':indFilaEditada == i}">
+                                <td class="text-center">
+                                    <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger btn-body" (click)="quitar(i)"></button>
+                                </td>
+                                <td class="text-center">{{i + 1 | number:'2.0-0'}}</td>
+                                <td>
+                                    <p-autoComplete (onSelect)="asignarPrecio(i, $event)" [(ngModel)]="det.producto" [showEmptyMessage]="true" [suggestions]="listadoProductosAutocomplete" (completeMethod)="autocompleteProducto($event)" field="busqueda" [minLength]="1"></p-autoComplete>
+                                </td>
+                                <td class="text-center">
+                                    <input type="text" pInputText  class="custom-input-table"  [(ngModel)]="det.cantidad" (input)="calcularTotal(i, $event, 1)">
+                                </td>
+                                <td class="text-center">
+                                    <input type="text" pInputText  class="custom-input-table"  [(ngModel)]="det.precioVentaUnitario" (input)="calcularTotal(i, $event, 2)">
+                                </td>
+                                <td class="text-center">
+                                    <input type="text" pInputText  class="custom-input-table"  [(ngModel)]="det.descuentoPorcentaje" (input)="calcularTotal(i, $event, 3)">
+                                </td>
+                                <td class="text-center">
+                                    <input type="text" pInputText  class="custom-input-table"  [(ngModel)]="det.descuentoMonto" (input)="calcularTotal(i, $event, 4)">
+                                </td>
+                                <td class="text-center last-column">{{det.total | number: '1.2-2':'en'}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+            <div class="col-2" *ngIf="ordenVenta.tipoMoneda">
+                <div class="row mt-3">
+                    <div class="col-5">
+                        <b>Sub Total</b>
+                    </div>
+                    <div class="col-1">{{ordenVenta.tipoMoneda.simbolo}}</div>
+                    <div class="col-5">
+                        {{subtotal | number: '1.2-2':'en'}}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">
+                        <b>Descuento Total</b>
+                    </div>
+                    <div class="col-1">{{ordenVenta.tipoMoneda.simbolo}}</div>
+                    <div class="col-5">
+                        {{ordenVenta.descuentoTotal | number: '1.2-2':'en'}}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">
+                        <b>Neto Bruto</b>
+                    </div>
+                    <div class="col-1">{{ordenVenta.tipoMoneda.simbolo}}</div>
+                    <div class="col-5">
+                        {{ordenVenta.subtotal | number: '1.2-2':'en'}}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">
+                        <b>Igv</b>
+                    </div>
+                    <div class="col-1">{{ordenVenta.tipoMoneda.simbolo}}</div>
+                    <div class="col-5">
+                        {{ordenVenta.montoIgv | number: '1.2-2':'en'}}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">
+                        <b>Total</b>
+                    </div>
+                    <div class="col-1">{{ordenVenta.tipoMoneda.simbolo}}</div>
+                    <div class="col-5">
+                        {{ordenVenta.total | number: '1.2-2':'en'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-card>
+</div>

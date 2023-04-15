@@ -4,7 +4,9 @@ import { TipoCambio } from "./tipo-cambio";
 export class Moneda {
     id: number;
     nombre: string;
-    tipoCambio: TipoCambio;
+    abreviatura: string;
+    simbolo:string;
+    tipoCambio: number;
     estado: TablaAuxiliarDetalle;
     idUsuarioCrea: number;
     idUsuarioModifica: number;

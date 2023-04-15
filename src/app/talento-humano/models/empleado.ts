@@ -5,6 +5,8 @@ import { Banco } from "./banco";
 import { EntidadFondos } from "./entidad-fondos";
 import { HijoEmpleado } from "./hijo-empleado";
 import { EmpleadoHorarios } from "./empleado-horarios";
+import { Distrito } from "src/app/ubicacion/models/distrito";
+import { Empresa } from "src/app/gestion/models/empresa";
 
 export class Empleado {
     id: number;
@@ -83,4 +85,7 @@ export class Empleado {
     horaFin: string;
 
     horarios: EmpleadoHorarios[] = [];
+    distrito: Distrito;
+
+    empresaRegimen: Empresa;
 }

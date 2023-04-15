@@ -3,35 +3,37 @@ import { Empresa } from "src/app/gestion/models/empresa";
 import { Cliente } from "src/app/maestros/models/cliente";
 import { ClienteContacto } from "src/app/maestros/models/cliente-contacto";
 import { Moneda } from "src/app/maestros/models/moneda";
-import { TipoCambio } from "src/app/maestros/models/tipo-cambio";
 import { OrdenVentaDetalle } from "./orden-venta-detalle";
 import { Pago } from "./pago";
+import { OrdenVentaDespacho } from "./orden-venta-despacho";
 
 export class OrdenVenta {
     id: number;
     codigo: string;
     empresaPartida: Empresa;
-    indIncluyeIgv: boolean;
+    indIncluyeIgv: boolean = true;
     diasValidez: number;
     aniosGarantia: number;
     plazoEntrega: number;
     cliente: Cliente;
     contacto: ClienteContacto;
-    subtotal: number;
-    montoIgv: number;
-    total: number;
+    subtotal: number = 0;
+    montoIgv: number = 0;
+    total: number = 0;
     estado: TablaAuxiliarDetalle;
     fechaEntregaBase: Date;
     formaPago: TablaAuxiliarDetalle;
     saldoPago: TablaAuxiliarDetalle;
     tipoMoneda: Moneda;
-    descuentoTotal: number;
+    descuentoTotal: number = 0;
     referencia: string;
-    tipoCambio: TipoCambio;
+    tipoCambio: number;
     pagos: Pago[];
-    detalle: OrdenVentaDetalle[];
+    detalle: OrdenVentaDetalle[] = [];
     idUsuarioCrea: number;
     idUsuarioModifica: number;
     fechaCrea: Date;
     fechaModifica: Date;
+
+    despachos: OrdenVentaDespacho[] = [];
 }

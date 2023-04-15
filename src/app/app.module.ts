@@ -44,7 +44,8 @@ import { MaestroEmpleadoComponent } from './talento-humano/maestro-empleado/maes
 import { EmpleadoDetalleComponent } from './talento-humano/empleado-detalle/empleado-detalle.component';
 import { ModalAgregarAuxiliarComponent } from './commons/modal-agregar-auxiliar/modal-agregar-auxiliar.component';
 import { ModalHijosEmpleadoComponent } from './talento-humano/empleado-detalle/modal-hijos-empleado/modal-hijos-empleado.component';
-import {ContextMenuModule} from 'primeng/contextmenu';
+import { ContextMenuModule } from 'primeng/contextmenu';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { ModalRegistroVacacionesComponent } from './talento-humano/maestro-empleado/modal-registro-vacaciones/modal-registro-vacaciones.component';
 import { ModalRegistroPermisosComponent } from './talento-humano/maestro-empleado/modal-registro-permisos/modal-registro-permisos.component';
 import { ModalRegistroCesesComponent } from './talento-humano/maestro-empleado/modal-registro-ceses/modal-registro-ceses.component';
@@ -62,15 +63,25 @@ import { RegistroRequerimientoCompraComponent } from './logistica/registro-reque
 import { ReporteActosComponent } from './seguridad-trabajo/reporte-actos/reporte-actos.component';
 import { RegistroReporteActosComponent } from './seguridad-trabajo/reporte-actos/registro-reporte-actos/registro-reporte-actos.component';
 import { ModalAgregarActoCondicionComponent } from './seguridad-trabajo/reporte-actos/registro-reporte-actos/modal-agregar-acto-condicion/modal-agregar-acto-condicion.component';
+import { ModalAgregarContactoClienteComponent } from './ventas/cotizaciones-detalle/modal-agregar-contacto-cliente/modal-agregar-contacto-cliente.component';
+import { ModalRegistroDespachosComponent } from './ventas/cotizaciones-detalle/modal-registro-despachos/modal-registro-despachos.component';
+import { ModalRegistroProductosDespachosComponent } from './ventas/cotizaciones-detalle/modal-registro-despachos/modal-registro-productos-despachos/modal-registro-productos-despachos.component';
 
 registerLocaleData(localeES, 'es-Pe');
 
 const routes: Routes = [
+  //Ventas
+  { path: 'cotizacion', component: CotizacionesComponent, pathMatch: 'full', data: {title: 'Listado de Cotizaciones', menu: 'Ventas | Listado de Cotizaciones'} },
+  { path: 'cotizacion/detalle', redirectTo: 'cotizacion/detalle/0', pathMatch: 'full', data: {title: 'Detalle de Cotización', menu: 'Ventas | Detalle de Cotización'} },
+  { path: 'cotizacion/detalle/:id', component: CotizacionesDetalleComponent, pathMatch: 'full', data: {title: 'Detalle de Cotización', menu: 'Ventas | Detalle de Cotización'} },
+  
   //Seguridad
   { path: 'seguridad', component: ReporteActosComponent, pathMatch: 'full', data: {title: 'Listado de Reportes', menu: 'Seguridad y salud del trabajo | Listado de Reportes'} },
+  { path: 'seguridad/registro', redirectTo: 'seguridad/registro/0', pathMatch: 'full', data: {title: 'Registro de Reporte', menu: 'Seguridad y salud del trabajo | Registro de Reporte'} },
   { path: 'seguridad/registro/:id', component: RegistroReporteActosComponent, pathMatch: 'full', data: {title: 'Registro de Reporte', menu: 'Seguridad y salud del trabajo | Registro de Reporte'} },
   
   //Talento Humano
+  { path: 'empleado/detalle', redirectTo: 'empleado/detalle/0', pathMatch: 'full', data: {title: 'Detalle de personal', menu: 'Talento Humano | Detalle de personal'} },
   { path: 'empleado/detalle/:id', component: EmpleadoDetalleComponent, pathMatch: 'full', data: {title: 'Detalle de personal', menu: 'Talento Humano | Detalle de personal'} },
   { path: 'empleado', component: MaestroEmpleadoComponent, pathMatch: 'full', data: {title: 'Listado de personal', menu: 'Talento Humano | Listado de personal'}},
 
@@ -112,6 +123,9 @@ const routes: Routes = [
     ReporteActosComponent,
     RegistroReporteActosComponent,
     ModalAgregarActoCondicionComponent,
+    ModalAgregarContactoClienteComponent,
+    ModalRegistroDespachosComponent,
+    ModalRegistroProductosDespachosComponent,
   ],
   imports: [
     CardModule,
@@ -136,6 +150,7 @@ const routes: Routes = [
     CardModule,
     ToastModule,
     TableModule,
+    InputNumberModule,
     ScrollingModule,
     DynamicDialogModule,
     FormsModule,
