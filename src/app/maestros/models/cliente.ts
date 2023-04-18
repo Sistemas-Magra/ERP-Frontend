@@ -22,4 +22,6 @@ export class Cliente {
     fechaCrea: Date;
     fechaModifica: Date;
     contactos: ClienteContacto[] = [];
+
+    autoShow: string;
 }

@@ -36,7 +36,7 @@ export class ModalRegistroProductosDespachosComponent implements OnInit {
 
     if(asig) {
       asig.cantidad = Number(asig.cantidad) + Number(1);
-      asig.precioTotal = asig.cantidad*prodDisp.precioVentaUnitario;
+      asig.precioTotal = asig.cantidad*prodDisp.precioVentaUnitario*1.18;
 
       prodDisp.cantidad -= 1;
     } else {
@@ -44,7 +44,7 @@ export class ModalRegistroProductosDespachosComponent implements OnInit {
       let producto: OrdenVentaDespachoDetalle = new OrdenVentaDespachoDetalle();
   
       producto.producto = prodDisp.producto;
-      producto.precioTotal = prodDisp.precioVentaUnitario*producto.cantidad;
+      producto.precioTotal = prodDisp.precioVentaUnitario*producto.cantidad*1.18;
       producto.maxAsig = Number(prodDisp.cantidad);
 
       this.productosAsignados.push(producto)

@@ -20,6 +20,8 @@ import { ProductoVenta } from '../models/producto-venta';
 import { OrdenVentaDetalle } from '../models/orden-venta-detalle';
 import { ModalRegistroDespachosComponent } from './modal-registro-despachos/modal-registro-despachos.component';
 import { CotizacionService } from '../cotizacion.service';
+import { AuthService } from 'src/app/seguridad/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cotizaciones-detalle',
@@ -59,18 +61,23 @@ export class CotizacionesDetalleComponent implements OnInit {
     private messageService: MessageService,
     private dialogService: DialogService,
     private cotizacionService: CotizacionService,
-    private auxiliarService: AuxiliarService
+    private authService: AuthService,
+    private auxiliarService: AuxiliarService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     
     let fork = forkJoin(
-      [this.auxiliarService.getListSelect('TIPDOC'),
-      this.auxiliarService.getListSelect('TIPFPG'),
-      this.auxiliarService.getListSelect('TIPSPG'),
-      this.monedaService.getAllMonedas(),
-      this.departamentoService.getAll(),
-      this.tipoCambioService.getUltimoTipoCambio()]
+      [
+        this.auxiliarService.getListSelect('TIPDOC'),
+        this.auxiliarService.getListSelect('TIPFPG'),
+        this.auxiliarService.getListSelect('TIPSPG'),
+        this.monedaService.getAllMonedas(),
+        this.departamentoService.getAll(),
+        this.tipoCambioService.getUltimoTipoCambio(),
+        this.auxiliarService.getDetalleById('ESTVEN', 1)
+      ]
     )
 
     fork.subscribe(res => {
@@ -79,12 +86,42 @@ export class CotizacionesDetalleComponent implements OnInit {
       this.saldosPagoSelect = res[2]
       this.monedaSelect = res[3]
       this.departamentos = res[4];
+      this.ordenVenta.estado = res[6];
 
       setTimeout(()=> {
         this.ordenVenta.tipoMoneda = this.monedaSelect[0];
         this.ordenVenta.tipoCambio = this.monedaSelect[0].tipoCambio;
       })
     })
+  }
+
+  asignarCliente(event) {
+    console.log(event)
+
+    let enc: boolean = false;
+
+    for(let i: number = 0; i < this.departamentos.length; i++) {
+      for(let j: number = 0; j < this.departamentos[i].provincias.length; j++) {
+        if(this.departamentos[i].provincias[j].distritos.find(d => d.id == event.distrito.id)) {
+          this.departamentoSeleccionado = this.departamentos[i];
+          setTimeout(() => {
+            this.provinciaSeleccionada = this.departamentos[i].provincias[j];
+            setTimeout(() => {
+              this.cliente = event;
+              this.cliente.nroDocumentoIdentidad = event.nroDocumentoIdentidad;
+              this.cliente.distrito = this.departamentos[i].provincias[j].distritos.find(d => d.id == event.distrito.id);
+
+              enc = true;
+            }, 200)
+          }, 200)
+          break;
+        }
+
+        if(enc) {
+          break;
+        }
+      }
+    }
   }
 
   getClienteAutocomplete(event) {
@@ -201,10 +238,14 @@ export class CotizacionesDetalleComponent implements OnInit {
           this.messageService.add({severity:'warn', summary:'Advertencia', detail: res.mensaje});
           return;
         } else {
+          console.log(res)
+          this.cliente.id = res.id
           this.cliente.razonSocial = res.nombre
           this.cliente.situacionSunat = res.condicion
           this.cliente.estadoSunat = res.estado
           this.cliente.direccion = res.direccion.replace('-', '');
+
+          this.cliente.contactos = res.contactos?res.contactos:[];
 
           let enc: boolean = false;
 
@@ -322,7 +363,7 @@ export class CotizacionesDetalleComponent implements OnInit {
 
     this.ref = this.dialogService.open(ModalRegistroDespachosComponent, {
       data: {
-        despachos: JSON.parse(JSON.stringify(this.ordenVenta.despachos)),
+        despachos: JSON.parse(JSON.stringify(this.ordenVenta.despacho)),
         productos: JSON.parse(JSON.stringify(this.ordenVenta.detalle))
       },
       width: '400px',
@@ -331,7 +372,7 @@ export class CotizacionesDetalleComponent implements OnInit {
 
     this.ref.onClose.subscribe(res => {
       if(res) {
-        this.ordenVenta.despachos = res;
+        this.ordenVenta.despacho = res;
       }
     })
   }
@@ -412,7 +453,7 @@ export class CotizacionesDetalleComponent implements OnInit {
       return;
     }
     
-    if(this.ordenVenta.despachos.length == 0) {
+    if(this.ordenVenta.despacho.length == 0) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar al menos un despacho.'});
       return;
     }
@@ -420,16 +461,17 @@ export class CotizacionesDetalleComponent implements OnInit {
     this.ordenVenta.cliente = this.cliente;
 
     this.ordenVenta.detalle.forEach(p => {
-      this.ordenVenta.despachos.forEach(d => {
+      p.idUsuarioCrea = this.authService.usuario.id;
+      this.ordenVenta.despacho.forEach(d => {
         d.detalle.forEach(dp => {
           if(dp.producto.id == p.producto.id) {
-            dp.precioTotal = dp.cantidad*(p.precioVentaUnitario - p.descuentoMonto);
+            dp.precioTotal = dp.cantidad*(p.precioVentaUnitario - p.descuentoMonto)*1.18;
           }
         })
       })
     })
 
-    this.ordenVenta.despachos.forEach(d => {
+    this.ordenVenta.despacho.forEach(d => {
       let montoDespacho: number = 0
       d.detalle.forEach(dp => {
         montoDespacho += dp.precioTotal;
@@ -438,9 +480,14 @@ export class CotizacionesDetalleComponent implements OnInit {
       d.precioTotal= montoDespacho;
     })
 
+    this.ordenVenta.idUsuarioCrea = this.authService.usuario.id;
+    this.ordenVenta.fechaCrea = new Date();
+
     this.cotizacionService.create(this.ordenVenta).subscribe({
       next: res => {
         this.messageService.add({severity:'success', summary:'Éxito', detail:'Cotización registrada correctamente.'});
+        this.router.navigate(['/cotizacion'])
+
       }, error: err => {
         this.messageService.add({severity:'error', summary:'Error', detail:'Error al registrar cotización.'});
       }

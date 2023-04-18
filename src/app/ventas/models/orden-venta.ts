@@ -35,5 +35,5 @@ export class OrdenVenta {
     fechaCrea: Date;
     fechaModifica: Date;
 
-    despachos: OrdenVentaDespacho[] = [];
+    despacho: OrdenVentaDespacho[] = [];
 }

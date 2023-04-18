@@ -27,11 +27,12 @@
                 </div>
             </div>
             <div class="col-2">
-                <span class="p-float-label">
-                    <p-autoComplete [(ngModel)]="cliente.nroDocumentoIdentidad" (keydown.enter)="buscarRuc()" [suggestions]="clientesAutocomplete" (completeMethod)="getClienteAutocomplete($event)"></p-autoComplete>
-                    
-                    <label for="nrodoc">Número de Documento</label>
-                </span>
+                <div class="row">
+                    <span class="p-float-label">
+                        <input type="text" id="nrodoc" (keydown.enter)="buscarRuc()" pInputText [(ngModel)]="cliente.nroDocumentoIdentidad"> 
+                        <label for="nrodoc">Número de Documento</label>
+                    </span>
+                </div>
             </div>
             <div class="col-6">
                 <span class="p-float-label">
