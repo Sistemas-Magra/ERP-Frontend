@@ -6,7 +6,7 @@ import { TablaAuxiliarDetalle } from 'src/app/auxiliar/models/tabla-auxiliar-det
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ModalAgregarAuxiliarComponent } from 'src/app/commons/modal-agregar-auxiliar/modal-agregar-auxiliar.component';
 import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
-import { forkJoin } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { DepartamentoService } from 'src/app/ubicacion/departamento.service';
 import { Departamento } from 'src/app/ubicacion/models/departamento';
 import { Provincia } from 'src/app/ubicacion/models/provincia';
@@ -21,7 +21,9 @@ import { OrdenVentaDetalle } from '../models/orden-venta-detalle';
 import { ModalRegistroDespachosComponent } from './modal-registro-despachos/modal-registro-despachos.component';
 import { CotizacionService } from '../cotizacion.service';
 import { AuthService } from 'src/app/seguridad/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as FileSaver from 'file-saver'
+
 
 @Component({
   selector: 'app-cotizaciones-detalle',
@@ -52,6 +54,8 @@ export class CotizacionesDetalleComponent implements OnInit {
 
   ref: DynamicDialogRef;
 
+  indPasarVenta: boolean = false;
+
   constructor(
     private clienteService: ClienteService,
     private departamentoService: DepartamentoService,
@@ -63,7 +67,8 @@ export class CotizacionesDetalleComponent implements OnInit {
     private cotizacionService: CotizacionService,
     private authService: AuthService,
     private auxiliarService: AuxiliarService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -76,27 +81,93 @@ export class CotizacionesDetalleComponent implements OnInit {
         this.monedaService.getAllMonedas(),
         this.departamentoService.getAll(),
         this.tipoCambioService.getUltimoTipoCambio(),
-        this.auxiliarService.getDetalleById('ESTVEN', 1)
+        this.auxiliarService.getDetalleById('ESTVEN', 1),
+        this.auxiliarService.getDetalleById('ESTVEN', 2)
       ]
     )
 
-    fork.subscribe(res => {
-      this.documentoIdentidadSelect = res[0]
-      this.formasPagoSelect = res[1]
-      this.saldosPagoSelect = res[2]
-      this.monedaSelect = res[3]
-      this.departamentos = res[4];
-      this.ordenVenta.estado = res[6];
+    fork.subscribe(resp => {
+      this.documentoIdentidadSelect = resp[0]
+      this.formasPagoSelect = resp[1]
+      this.saldosPagoSelect = resp[2]
+      this.monedaSelect = resp[3]
+      this.departamentos = resp[4];
 
-      setTimeout(()=> {
-        this.ordenVenta.tipoMoneda = this.monedaSelect[0];
-        this.ordenVenta.tipoCambio = this.monedaSelect[0].tipoCambio;
+      this.activatedRoute.params.subscribe(param => {
+        this.ordenVenta.id = +param['id'];
+
+        if(!this.ordenVenta.id || this.ordenVenta.id == 0) {
+
+          setTimeout(()=> {
+            this.ordenVenta.tipoMoneda = this.monedaSelect[0];
+            this.ordenVenta.tipoCambio = this.monedaSelect[0].tipoCambio;
+            this.ordenVenta.estado = resp[6];
+          }, 200)
+
+        } else {
+
+          this.cotizacionService.getById(this.ordenVenta.id).subscribe({
+            next: res => {
+
+              let enc: boolean = false;
+
+              for(let i: number = 0; i < this.departamentos.length; i++) {
+                for(let j: number = 0; j < this.departamentos[i].provincias.length; j++) {
+                  if(this.departamentos[i].provincias[j].distritos.find(d => d.id == res.cliente.distrito.id)) {
+                    this.departamentoSeleccionado = this.departamentos[i];
+                    setTimeout(() => {
+                      this.provinciaSeleccionada = this.departamentos[i].provincias[j];
+                      enc = true;
+                    }, 200)
+                    break;
+                  }
+
+                  if(enc) {
+                    break;
+                  }
+                }
+              }
+
+              this.cliente = res.cliente;
+              setTimeout(()=> {
+                this.ordenVenta = res;
+                this.ordenVenta.contacto = this.cliente.contactos.find(cont => cont.id == res.contacto.id);
+                this.subtotal = this.ordenVenta.subtotal + this.ordenVenta.descuentoTotal;
+                this.ordenVenta.estado = resp[7];
+              }, 200)
+
+              this.indPasarVenta = true;
+            }
+          })
+        }
       })
     })
   }
 
-  asignarCliente(event) {
+  showPreview(event, i: number) {
+    if((event.target as HTMLInputElement).files[0]) {
+      this.ordenVenta.detalle[i].planoFile = (event.target as HTMLInputElement).files[0];
+      this.ordenVenta.detalle[i].plano = this.ordenVenta.detalle[i].planoFile.name;
+    }
+  }
+
+  showPreviewEspTec(event, i: number) {
     console.log(event)
+    if((event.target as HTMLInputElement).files[0]) {
+      this.ordenVenta.detalle[i].especificacionesTecnicasFile = (event.target as HTMLInputElement).files[0];
+      this.ordenVenta.detalle[i].especificacionesTecnicas = this.ordenVenta.detalle[i].especificacionesTecnicasFile.name;
+    }
+  }
+
+  downloadFile(i: number) {
+    FileSaver.saveAs(this.ordenVenta.detalle[i].planoFile, this.ordenVenta.detalle[i].plano)
+  }
+
+  downloadFileEspTec(i: number) {
+    FileSaver.saveAs(this.ordenVenta.detalle[i].especificacionesTecnicasFile, this.ordenVenta.detalle[i].especificacionesTecnicas)
+  }
+
+  asignarCliente(event) {
 
     let enc: boolean = false;
 
@@ -403,42 +474,42 @@ export class CotizacionesDetalleComponent implements OnInit {
       return;
     }
     
-    if(!this.ordenVenta.contacto) {
+    if(!this.ordenVenta.contacto && this.indPasarVenta) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar un contacto del cliente.'});
       return;
     }
     
-    if(!this.ordenVenta.formaPago) {
+    if(!this.ordenVenta.formaPago && this.indPasarVenta) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar una forma de pago.'});
       return;
     }
     
-    if(!this.ordenVenta.saldoPago) {
+    if(!this.ordenVenta.saldoPago && this.indPasarVenta) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar un saldo de pago.'});
       return;
     }
     
-    if(!this.ordenVenta.fechaEntregaBase) {
+    if(!this.ordenVenta.fechaEntregaBase && this.indPasarVenta) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar una fecha de entrega.'});
       return;
     }
     
-    if(!this.ordenVenta.tipoMoneda) {
+    if(!this.ordenVenta.tipoMoneda && this.indPasarVenta) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar una moneda de pago.'});
       return;
     }
     
-    if(!this.ordenVenta.diasValidez) {
+    if(!this.ordenVenta.diasValidez && this.indPasarVenta) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar una cantidad de días de validez.'});
       return;
     }
     
-    if(!this.ordenVenta.aniosGarantia) {
+    if(!this.ordenVenta.aniosGarantia && this.indPasarVenta) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar los años de garantía.'});
       return;
     }
     
-    if(!this.ordenVenta.diasValidez) {
+    if(!this.ordenVenta.diasValidez && this.indPasarVenta) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar un plazo de entrega.'});
       return;
     }
@@ -453,8 +524,23 @@ export class CotizacionesDetalleComponent implements OnInit {
       return;
     }
     
-    if(this.ordenVenta.despacho.length == 0) {
+    if(this.ordenVenta.despacho.length == 0 && this.indPasarVenta) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar al menos un despacho.'});
+      return;
+    }
+    
+    if((!this.ordenVenta.nombreTrabajo || this.ordenVenta.nombreTrabajo.length == 0) && this.indPasarVenta) {
+      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar el nombre de la obra.'});
+      return;
+    }
+    
+    if(this.ordenVenta.detalle.find(d => !d.plano || !d.planoFile) && this.indPasarVenta) {
+      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar los planos faltantes de los productos.'});
+      return;
+    }
+    
+    if(this.ordenVenta.detalle.find(d => !d.especificacionesTecnicas || !d.especificacionesTecnicasFile) && this.indPasarVenta) {
+      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar las espcificaciones técnicas faltantes de los productos.'});
       return;
     }
 
@@ -480,18 +566,48 @@ export class CotizacionesDetalleComponent implements OnInit {
       d.precioTotal= montoDespacho;
     })
 
-    this.ordenVenta.idUsuarioCrea = this.authService.usuario.id;
-    this.ordenVenta.fechaCrea = new Date();
+    if(this.indPasarVenta) {
 
-    this.cotizacionService.create(this.ordenVenta).subscribe({
-      next: res => {
-        this.messageService.add({severity:'success', summary:'Éxito', detail:'Cotización registrada correctamente.'});
-        this.router.navigate(['/cotizacion'])
+      this.ordenVenta.idUsuarioModifica = this.authService.usuario.id;
+      this.ordenVenta.fechaModifica = new Date();
 
-      }, error: err => {
-        this.messageService.add({severity:'error', summary:'Error', detail:'Error al registrar cotización.'});
-      }
-    })
+      this.cotizacionService.updateVenta(this.ordenVenta.id, this.ordenVenta).subscribe({
+        next: res => {
+          let observables: Observable<any>[] = [];
+
+          this.ordenVenta.detalle.forEach((d, i) => {
+            observables.push(this.cotizacionService.subirPlanoEspecificaciones(d.planoFile, d.especificacionesTecnicasFile, `${i}`, `${d.id}`))
+          })
+
+          let fork  = forkJoin(observables)
+
+          fork.subscribe({
+            next: res => {
+              if(res[observables.length - 1]) {
+                this.messageService.add({severity:'success', summary:'Éxito', detail:'Venta registrada correctamente.'});
+                this.router.navigate(['/cotizacion'])
+              }
+            }
+          })
+        }
+      })
+
+    } else {
+
+      this.ordenVenta.idUsuarioCrea = this.authService.usuario.id;
+      this.ordenVenta.fechaCrea = new Date();
+  
+      this.cotizacionService.create(this.ordenVenta).subscribe({
+        next: res => {
+          this.messageService.add({severity:'success', summary:'Éxito', detail:'Cotización registrada correctamente.'});
+          this.router.navigate(['/cotizacion'])
+  
+        }, error: err => {
+          this.messageService.add({severity:'error', summary:'Error', detail:'Error al registrar cotización.'});
+        }
+      })
+
+    }
   }
 
 }

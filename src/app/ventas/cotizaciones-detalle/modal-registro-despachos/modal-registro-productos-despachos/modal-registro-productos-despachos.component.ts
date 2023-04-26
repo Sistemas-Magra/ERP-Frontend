@@ -85,6 +85,11 @@ export class ModalRegistroProductosDespachosComponent implements OnInit {
   }
 
   guardar() {
+
+    this.productosAsignados.forEach(pa => {
+      let proddisp = this.productosDisponibles.find(pd => pd.producto.id == pa.producto.id)
+      pa.precioTotal = pa.cantidad*proddisp.precioVentaUnitario*1.18;
+    })
     this.ref.close(this.productosAsignados)
   }
 

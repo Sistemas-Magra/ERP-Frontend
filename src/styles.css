@@ -58,6 +58,7 @@ body {
     background-color: var(--marron-base);
     color: var(--marron-font);
     text-align: center;
+    padding: .3rem .5rem !important;
     border-left: 1px solid white;
     min-width: var(--header-table) !important;
     width: var(--header-table) !important;
@@ -75,6 +76,7 @@ body {
 
 .p-datatable tbody > tr > td > p-dropdown > div {
     max-width: var(--header-table) !important;
+    border: 0 !important;
 }
 
 .p-datatable tbody > tr > td .p-dropdown .p-placeholder {
@@ -159,7 +161,7 @@ body {
 }
 
 .datatable-multiheader .p-datatable-thead > tr:nth-child(2){
-    top: 31px;
+    top: 26px;
     position: -webkit-sticky;
     position: sticky;
     z-index: 4;
@@ -283,6 +285,10 @@ span.p-paginator-current {
 
 .p-dropdown-label {
     padding-top: var(--padding-top-dropdown-label);
+}
+
+.p-dropdown .p-dropdown-label {
+    padding-left: 8px !important;
 }
 
 .p-inputtext, .p-dropdown {
@@ -434,10 +440,6 @@ p-calendar.p-element.p-inputwrapper {
     padding-left: 0;
 }
 
-p-dropdown.p-element.p-inputwrapper {
-    padding-left: 0;
-}
-
 table {
     padding-left: 0px !important;
 }
@@ -471,6 +473,30 @@ td.last-column {
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
-.ng-star-inserted .no-affect {
-    padding-left: 10px !important;
+.ng-star-inserted {
+    padding-left: 0px !important;
+}
+
+.autocomplete-table > .p-autocomplete-input {
+    border: 0 !important;
+    padding-left: 5px !important;
+}
+
+.inputnumber-table > .p-inputnumber > .p-inputnumber-input {
+    border: 0 !important;
+    padding-left: 5px !important;
+}
+
+.p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item {
+    margin: 0 1rem !important;
+    padding: 0.5rem 1rem;
+    border: 0 none;
+    color: #495057;
+    background: transparent;
+    transition: box-shadow 0.2s;
+    border-radius: 0;
+}
+
+.p-contextmenu .p-menuitem-link {
+    padding: 0.75rem 1rem !important;
 }

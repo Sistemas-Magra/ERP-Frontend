@@ -69,3 +69,7 @@
     display:flex !important;
     justify-content: space-around !important;
 }
+
+.input-file>input{ 
+    display: none;
+}

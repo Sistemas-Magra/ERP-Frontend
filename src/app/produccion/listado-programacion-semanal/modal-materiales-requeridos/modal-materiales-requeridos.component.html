@@ -1,0 +1,71 @@
+<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
+    <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
+        <div class="col-11 float-start mt-1"><span>Materiales Requeridos para producción semanal</span></div>
+        <div class="col-1 btn-close-modal" (click)="close()">
+            <div class="float-end">
+                <i class="pi pi-times me-1"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-2">
+            <div class="row">
+                <label class="col-5 col-form-label">Planta: </label>
+                <div class="col-7">
+                    <p-dropdown [options]="plantas" [(ngModel)]="plantaSeleccionada" (onChange)="buscar()" appendTo="body" optionLabel="nombre"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-5 col-form-label">Orden de Trabajo: </label>
+                <div class="col-5">
+                    <div class="row">
+                        <label class="col-5 pe-0 col-form-label">{{anioNroOrden}} - </label>
+                        <div class="col-7 ps-0">
+                            <input type="text" pInputText [(ngModel)]="nroOrdenFilter" (input)="filterNroOrden($event)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-5 col-form-label">Tipo de Poste: </label>
+                <div class="col-7">
+                    <input type="text" pInputText [(ngModel)]="posteFilter" (input)="filterPoste($event)">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12 px-0" style="--height-table:70vh">
+            <p-table [value]="listadoShow" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 100px">Ord. Trab.</th>
+                        <th style="--header-table: 300px">Cliente</th>
+                        <th style="--header-table: 200px">Producto</th>
+                        <th style="--header-table: 100px">Cnt. Prog.</th>
+                        <th style="--header-table: 250px">Material</th>
+                        <th style="--header-table: 150px">Uni. Med.</th>
+                        <th *ngFor="let f of fechas" style="--header-table: 100px">{{f.show}}</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-i="rowIndex">
+                    <tr [ngClass]="{'separator': item.ind == 1}">
+                        <td class="text-center">{{i + 1 | number:'2.0-0'}}</td>
+                        <td class="text-uppercase">{{item.orden_trabajo}}</td>
+                        <td class="text-center">{{item.cliente}}</td>
+                        <td class="text-uppercase">{{item.resumen}}</td>
+                        <td class="text-center">{{item.cantidad_programada}}</td>
+                        <td class="text-uppercase">{{item.ninsumo}}</td>
+                        <td class="text-center">{{item.unimed}}</td>
+                        <td *ngFor="let f of fechas" class="text-center" [ngClass]="{'last-column': fechas.indexOf(f) == fechas.length - 1}">{{item[f.comp] | number:'0.2-2':'en'}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

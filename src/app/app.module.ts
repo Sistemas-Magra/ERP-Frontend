@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import localeES from '@angular/common/locales/es';
-import { LoginComponent } from './seguridad/login/login.component';
+
 import { registerLocaleData } from '@angular/common';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import { HeaderComponent } from './header/header.component';
@@ -66,14 +66,26 @@ import { ModalAgregarActoCondicionComponent } from './seguridad-trabajo/reporte-
 import { ModalAgregarContactoClienteComponent } from './ventas/cotizaciones-detalle/modal-agregar-contacto-cliente/modal-agregar-contacto-cliente.component';
 import { ModalRegistroDespachosComponent } from './ventas/cotizaciones-detalle/modal-registro-despachos/modal-registro-despachos.component';
 import { ModalRegistroProductosDespachosComponent } from './ventas/cotizaciones-detalle/modal-registro-despachos/modal-registro-productos-despachos/modal-registro-productos-despachos.component';
+import { ProgramacionProduccionSemanalComponent } from './produccion/programacion-produccion-semanal/programacion-produccion-semanal.component';
+import { LoginComponent } from './seguridad/login/login.component';
+import { ListadoProgramacionSemanalComponent } from './produccion/listado-programacion-semanal/listado-programacion-semanal.component';
+import { ModalMaterialesRequeridosComponent } from './produccion/listado-programacion-semanal/modal-materiales-requeridos/modal-materiales-requeridos.component';
+import { ModalListadoVersionesComponent } from './produccion/listado-programacion-semanal/modal-listado-versiones/modal-listado-versiones.component';
+import { VistaVersionesComponent } from './produccion/vista-versiones/vista-versiones.component';
 
 registerLocaleData(localeES, 'es-Pe');
 
 const routes: Routes = [
+  //Producción
+  { path: 'produccion/visor/programacion-semanal/version/:id', component: VistaVersionesComponent, pathMatch: 'full', data: {title: 'Programación Semanal', menu: 'Producción | Programación Semanal'} },
+  { path: 'produccion/programacion-semanal/listado', component: ListadoProgramacionSemanalComponent, pathMatch: 'full', data: {title: 'Programación Semanal', menu: 'Producción | Listado Programación Semanal'} },
+  { path: 'produccion/programacion-semanal/detalle', redirectTo: 'produccion/programacion-semanal/detalle/0', pathMatch: 'full', data: {title: 'Programación Semanal', menu: 'Producción | Programación Semanal'} },
+  { path: 'produccion/programacion-semanal/detalle/:id', component: ProgramacionProduccionSemanalComponent, pathMatch: 'full', data: {title: 'Programación Semanal', menu: 'Producción | Programación Semanal'} },
+
   //Ventas
-  { path: 'cotizacion', component: CotizacionesComponent, pathMatch: 'full', data: {title: 'Listado de Cotizaciones', menu: 'Ventas | Listado de Cotizaciones'} },
-  { path: 'cotizacion/detalle', redirectTo: 'cotizacion/detalle/0', pathMatch: 'full', data: {title: 'Detalle de Cotización', menu: 'Ventas | Detalle de Cotización'} },
-  { path: 'cotizacion/detalle/:id', component: CotizacionesDetalleComponent, pathMatch: 'full', data: {title: 'Detalle de Cotización', menu: 'Ventas | Detalle de Cotización'} },
+  { path: 'ventas/cotizacion', component: CotizacionesComponent, pathMatch: 'full', data: {title: 'Listado de Cotizaciones', menu: 'Ventas | Listado de Cotizaciones'} },
+  { path: 'ventas/cotizacion/detalle', redirectTo: 'cotizacion/detalle/0', pathMatch: 'full', data: {title: 'Detalle de Cotización', menu: 'Ventas | Detalle de Cotización'} },
+  { path: 'ventas/cotizacion/detalle/:id', component: CotizacionesDetalleComponent, pathMatch: 'full', data: {title: 'Detalle de Cotización', menu: 'Ventas | Detalle de Cotización'} },
   
   //Seguridad
   { path: 'seguridad', component: ReporteActosComponent, pathMatch: 'full', data: {title: 'Listado de Reportes', menu: 'Seguridad y salud del trabajo | Listado de Reportes'} },
@@ -126,6 +138,11 @@ const routes: Routes = [
     ModalAgregarContactoClienteComponent,
     ModalRegistroDespachosComponent,
     ModalRegistroProductosDespachosComponent,
+    ProgramacionProduccionSemanalComponent,
+    ListadoProgramacionSemanalComponent,
+    ModalMaterialesRequeridosComponent,
+    ModalListadoVersionesComponent,
+    VistaVersionesComponent,
   ],
   imports: [
     CardModule,

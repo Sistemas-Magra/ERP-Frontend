@@ -92,6 +92,13 @@ export class ModalRegistroDespachosComponent implements OnInit {
     this.refModal.onClose.subscribe(res => {
       if(res) {
         this.despachos[i].detalle = res;
+
+        let montoDespacho: number = 0
+        this.despachos[i].detalle.forEach(dp => {
+          montoDespacho = Number(montoDespacho) + Number(dp.precioTotal);
+        })
+
+        this.despachos[i].precioTotal= montoDespacho;
       }
     })
 

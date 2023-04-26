@@ -3,6 +3,7 @@ import { Almacen } from "src/app/logistica/models/almacen";
 
 export class ProductoAlmacen {
     id: number;
+    nombre: string;
     estado: TablaAuxiliarDetalle;
     almacen: Almacen;
     stock: number;

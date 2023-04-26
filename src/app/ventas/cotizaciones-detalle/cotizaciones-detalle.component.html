@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <div class="row mb-3">
+    <div class="row my-3">
         <div class="col-12">
             <div class="float-end">
                 <p-button label="Guardar" styleClass="default-button" (click)="guardar()" [style]="{width: '90px', height: '26px'}"></p-button>
@@ -183,9 +183,17 @@
                 </div>
             </div>
             <div class="col-2">
-                <div class="float-end">
+                <div class="float-end" *ngIf="indPasarVenta">
                     <p-button label="Despachos" styleClass="default-button" (click)="registrarDespachos()" [style]="{width: '90px', height: '26px'}"></p-button>
                 </div>
+            </div>
+        </div>
+        <div class="row mt-3" *ngIf="indPasarVenta">
+            <div class="col-10 no-affect">
+                <span class="p-float-label">
+                    <input type="text" id="obra" pInputText [(ngModel)]="ordenVenta.nombreTrabajo"> 
+                    <label for="obra">Nombre de la Obra</label>
+                </span>
             </div>
         </div>
         <div class="row mt-3" *ngIf="ordenVenta.tipoMoneda">
@@ -194,12 +202,14 @@
                     <p-table [value]="ordenVenta.detalle" responsiveLayout="scroll">
                         <ng-template pTemplate="header">
                             <tr>
-                                <th style="--header-table: 60px" class="text-center">
+                                <th style="--header-table: 60px" class="text-center" *ngIf="!indPasarVenta">
                                     <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-success p-button-text plus-header" (click)="addItem()"></button>
                                 </th>
                                 <th style="--header-table: 40px">N</th>
                                 <th>Producto</th>
-                                <th style="--header-table: 110px">Cant.</th>
+                                <th style="--header-table: 60px">Cant.</th>
+                                <th style="--header-table: 60px" *ngIf="indPasarVenta">Plano</th>
+                                <th style="--header-table: 80px" *ngIf="indPasarVenta">Esp. Tec.</th>
                                 <th style="--header-table: 110px">Prec. Unit. ({{ordenVenta.tipoMoneda.simbolo}})</th>
                                 <th style="--header-table: 110px">Desc. (%)</th>
                                 <th style="--header-table: 110px">Desc. ({{ordenVenta.tipoMoneda.simbolo}})</th>
@@ -208,24 +218,55 @@
                         </ng-template>
                         <ng-template pTemplate="body" let-det let-i="rowIndex">
                             <tr [ngClass]="{'selected':indFilaEditada == i}">
-                                <td class="text-center">
+                                <td class="text-center" *ngIf="!indPasarVenta">
                                     <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger btn-body" (click)="quitar(i)"></button>
                                 </td>
                                 <td class="text-center">{{i + 1 | number:'2.0-0'}}</td>
                                 <td>
-                                    <p-autoComplete (onSelect)="asignarPrecio(i, $event)" [(ngModel)]="det.producto" [showEmptyMessage]="true" [suggestions]="listadoProductosAutocomplete" (completeMethod)="autocompleteProducto($event)" field="busqueda" [minLength]="1"></p-autoComplete>
+                                    <p-autoComplete *ngIf="!indPasarVenta" (onSelect)="asignarPrecio(i, $event)" [(ngModel)]="det.producto" [showEmptyMessage]="true" [suggestions]="listadoProductosAutocomplete" (completeMethod)="autocompleteProducto($event)" field="busqueda" [minLength]="1"></p-autoComplete>
+                                    <label *ngIf="indPasarVenta">{{det.producto.codigo}} - {{det.producto.resumen}}</label>
                                 </td>
                                 <td class="text-center">
-                                    <input type="text" pInputText  class="custom-input-table"  [(ngModel)]="det.cantidad" (input)="calcularTotal(i, $event, 1)">
+                                    <input type="text" *ngIf="!indPasarVenta" pInputText  class="custom-input-table"  [(ngModel)]="det.cantidad" (input)="calcularTotal(i, $event, 1)">
+                                    <label class="text-center" *ngIf="indPasarVenta">{{det.cantidad}}</label>
+                                </td>
+                                <td class="text-center" *ngIf="indPasarVenta">
+                                    <div class="row">
+                                        <div class="input-file col-6">
+                                            <label [for]="'file-input' + i">
+                                                <i style="cursor: pointer;" class="pi pi-paperclip"></i>
+                                            </label>
+                                            <input [id]="'file-input' + i" type="file" (change)="showPreview($event, i)"/>
+                                        </div>
+                                        <div class="input-file col-6">
+                                            <i *ngIf="det.plano" (click)="downloadFile(i)" [title]="det.plano" style="cursor: pointer;" class="pi pi-file"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center" *ngIf="indPasarVenta">
+                                    <div class="row">
+                                        <div class="input-file col-6">
+                                            <label [for]="'file-input-2' + i">
+                                                <i style="cursor: pointer;" class="pi pi-paperclip"></i>
+                                            </label>
+                                            <input [id]="'file-input-2' + i" type="file" (change)="showPreviewEspTec($event, i)"/>
+                                        </div>
+                                        <div class="input-file col-6">
+                                            <i *ngIf="det.especificacionesTecnicas" (click)="downloadFileEspTec(i)" [title]="det.especificacionesTecnicas" style="cursor: pointer;" class="pi pi-file"></i>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td class="text-center">
-                                    <input type="text" pInputText  class="custom-input-table"  [(ngModel)]="det.precioVentaUnitario" (input)="calcularTotal(i, $event, 2)">
+                                    <input type="text" *ngIf="!indPasarVenta" pInputText  class="custom-input-table"  [(ngModel)]="det.precioVentaUnitario" (input)="calcularTotal(i, $event, 2)">
+                                    <label class="text-center" *ngIf="indPasarVenta">{{det.precioVentaUnitario | number: '1.2-2':'en'}}</label>
                                 </td>
                                 <td class="text-center">
-                                    <input type="text" pInputText  class="custom-input-table"  [(ngModel)]="det.descuentoPorcentaje" (input)="calcularTotal(i, $event, 3)">
+                                    <input type="text" *ngIf="!indPasarVenta" pInputText  class="custom-input-table"  [(ngModel)]="det.descuentoPorcentaje" (input)="calcularTotal(i, $event, 3)">
+                                    <label class="text-center" *ngIf="indPasarVenta">{{det.descuentoPorcentaje | number: '1.2-2':'en'}}</label>
                                 </td>
                                 <td class="text-center">
-                                    <input type="text" pInputText  class="custom-input-table"  [(ngModel)]="det.descuentoMonto" (input)="calcularTotal(i, $event, 4)">
+                                    <input type="text" *ngIf="!indPasarVenta" pInputText  class="custom-input-table"  [(ngModel)]="det.descuentoMonto" (input)="calcularTotal(i, $event, 4)">
+                                    <label class="text-center" *ngIf="indPasarVenta">{{det.descuentoMonto | number: '1.2-2':'en'}}</label>
                                 </td>
                                 <td class="text-center last-column">{{det.total | number: '1.2-2':'en'}}</td>
                             </tr>

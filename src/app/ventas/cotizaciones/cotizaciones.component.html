@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-3">
             <div class="row">
                 <label class="col-2 mt-1">Cliente:</label>
@@ -39,6 +39,7 @@
                     <tr>
                         <th style="--header-table: 40px">N</th>
                         <th style="--header-table: 110px">Código</th>
+                        <th style="--header-table: 60px">Estado</th>
                         <th style="--header-table: 80px">Tip. Doc.</th>
                         <th style="--header-table: 80px">Nro. Doc.</th>
                         <th>Cliente</th>
@@ -56,6 +57,7 @@
                     <tr [ngClass]="{'selected':indFilaEditada == i}" [pContextMenuRow]="emp">
                         <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
                         <td class="text-uppercase text-center">{{emp.codigo}}</td>
+                        <td class="text-uppercase text-center" [style]="'background-color: ' + emp.color + ' !important; color: ' + emp.fcolor + ' !important; font-weight: bold'">{{emp.est}}</td>
                         <td class="text-uppercase text-center">{{emp.tdoc}}</td>
                         <td class="text-uppercase">{{emp.ndoc}}</td>
                         <td class="text-uppercase">{{emp.cliente}}</td>

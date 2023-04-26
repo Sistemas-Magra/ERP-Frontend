@@ -1,0 +1,69 @@
+<div class="container-fluid" *ngIf="vigente">
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="float-end">
+                <p-button label="Guardar" styleClass="default-button" (click)="guardar()" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngFor="let p of progSem.detallePlantas; let i = index">
+        <div class="col-12">
+            <div class="row">
+                <label style="font-size: 20px !important; font-weight: bold;">{{p.planta.nombre}}</label>
+            </div>
+            <div class="row mt-3" style="--height-table: 17.8vh">
+                <p-table [value]="p.detalleCliente" responsiveLayout="scroll" class="datatable-multiheader">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th rowspan="2" style="--header-table: 60px" class="text-center">
+                                <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-success p-button-text plus-header" (click)="addProgramacion(i)"></button>
+                            </th>
+                            <th rowspan="2" style="--header-table: 40px">N</th>
+                            <th rowspan="2" style="--header-table: 140px">N° Ord. Trab.</th>
+                            <th rowspan="2" style="--header-table: 140px">Tipo Poste</th>
+                            <th rowspan="2">Cliente</th>
+                            <th rowspan="2" style="--header-table: 100px">Cnt. Sol.</th>
+                            <th rowspan="2" style="--header-table: 100px">Cnt. Pen.</th>
+                            <th rowspan="2" style="--header-table: 100px">Cnt. Prog.</th>
+                            <th rowspan="2" style="--header-table: 100px">Cnt. Mold.</th>
+                            <th rowspan="2" style="--header-table: 100px">Vueltas</th>
+                            <th colspan="6">Semana</th>
+                        </tr>
+                        <tr>
+                            <th style="--header-table: 80px" class="text-uppercase" *ngFor="let d of dias">{{d | date:'dd MMM'}}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-psc let-j="rowIndex">
+                        <tr (click)="selectRow(i, j)" [ngClass]="{'selected': validarFila[i] == j}">
+                            <td class="text-center">
+                                <div class="col-12 botones">
+                                    <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger btn-body" (click)="quitar(i,j)"></button>
+                                </div>
+                            </td>
+                            <td class="text-center">{{j + 1 | number: '2.0-0'}}</td>
+                            <td>
+                                <p-autoComplete appendTo="body" styleClass="autocomplete-table" (onSelect)="setOrdenTrabajoByAutocomplete($event, i, j)" [(ngModel)]="psc.ordenTrabajo" [showEmptyMessage]="true" [suggestions]="ordenesTrabajoAutocomplete" (completeMethod)="autocompleteOrdenTrabajo($event)" field="autocompleteShow" [minLength]="1"></p-autoComplete>
+                            </td>
+                            <td>
+                                <p-dropdown appendTo="body" [autoDisplayFirst]="false" [disabled]="!psc.ordenTrabajo" [options]="psc.ordenTrabajo?.detalle" [(ngModel)]="psc.ordenTrabajoDetalle" (onChange)="[setProducto($event, i, j)]" optionLabel="ordenVentaDetalle.producto.resumen"></p-dropdown>
+                            </td>
+                            <td>{{psc.ordenTrabajo?.ordenVenta?.cliente?.razonSocial}}</td>
+                            <td class="text-center">{{psc.ordenTrabajoDetalle?.ordenVentaDetalle?.cantidad}}</td>   
+                            <td class="text-center">{{psc.cantidadPendiente}}</td>
+                            <td class="text-center">{{psc.cantidadProgramada}}</td>
+                            <td>
+                                <p-inputNumber class="inputnumber-table" [disabled]="!psc.ordenTrabajoDetalle" [(ngModel)]="psc.cantidadMoldes" (onInput)="calcularProgramacion($event, 1, i, j)"></p-inputNumber>
+                            </td>
+                            <td>
+                                <p-inputNumber class="inputnumber-table" [disabled]="!psc.ordenTrabajoDetalle" [(ngModel)]="psc.vueltasMolde" (onInput)="calcularProgramacion($event, 2, i, j)"></p-inputNumber>
+                            </td>
+                            <td class="text-center" *ngFor="let dia of p.detalleCliente[j].detalleDiarios">
+                                {{dia.cantidadProgramada}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>

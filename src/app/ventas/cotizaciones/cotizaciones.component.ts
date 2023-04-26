@@ -34,7 +34,19 @@ export class CotizacionesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.optionsRc = [
+      {label: 'Ver Detalle', icon: 'pi pi-fw pi-eye', command: () => this.irDetalle(this.rowSelected)},
+      {label: 'Registrar Venta', icon: 'pi pi-fw pi-money-bill', command: () => this.irDetalleVenta(this.rowSelected)},
+    ]
     this.filtrar();
+  }
+
+  irDetalle(item: any) {
+    
+  }
+
+  irDetalleVenta(item: any) {
+    this.router.navigate([`/cotizacion/detalle/${item.id}`])
   }
 
   filtrar() {
@@ -53,7 +65,7 @@ export class CotizacionesComponent implements OnInit {
   }
 
   nuevo() {
-    this.router.navigate(['/cotizacion/detalle'])
+    this.router.navigate(['/ventas/cotizacion/detalle/0'])
   }
 
   loadEmpleados(event: LazyLoadEvent) {

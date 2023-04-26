@@ -7,6 +7,10 @@ export class OrdenVentaDetalle {
     descuentoPorcentaje: number;
     descuentoMonto: number;
     total: number;
+    plano: string;
+    planoFile: File;
+    especificacionesTecnicas: string;
+    especificacionesTecnicasFile: File;
     producto: ProductoVenta;
     idUsuarioCrea: number;
     idUsuarioModifica: number;

@@ -1,0 +1,50 @@
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-1">
+            <div class="row">
+                <label class="col-4">Año:</label>
+                <div class="col-8">
+                    <p-inputNumber [(ngModel)]="anioFilter" [format]="false" [maxlength]="4" (keydown.enter)="buscar()"></p-inputNumber>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <label class="col-3">Mes:</label>
+                <div class="col-9">
+                    <p-dropdown (onChange)="buscar()" appendTo="body" placeholder="Selecione" [autoDisplayFirst]="false" [options]="meses" [(ngModel)]="mesFilter" optionLabel="nombre"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="float-end">
+                <p-button label="Nuevo" styleClass="default-button" (click)="nuevo()" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3" style="--height-table: 45vh">
+        <p-table [value]="listado" responsiveLayout="scroll" class="datatable-multiheader" [contextMenu]="cm"[(contextMenuSelection)]="rowSelected">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="--header-table: 40px">N</th>
+                    <th style="--header-table: 140px">Fecha Inicio</th>
+                    <th style="--header-table: 140px">Fecha Fin</th>
+                    <th style="--header-table: 40px">Versión</th>
+                    <th style="--header-table: 140px">Fecha Registro</th>
+                    <th style="--header-table: 140px">Usuario Registro</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-prog let-i="rowIndex">
+                <tr (click)="selectRow(i)" [ngClass]="{'selected': validarFila == i}"[pContextMenuRow]="prog">
+                    <td class="text-center">{{i+1 | number: '2.0-0'}}</td>
+                    <td class="text-center">{{prog.fecha_inicio}}</td>
+                    <td class="text-center">{{prog.fecha_fin}}</td>
+                    <td class="text-center custom-link" (click)="verVersiones(prog.id)">{{prog.version}}</td>
+                    <td class="text-center">{{prog.fecha_crea}}</td>
+                    <td class="text-center text-uppercase">{{prog.username}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+<p-contextMenu #cm [model]="optionsRc"></p-contextMenu>

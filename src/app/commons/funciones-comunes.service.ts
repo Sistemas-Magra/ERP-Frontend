@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -5,7 +6,19 @@ import { Injectable } from '@angular/core';
 })
 export class FuncionesComunesService {
 
-  constructor() { }
+  constructor(
+    private pipe: DatePipe
+  ) { }
+
+  getNextMonday(): string {
+    let fechaLunes: string = this.pipe.transform(new Date(), 'yyyy-MM-dd')
+
+    while((new Date(`${fechaLunes} 00:00:00.000000`)).getDay() != 1 || +fechaLunes.split('-')[2] == (new Date()).getDate()) {
+      fechaLunes = this.agregarDias(fechaLunes, 1);
+    }
+
+    return fechaLunes;
+  }
 
   //Funciones con fechas
   diferenciaHoras(horaInicio: string, horaFin: string): number {
@@ -132,9 +145,12 @@ export class FuncionesComunesService {
     let mes: number = (Math.floor((100*diaAux + 52)/3060) + 2)%12 + 1;
 
     anio = anio + Math.floor((Math.floor((100*diaAux + 52)/3060) + 2)/12);
-    let dia: number = diaAux - Math.floor((Math.floor((100*diaAux + 52)/3060)*306 + 5)/10) + 1
+    let dia: number = diaAux - Math.floor((Math.floor((100*diaAux + 52)/3060)*306 + 5)/10) + 1;
 
-    return `${anio}-${mes}-${dia}`;
+    let diastr: string = (dia < 10)?`0${dia}`: dia.toString();
+    let messtr: string = (mes < 10)?`0${mes}`: mes.toString();
+
+    return `${anio}-${messtr}-${diastr}`;
   }
 
   tiene31dias(mes: number): boolean {

@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <div class="row mt-3" *ngFor="let p of progSem.detallePlantas; let i = index">
+        <div class="col-12">
+            <div class="row">
+                <label style="font-size: 20px !important; font-weight: bold;">{{p.planta.nombre}}</label>
+            </div>
+            <div class="row mt-3" style="--height-table: 17.8vh">
+                <p-table [value]="p.detalleCliente" responsiveLayout="scroll" class="datatable-multiheader">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th rowspan="2" style="--header-table: 40px">N</th>
+                            <th rowspan="2" style="--header-table: 140px">N° Ord. Trab.</th>
+                            <th rowspan="2" style="--header-table: 140px">Tipo Poste</th>
+                            <th rowspan="2">Cliente</th>
+                            <th rowspan="2" style="--header-table: 100px">Cnt. Sol.</th>
+                            <th rowspan="2" style="--header-table: 100px">Cnt. Pen.</th>
+                            <th rowspan="2" style="--header-table: 100px">Cnt. Prog.</th>
+                            <th rowspan="2" style="--header-table: 100px">Cnt. Mold.</th>
+                            <th rowspan="2" style="--header-table: 100px">Vueltas</th>
+                            <th colspan="6">Semana</th>
+                        </tr>
+                        <tr>
+                            <th style="--header-table: 80px" class="text-uppercase" *ngFor="let d of dias">{{d | date:'dd MMM'}}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-psc let-j="rowIndex">
+                        <tr>
+                            <td class="text-center">{{j + 1 | number: '2.0-0'}}</td>
+                            <td>{{psc.ordenTrabajo.codigo}}</td>
+                            <td>{{psc.ordenTrabajoDetalle.ordenVentaDetalle.producto.resumen}}</td>
+                            <td>{{psc.ordenTrabajo?.ordenVenta?.cliente?.razonSocial}}</td>
+                            <td class="text-center">{{psc.ordenTrabajoDetalle?.ordenVentaDetalle?.cantidad}}</td>   
+                            <td class="text-center">{{psc.cantidadPendiente}}</td>
+                            <td class="text-center">{{psc.cantidadProgramada}}</td>
+                            <td class="text-center">{{psc.cantidadMoldes}}</td>
+                            <td class="text-center">{{psc.vueltasMolde}}</td>
+                            <td class="text-center" *ngFor="let dia of p.detalleCliente[j].detalleDiarios">
+                                {{dia.cantidadProgramada}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -20,6 +20,7 @@ export class OrdenVenta {
     subtotal: number = 0;
     montoIgv: number = 0;
     total: number = 0;
+    nombreTrabajo: string;
     estado: TablaAuxiliarDetalle;
     fechaEntregaBase: Date;
     formaPago: TablaAuxiliarDetalle;
