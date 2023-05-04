@@ -21,6 +21,7 @@ export class ModalMaterialesRequeridosComponent implements OnInit {
 
   plantas: Planta[];
   plantaSeleccionada:Planta;
+  materialFilter: string = '';
   posteFilter: string = '';
   nroOrdenFilter: string = '';
   anioNroOrden: string;
@@ -49,15 +50,19 @@ export class ModalMaterialesRequeridosComponent implements OnInit {
   }
 
   filterNroOrden(event) {
-    console.log(event.target.value)
-    this.listadoShow = this.listado.filter(i => i.orden_trabajo.includes(event.target.value) && i.resumen.includes(this.posteFilter))
+    this.listadoShow = this.listado.filter(i => i.orden_trabajo.includes(event.target.value) && i.resumen.includes(this.posteFilter) && i.ninsumo.includes(this.materialFilter))
   }
 
   filterPoste(event) {
-    this.listadoShow = this.listado.filter(i => i.orden_trabajo.includes(this.nroOrdenFilter) && i.resumen.includes(event.target.value))
+    this.listadoShow = this.listado.filter(i => i.orden_trabajo.includes(this.nroOrdenFilter) && i.resumen.includes(event.target.value) && i.ninsumo.includes(this.materialFilter))
+  }
+
+  filterMaterial(event) {
+    this.listadoShow = this.listado.filter(i => i.orden_trabajo.includes(this.nroOrdenFilter) && i.resumen.includes(this.posteFilter) && i.ninsumo.includes(event.target.value))
   }
 
   buscar() {
+    this.fechas = [];
     this.programacionService.getMaterialesProgramados(this.config.data.id, this.plantaSeleccionada.id).subscribe({
       next: res => {
 

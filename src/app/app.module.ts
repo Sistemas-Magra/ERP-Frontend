@@ -72,11 +72,15 @@ import { ListadoProgramacionSemanalComponent } from './produccion/listado-progra
 import { ModalMaterialesRequeridosComponent } from './produccion/listado-programacion-semanal/modal-materiales-requeridos/modal-materiales-requeridos.component';
 import { ModalListadoVersionesComponent } from './produccion/listado-programacion-semanal/modal-listado-versiones/modal-listado-versiones.component';
 import { VistaVersionesComponent } from './produccion/vista-versiones/vista-versiones.component';
+import { RegistroProduccionComponent } from './produccion/registro-produccion/registro-produccion.component';
+import { ListadoRegistroProgramacionProduccionComponent } from './produccion/listado-registro-programacion-produccion/listado-registro-programacion-produccion.component';
 
 registerLocaleData(localeES, 'es-Pe');
 
 const routes: Routes = [
   //Producción
+  { path: 'produccion/registro-produccion-postes/listado', component: ListadoRegistroProgramacionProduccionComponent, pathMatch: 'full', data: {title: 'Registro de Producción de Postes', menu: 'Producción | Registro de Producción de Postes'} },
+  { path: 'produccion/registro-produccion-postes', component: RegistroProduccionComponent, pathMatch: 'full', data: {title: 'Registro de Producción de Postes', menu: 'Producción | Registro de Producción de Postes'} },
   { path: 'produccion/visor/programacion-semanal/version/:id', component: VistaVersionesComponent, pathMatch: 'full', data: {title: 'Programación Semanal', menu: 'Producción | Programación Semanal'} },
   { path: 'produccion/programacion-semanal/listado', component: ListadoProgramacionSemanalComponent, pathMatch: 'full', data: {title: 'Programación Semanal', menu: 'Producción | Listado Programación Semanal'} },
   { path: 'produccion/programacion-semanal/detalle', redirectTo: 'produccion/programacion-semanal/detalle/0', pathMatch: 'full', data: {title: 'Programación Semanal', menu: 'Producción | Programación Semanal'} },
@@ -143,6 +147,8 @@ const routes: Routes = [
     ModalMaterialesRequeridosComponent,
     ModalListadoVersionesComponent,
     VistaVersionesComponent,
+    RegistroProduccionComponent,
+    ListadoRegistroProgramacionProduccionComponent,
   ],
   imports: [
     CardModule,

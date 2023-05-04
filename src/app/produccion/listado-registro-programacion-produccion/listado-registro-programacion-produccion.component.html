@@ -1,0 +1,55 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2">
+            <div class="row">
+                <label class="col-2 col-form-label">Fecha</label>
+                <div class="col-8">
+                    <p-calendar selectionMode="range" [(ngModel)]="fechaFilter" appendTo="body" dateFormat="dd M yy" (onSelect)="buscar()"></p-calendar>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <label class="col-2 col-form-label">Estado</label>
+                <div class="col-6">
+                    <p-dropdown [options]="estadosSelect" [(ngModel)]="estadoFilter" [autoDisplayFirst]="false" placeholder="Seleccione" appendTo="body" optionLabel="nombre" (onChange)="buscar()"></p-dropdown>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="plantas">
+        <div class="col-12 ps-0">
+            <div class="row mt-3" style="--height-table:45vh">
+                <p-table [value]="listadosRegistrosProduccion" responsiveLayout="scroll" class="datatable-multiheader">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th rowspan="2" style="--header-table: 40px">N</th>
+                            <th rowspan="2" style="--header-table: 80px">Fecha</th>
+                            <th rowspan="2" style="--header-table: 40px">Cantidad</th>
+                            <th rowspan="2" style="--header-table: 80px">Estado</th>
+                            <th [attr.colspan]="plantas.length">Plantas</th>
+                        </tr>
+                        <tr>
+                            <th *ngFor="let p of plantas" style="--header-table: 220px">{{p.nombre}}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rp let-i="rowIndex">
+                        <tr>
+                            <td class="text-center">{{ i + 1 | number:'2.0-0' }}</td>
+                            <td class="text-center">{{ rp.fecha }}</td>
+                            <td class="text-center">{{ rp.cantidad | number:'2.0-0' }}</td>
+                            <td class="text-center">{{ rp.est_abrv }}</td>
+                            <td *ngFor="let p of plantas" style="--header-table: 220px" class="text-center" [ngClass]="{'last-column': plantas.indexOf(p) == plantas.length - 1}">
+                                <div class="row my-0" *ngIf="rp[p.nombre + '_ENC']">
+                                    <label class="col-9 col-form-label">{{rp[p.nombre + '_ENC']}}</label>
+                                    <label class="col-1 col-form-label">|</label>
+                                    <label class="col-2 col-form-label">{{rp[p.nombre + '_CANT'] | number:'2.0-0'}}</label>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>

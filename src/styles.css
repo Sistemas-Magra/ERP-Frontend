@@ -122,10 +122,6 @@ body {
     background-color: #E5E5E5 !important;
 }
 
-.ng-star-inserted {
-    padding-left: 5px;
-}
-
 .custom-input-table {
     height: 26px;
     border: 0px !important;
@@ -440,6 +436,14 @@ p-calendar.p-element.p-inputwrapper {
     padding-left: 0;
 }
 
+p-autocomplete.ng-star-inserted {
+    padding-left: 0px !important
+}
+
+.botones.ng-star-inserted > button {
+    padding-left: 0 !important;
+}
+
 table {
     padding-left: 0px !important;
 }
@@ -474,6 +478,10 @@ td.last-column {
 }
 
 .ng-star-inserted {
+    padding-left: 5px !important;
+}
+
+table.ng-star-inserted {
     padding-left: 0px !important;
 }
 
@@ -499,4 +507,8 @@ td.last-column {
 
 .p-contextmenu .p-menuitem-link {
     padding: 0.75rem 1rem !important;
+}
+
+p-dropdownitem.p-element {
+    height: 30px !important
 }

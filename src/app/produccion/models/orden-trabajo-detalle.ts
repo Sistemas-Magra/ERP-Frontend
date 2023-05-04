@@ -5,5 +5,8 @@ export class OrdenTrabajoDetalle {
     ordenVentaDetalle: OrdenVentaDetalle;
     cantidadProducida: number;
     cantidadPendiente: number;
+    cantidadAceptada: number;
+    cantidadRechazada: number;
+    cantidadDespachada: number;
     cantidadProgramadaSemanal: number;
 }

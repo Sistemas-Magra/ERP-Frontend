@@ -4,6 +4,8 @@ import { MateriaPrimaProducto } from "./materia-prima-producto";
 export class ProductoVenta {
     id: number;
     codigo: string;
+    nombre: string;
+    cantidad: number;
     longitud: number;
     cargaTrabajo: number;
     cima: number;

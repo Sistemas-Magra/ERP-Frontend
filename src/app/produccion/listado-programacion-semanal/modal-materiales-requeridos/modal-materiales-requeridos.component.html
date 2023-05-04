@@ -37,6 +37,14 @@
                 </div>
             </div>
         </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-5 col-form-label">Material: </label>
+                <div class="col-7">
+                    <input type="text" pInputText [(ngModel)]="materialFilter" (input)="filterMaterial($event)">
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row mt-3">
         <div class="col-12 px-0" style="--height-table:70vh">
@@ -46,18 +54,18 @@
                         <th style="--header-table: 40px">N</th>
                         <th style="--header-table: 100px">Ord. Trab.</th>
                         <th style="--header-table: 300px">Cliente</th>
-                        <th style="--header-table: 200px">Producto</th>
-                        <th style="--header-table: 100px">Cnt. Prog.</th>
+                        <th style="--header-table: 120px">Producto</th>
+                        <th style="--header-table: 80px">Cnt. Prog.</th>
                         <th style="--header-table: 250px">Material</th>
-                        <th style="--header-table: 150px">Uni. Med.</th>
+                        <th style="--header-table: 100px">Uni. Med.</th>
                         <th *ngFor="let f of fechas" style="--header-table: 100px">{{f.show}}</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-item let-i="rowIndex">
                     <tr [ngClass]="{'separator': item.ind == 1}">
                         <td class="text-center">{{i + 1 | number:'2.0-0'}}</td>
-                        <td class="text-uppercase">{{item.orden_trabajo}}</td>
-                        <td class="text-center">{{item.cliente}}</td>
+                        <td class="text-center">{{item.orden_trabajo}}</td>
+                        <td>{{item.cliente}}</td>
                         <td class="text-uppercase">{{item.resumen}}</td>
                         <td class="text-center">{{item.cantidad_programada}}</td>
                         <td class="text-uppercase">{{item.ninsumo}}</td>
