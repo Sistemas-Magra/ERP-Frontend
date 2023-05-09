@@ -30,10 +30,10 @@
                         </td>
                         <td class="text-center">{{i + 1 | number: '2.0-0': 'en'}}</td>
                         <td>
-                            <p-calendar class="px-0" [(ngModel)]="despacho.fechaPropuesta" appendTo="body" dateFormat="dd M yy" [minDate]="despacho.minDate"></p-calendar>
+                            <p-calendar class="px-0" [(ngModel)]="despacho.fechaPropuesta" appendTo="body" dateFormat="dd M yy" [minDate]="despacho.minDate" [maxDate]="fechaMax"></p-calendar>
                         </td>
                         <td class="text-center">
-                            {{despacho.precioTotal | number: '1.2-2':'en'}}
+                            <p-inputNumber [(ngModel)]="despacho.precioTotal" mode="decimal" [maxFractionDigits]="2" locale="en-US"></p-inputNumber>
                         </td>
                         <td class="text-center custom-link last-column" style="--header-table: 40px" (click)="registrarProductos(i)">{{despacho.detalle.length}}</td>
                     </tr>

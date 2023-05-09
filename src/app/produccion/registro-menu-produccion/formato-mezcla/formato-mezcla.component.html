@@ -1,0 +1,109 @@
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-1">
+            <div class="row">
+                <label  class="col-3 col-form-label">Planta</label> 
+                <div class="col-9">
+                    <p-dropdown [options]="plantas" [(ngModel)]="plantaSeleccionada" placeholder="Seleccione" (onChange)="setListado()" optionLabel="nombre" appendTo="body" [autoDisplayFirst]="false"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label  class="col-4 col-form-label">Responsable</label> 
+                <div class="col-8">
+                    <input type="text" pInputText [(ngModel)]="responsable">
+                </div>
+            </div>
+        </div>
+        <label class="col-4 col-form-label">Fecha: <span class="text-uppercase">{{fecha | date:'dd MMM yyyy'}}</span></label>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12" style="--height-table:85vh">
+            <p-table [value]="listado" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px" class="text-center">
+                            <button pButton pRipple type="button" [disabled]="!plantaSeleccionada || !responsable" (click)="addRegistro()" icon="pi pi-plus" class="p-button-rounded p-button-success p-button-text plus-header"></button>
+                        </th>
+                        <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 100px">Ord. Trab.</th>
+                        <th>Producto</th>
+                        <th style="--header-table: 80px" title="Cantidad de bolsas de cemento usadas">Bls. Cmnt.</th>
+                        <th style="--header-table: 80px" title="Cantidad de carretillas de piedra usadas">Crrt. Piedra</th>
+                        <th style="--header-table: 80px" title="Cantidad de carretillas de arena usadas">Crrt. Arena</th>
+                        <th style="--header-table: 100px" title="Tipo de cemento usado">Tip. Cmnt.</th>
+                        <th style="--header-table: 150px" title="Marca de cemento usado">Marca Cemento</th>
+                        <th style="--header-table: 80px" title="Litros de agua usados">Ltrs. Agua</th>
+                        <th style="--header-table: 150px" title="Relación de agua y cemento usados">Rel. Agua/Cmnt.</th>
+                        <th style="--header-table: 80px" title="Hora de Ingreso">H. Ing.</th>
+                        <th style="--header-table: 80px" title="Hora de Salida">H. Sal.</th>
+                        <th style="--header-table: 80px" title="Tiempo total del proceso en minutos">Tmp. Total</th>
+                        <th style="--header-table: 40px" title="Conforme/No conforme">C/NC</th>
+                        <th style="--header-table: 400px">Observaciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr (click)="asignarFila(i)" [ngClass]="{'selected': validarFila == i}">
+                        <td class="text-center">
+                            <div class="col-12 botones" *ngIf="blnFilaAniadidaSinGuardar && validarFila == i">
+                                <button (click)="guardarMezcla(i)" pButton pRipple type="button" icon="pi pi-save" class="p-button-rounded p-button-primary btn-body"></button>
+                            </div>
+                        </td>
+                        <td class="text-center">{{i+1 | number:'2.0-0'}}</td>
+                        <td class="text-center">
+                            <p-autoComplete *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" (onSelect)="setOrdenTrabajo($event, i)" [(ngModel)]="prod.ordenTrabajo" (completeMethod)="ordenTrabajoAutocomplete($event)" [suggestions]="listadoOrdenesTrabajo" field="codigo" [minLength]="1" appendTo="body" styleClass="autocomplete-table" [showEmptyMessage]="true"></p-autoComplete>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.ordenTrabajo?.codigo}}</label>
+                        </td>
+                        <td>
+                            <p-autoComplete *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" [(ngModel)]="prod.ordenTrabajoDetalle" (completeMethod)="findProducto($event, i)" [suggestions]="prod.listadoAutocompleteAux" field="ordenVentaDetalle.producto.nombre" [minLength]="1" appendTo="body" styleClass="autocomplete-table" [showEmptyMessage]="true"></p-autoComplete>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</label>
+                        </td>
+                        <td class="text-center">
+                            <p-inputNumber *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" class="inputnumber-table" (onInput)="inputCemento($event, i)" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.bolsasCemento"></p-inputNumber>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.bolsasCemento | number:'2.0-0'}}</label>
+                        </td>
+                        <td class="text-center">
+                            <p-inputNumber *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" class="inputnumber-table" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.carretillaPiedra"></p-inputNumber>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.carretillaPiedra | number:'2.0-0'}}</label>
+                        </td>
+                        <td class="text-center">
+                            <p-inputNumber *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" class="inputnumber-table" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.carretillaArena"></p-inputNumber>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.carretillaArena | number:'2.0-0'}}</label>
+                        </td>
+                        <td class="text-center">
+                            <p-inputNumber *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" class="inputnumber-table" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.tipoCemento"></p-inputNumber>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.tipoCemento | number:'2.0-0'}}</label>
+                        </td>
+                        <td>
+                            <input *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.marcaCemento" pInputText class="custom-input-table text-uppercase" type="text">
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label text-uppercase">{{prod.marcaCemento}}</label>
+                        </td>
+                        <td class="text-center">
+                            <p-inputNumber *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" class="inputnumber-table" (onInput)="inputAgua($event, i)" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.litrosAgua"></p-inputNumber>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.litrosAgua | number:'2.0-0'}}</label>
+                        </td>
+                        <td class="text-center">{{prod.relacionAguaCemento | number:'1.2-2':'en'}}</td>
+                        <td class="text-center">
+                            <p-calendar *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" (onSelect)="setHorasHI($event, i)" [(ngModel)]="prod.horaIngreso" appendTo="body" [disabled]="!prod.ordenTrabajoDetalle" [timeOnly]="true" [readonlyInput]="true"></p-calendar>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.horaIngreso | date:'HH:mm'}}</label>
+                        </td>
+                        <td class="text-center">
+                            <p-calendar *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" (onSelect)="setHorasHF($event, i)" [(ngModel)]="prod.horaSalida" appendTo="body" [disabled]="!prod.ordenTrabajoDetalle" [timeOnly]="true" [readonlyInput]="true"></p-calendar>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.horaSalida | date:'HH:mm'}}</label>
+                        </td>
+                        <td class="text-center">{{prod.minutosTotal}}</td>
+                        <td class="text-center">
+                            <p-checkbox *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.indConforme" [binary]="true"></p-checkbox>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.indConforme?'C':'NC'}}</label>
+                        </td>
+                        <td class="last-column">
+                            <input *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" [disabled]="!prod.ordenTrabajoDetalle || prod.indConforme" [(ngModel)]="prod.observacion" pInputText class="custom-input-table" type="text">
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.observacion}}</label>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

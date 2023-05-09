@@ -108,19 +108,6 @@
                 <div class="row">
                     <div class="col-10">
                         <span class="p-float-label">
-                            <p-dropdown inputId="fpago" [autoDisplayFirst]="false" [options]="formasPagoSelect" [(ngModel)]="ordenVenta.formaPago" optionLabel="nombre" appendTo="body"></p-dropdown>
-                            <label for="fpago">Forma de Pago</label>
-                        </span>
-                    </div>
-                    <div class="col-2">
-                        <i style="cursor: pointer; color: green; font-weight: bold; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar('TIPFPG')"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="row">
-                    <div class="col-10">
-                        <span class="p-float-label">
                             <p-dropdown inputId="fpago" [autoDisplayFirst]="false" [options]="saldosPagoSelect" [(ngModel)]="ordenVenta.saldoPago" optionLabel="nombre" appendTo="body"></p-dropdown>
                             <label for="fpago">Saldo de Pago</label>
                         </span>
@@ -156,6 +143,18 @@
             </div>
         </div>
         <div class="row mt-3">
+            <div class="col-2" *ngIf="indPasarVenta">
+                <div class="row ps-1">
+                    <label class="col-3 ms-1 col-form-label">Adelanto:</label>
+                    <div class="col-4">
+                        <p-inputNumber [(ngModel)]="ordenVenta.adelanto" mode="decimal" [maxFractionDigits]="2" locale="en-US" (onInput)="inputAdelanto($event)"></p-inputNumber>
+                    </div>
+                    <div class="col-3">
+                        <p-inputNumber [(ngModel)]="ordenVenta.adelantoPorc" mode="decimal" [maxFractionDigits]="2" locale="en-US" (onInput)="inputAdelantoPorc($event)"></p-inputNumber>
+                    </div>
+                    <label class="col-1 col-form-label">%</label>
+                </div>
+            </div>
             <div class="col-2">
                 <span class="p-float-label">
                     <input type="text" id="spago" pInputText [(ngModel)]="ordenVenta.diasValidez"> 
@@ -176,15 +175,19 @@
             </div>
             <div class="col-2">
                 <div class="row">
-                    <div class="col-1"> 
-                        <p-checkbox [(ngModel)]="ordenVenta.indIncluyeIgv" [binary]="true" (onChange)="calcularTotal2()"></p-checkbox>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-1"> 
+                                <p-checkbox [(ngModel)]="ordenVenta.indIncluyeIgv" [binary]="true" (onChange)="calcularTotal2()"></p-checkbox>
+                            </div>
+                            <label class="col-8">Incluye Igv</label>
+                        </div>
                     </div>
-                    <label class="col-5">Incluye Igv</label>
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="float-end" *ngIf="indPasarVenta">
-                    <p-button label="Despachos" styleClass="default-button" (click)="registrarDespachos()" [style]="{width: '90px', height: '26px'}"></p-button>
+                    <div class="col-6">
+                        <div class="float-end" *ngIf="indPasarVenta">
+                            <p-button label="Despachos" styleClass="default-button" [disabled]="!ordenVenta.adelanto || !ordenVenta.fechaEntregaBase" (click)="registrarDespachos()" [style]="{width: '90px', height: '26px'}"></p-button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -23,7 +23,9 @@ export class OrdenVenta {
     nombreTrabajo: string;
     estado: TablaAuxiliarDetalle;
     fechaEntregaBase: Date;
-    formaPago: TablaAuxiliarDetalle;
+    adelanto: number = 0;
+    adelantoPorc: number = 0;
+    pagoPendiente: number = 0;
     saldoPago: TablaAuxiliarDetalle;
     tipoMoneda: Moneda;
     descuentoTotal: number = 0;

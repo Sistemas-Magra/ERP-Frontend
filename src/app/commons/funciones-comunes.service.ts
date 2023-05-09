@@ -10,6 +10,13 @@ export class FuncionesComunesService {
     private pipe: DatePipe
   ) { }
 
+  getMinutosEntreHoras(horaInicio: string, horaFin: string): number {
+    let minutosHI: number = Number(horaInicio.split(':')[0])*60 + Number(horaInicio.split(':')[1]);
+    let minutosHF: number = Number(horaFin.split(':')[0])*60 + Number(horaFin.split(':')[1]);
+
+    return minutosHF - minutosHI;
+  }
+
   getNextMonday(): string {
     let fechaLunes: string = this.pipe.transform(new Date(), 'yyyy-MM-dd')
 

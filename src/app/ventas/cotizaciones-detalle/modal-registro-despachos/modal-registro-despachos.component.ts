@@ -19,6 +19,10 @@ export class ModalRegistroDespachosComponent implements OnInit {
   productos: OrdenVentaDetalle[];
   productosAux: OrdenVentaDetalle[];
 
+  fechaMax: Date;
+  total: number;
+  adelanto: number;
+
   refModal: DynamicDialogRef;
 
   constructor(
@@ -35,8 +39,12 @@ export class ModalRegistroDespachosComponent implements OnInit {
       d.minDate = new Date(d.minDate);
       d.fechaPropuesta = new Date(d.fechaPropuesta);
     })
-    this.productos = this.config.data.productos;
-    this.despachos = this.config.data.despachos;
+    
+    this.productos  = this.config.data.productos;
+    this.despachos  = this.config.data.despachos;
+    this.fechaMax   = this.config.data.fechaEntrega;
+    this.total   = this.config.data.total;
+    this.adelanto   = this.config.data.adelanto;
 
     this.productosAux = JSON.parse(JSON.stringify(this.productos))
   }
@@ -98,7 +106,7 @@ export class ModalRegistroDespachosComponent implements OnInit {
           montoDespacho = Number(montoDespacho) + Number(dp.precioTotal);
         })
 
-        this.despachos[i].precioTotal= montoDespacho;
+        this.despachos[i].precioTotal= (this.total - this.adelanto)*montoDespacho/this.total;
       }
     })
 

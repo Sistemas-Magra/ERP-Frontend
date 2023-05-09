@@ -45,10 +45,10 @@
                         <th>Cliente</th>
                         <th style="--header-table: 100px">Fecha Ent.</th>
                         <th style="--header-table: 300px">Contacto</th>
-                        <th style="--header-table: 150px">Frm. Pago</th>
                         <th style="--header-table: 150px">Sld. Pago</th>
                         <th style="--header-table: 60px" title="moneda">Mnd.</th>
-                        <th style="--header-table: 80px">Venta</th>
+                        <th style="--header-table: 150px">Venta</th>
+                        <th style="--header-table: 150px">Pendiente</th>
                         <th style="--header-table: 100px" title="Cantidad de Productos">Cnt. Prods.</th>
                         <th style="--header-table: 100px" title="Cantidad de Despachos">Cnt. Desps.</th>
                     </tr>
@@ -63,10 +63,10 @@
                         <td class="text-uppercase">{{emp.cliente}}</td>
                         <td class="text-uppercase text-center">{{emp.fecha_entrega_base | date:'dd MMM yyyy'}}</td>
                         <td class="text-uppercase">{{emp.contacto}}</td>
-                        <td class="text-uppercase" [title]="emp.forma_pago">{{emp.forma_pago_abrv}}</td>
                         <td class="text-uppercase" [title]="emp.saldo_pago">{{emp.saldo_pago_abrv}}</td>
                         <td class="text-center" [title]="emp.nmon">{{emp.snom}}</td>
                         <td class="text-end">{{emp.total | number:'2.2-2':'en'}}</td>
+                        <td class="text-end" [title]="emp.pendiente">{{emp.pendiente | number:'2.2-2':'en'}}</td>
                         <td class="text-center">{{emp.cnt_prods}}</td>
                         <td class="text-center last-column">{{emp.cnt_dsps}}</td>
                     </tr>

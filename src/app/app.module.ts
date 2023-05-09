@@ -74,11 +74,26 @@ import { ModalListadoVersionesComponent } from './produccion/listado-programacio
 import { VistaVersionesComponent } from './produccion/vista-versiones/vista-versiones.component';
 import { RegistroProduccionComponent } from './produccion/registro-produccion/registro-produccion.component';
 import { ListadoRegistroProgramacionProduccionComponent } from './produccion/listado-registro-programacion-produccion/listado-registro-programacion-produccion.component';
+import { ModalPagosComponent } from './ventas/cotizaciones/modal-pagos/modal-pagos.component';
+import { RegistroMenuProduccionComponent } from './produccion/registro-menu-produccion/registro-menu-produccion.component';
+import { FormatoMezclaComponent } from './produccion/registro-menu-produccion/formato-mezcla/formato-mezcla.component';
+import { FormatoEstructuraComponent } from './produccion/registro-menu-produccion/formato-estructura/formato-estructura.component';
+import { FormatoTubosPinesComponent } from './produccion/registro-menu-produccion/formato-tubos-pines/formato-tubos-pines.component';
+import { FormatoCentrifugadoComponent } from './produccion/registro-menu-produccion/formato-centrifugado/formato-centrifugado.component';
+import { FormatoDesencrofadoComponent } from './produccion/registro-menu-produccion/formato-desencrofado/formato-desencrofado.component';
+import { FormatoCuradoComponent } from './produccion/registro-menu-produccion/formato-curado/formato-curado.component';
 
 registerLocaleData(localeES, 'es-Pe');
 
 const routes: Routes = [
   //Producción
+  { path: 'produccion/formato/mezcla', component: FormatoMezclaComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/estructura', component: FormatoEstructuraComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/tubos-pines', component: FormatoTubosPinesComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/centrifugado', component: FormatoCentrifugadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/desencrofado', component: FormatoDesencrofadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/curado', component: FormatoCuradoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/menu-produccion', component: RegistroMenuProduccionComponent, pathMatch: 'full', data: {title: 'Menú de producción', menu: 'Producción | Menú de producción'} },
   { path: 'produccion/registro-produccion-postes/listado', component: ListadoRegistroProgramacionProduccionComponent, pathMatch: 'full', data: {title: 'Registro de Producción de Postes', menu: 'Producción | Registro de Producción de Postes'} },
   { path: 'produccion/registro-produccion-postes', component: RegistroProduccionComponent, pathMatch: 'full', data: {title: 'Registro de Producción de Postes', menu: 'Producción | Registro de Producción de Postes'} },
   { path: 'produccion/visor/programacion-semanal/version/:id', component: VistaVersionesComponent, pathMatch: 'full', data: {title: 'Programación Semanal', menu: 'Producción | Programación Semanal'} },
@@ -149,6 +164,14 @@ const routes: Routes = [
     VistaVersionesComponent,
     RegistroProduccionComponent,
     ListadoRegistroProgramacionProduccionComponent,
+    ModalPagosComponent,
+    RegistroMenuProduccionComponent,
+    FormatoMezclaComponent,
+    FormatoEstructuraComponent,
+    FormatoTubosPinesComponent,
+    FormatoCentrifugadoComponent,
+    FormatoDesencrofadoComponent,
+    FormatoCuradoComponent,
   ],
   imports: [
     CardModule,

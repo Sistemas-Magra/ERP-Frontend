@@ -101,8 +101,8 @@ body {
 .p-datatable-table .p-datatable-tbody > tr > td {
     border-left: 1px solid var(--border-table);
     position: relative;
-    padding: 0.5rem !important;
-    height: 31px;
+    padding: 0.3rem 0.5rem !important;
+    height: 26px;
 }
 
 
@@ -433,7 +433,7 @@ span.p-calendar, span.p-autocomplete {
 }
 
 p-calendar.p-element.p-inputwrapper {
-    padding-left: 0;
+    padding-left: 0 !important;
 }
 
 p-autocomplete.ng-star-inserted {
@@ -465,6 +465,10 @@ td.last-column {
     position: relative;
     -webkit-user-select: none;
     user-select: none;
+}
+
+p-multiselectitem.ng-star-inserted {
+    padding-left: 0!important;
 }
 
 .p-multiselect .p-multiselect-label.p-placeholder {

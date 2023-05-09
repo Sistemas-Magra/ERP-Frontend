@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, catchError, throwError, map } from 'rxjs';
 import { OrdenVenta } from './models/orden-venta';
+import { Pago } from './models/pago';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,30 @@ export class CotizacionService {
   private urlEndPoint: string = environment.apiURL + "api/orden-venta";
 
   constructor(private http: HttpClient) { }
+
+  registrarPagos(id: number, pago: Pago, adelanto: number, total: number, pendiente: number): Observable<any> {
+    let url: string = `${this.urlEndPoint}/registrar-pago/${id}`;
+    
+    if(adelanto) {
+      url += `&ad=${adelanto}`;
+    }
+    
+    if(total) {
+      url += `&to=${total}`;
+    }
+    
+    if(pendiente) {
+      url += `&pen=${pendiente}`;
+    }
+
+    url = url.replace('&', '?');
+
+    return this.http.put(url, pago).pipe(
+      catchError(err => {
+        return throwError(() => {return err});
+      })
+    );
+  }
 
   subirPlanoEspecificaciones(plano: File, esp: File, i: string, ovd: string): Observable<any> {
     let formData = new FormData();

@@ -435,7 +435,10 @@ export class CotizacionesDetalleComponent implements OnInit {
     this.ref = this.dialogService.open(ModalRegistroDespachosComponent, {
       data: {
         despachos: JSON.parse(JSON.stringify(this.ordenVenta.despacho)),
-        productos: JSON.parse(JSON.stringify(this.ordenVenta.detalle))
+        productos: JSON.parse(JSON.stringify(this.ordenVenta.detalle)),
+        fechaEntrega: this.ordenVenta.fechaEntregaBase,
+        adelanto: this.ordenVenta.adelanto,
+        total: this.ordenVenta.total
       },
       width: '400px',
       height: '320px'
@@ -448,7 +451,18 @@ export class CotizacionesDetalleComponent implements OnInit {
     })
   }
 
+  inputAdelanto(event) {
+    let adelanto: number = Number(event.value);
+    this.ordenVenta.adelantoPorc = 100*adelanto/this.ordenVenta.total;
+  }
+
+  inputAdelantoPorc(event) {
+    let adelanto: number = Number(event.value);
+    this.ordenVenta.adelanto = this.ordenVenta.total*adelanto/100;
+  }
+
   guardar() {
+
     if(!this.cliente.tipoDocumentoIdentidad) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar el tipo de documento de identidad del cliente.'});
       return;
@@ -476,11 +490,6 @@ export class CotizacionesDetalleComponent implements OnInit {
     
     if(!this.ordenVenta.contacto && this.indPasarVenta) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar un contacto del cliente.'});
-      return;
-    }
-    
-    if(!this.ordenVenta.formaPago && this.indPasarVenta) {
-      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar una forma de pago.'});
       return;
     }
     
@@ -539,6 +548,11 @@ export class CotizacionesDetalleComponent implements OnInit {
       return;
     }
     
+    if((!this.ordenVenta.adelanto || !this.ordenVenta.adelantoPorc) && this.indPasarVenta) {
+      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar el adelanto de la venta.'});
+      return;
+    }
+    
     if(this.ordenVenta.detalle.find(d => !d.especificacionesTecnicas || !d.especificacionesTecnicasFile) && this.indPasarVenta) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar las espcificaciones técnicas faltantes de los productos.'});
       return;
@@ -546,7 +560,7 @@ export class CotizacionesDetalleComponent implements OnInit {
 
     this.ordenVenta.cliente = this.cliente;
 
-    this.ordenVenta.detalle.forEach(p => {
+    /*this.ordenVenta.detalle.forEach(p => {
       p.idUsuarioCrea = this.authService.usuario.id;
       this.ordenVenta.despacho.forEach(d => {
         d.detalle.forEach(dp => {
@@ -563,13 +577,14 @@ export class CotizacionesDetalleComponent implements OnInit {
         montoDespacho += dp.precioTotal;
       })
 
-      d.precioTotal= montoDespacho;
-    })
+      d.precioTotal=  (this.ordenVenta.total-this.ordenVenta.adelanto)*montoDespacho/this.ordenVenta.adelanto;
+    })*/
 
     if(this.indPasarVenta) {
 
       this.ordenVenta.idUsuarioModifica = this.authService.usuario.id;
       this.ordenVenta.fechaModifica = new Date();
+      this.ordenVenta.pagoPendiente = this.ordenVenta.total;
 
       this.cotizacionService.updateVenta(this.ordenVenta.id, this.ordenVenta).subscribe({
         next: res => {
@@ -585,7 +600,7 @@ export class CotizacionesDetalleComponent implements OnInit {
             next: res => {
               if(res[observables.length - 1]) {
                 this.messageService.add({severity:'success', summary:'Éxito', detail:'Venta registrada correctamente.'});
-                this.router.navigate(['/cotizacion'])
+                this.router.navigate(['/ventas/cotizacion'])
               }
             }
           })
@@ -600,7 +615,7 @@ export class CotizacionesDetalleComponent implements OnInit {
       this.cotizacionService.create(this.ordenVenta).subscribe({
         next: res => {
           this.messageService.add({severity:'success', summary:'Éxito', detail:'Cotización registrada correctamente.'});
-          this.router.navigate(['/cotizacion'])
+          this.router.navigate(['/ventas/cotizacion'])
   
         }, error: err => {
           this.messageService.add({severity:'error', summary:'Error', detail:'Error al registrar cotización.'});

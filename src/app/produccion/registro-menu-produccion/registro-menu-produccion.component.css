@@ -1,0 +1,32 @@
+:host ::ng-deep .p-card-body {
+    padding: 0 !important;
+}
+
+:host ::ng-deep .p-card {
+    border-radius: 7px;
+    overflow: hidden;
+    background-color: rgb(248, 248, 255);
+}
+
+:host ::ng-deep .p-card {
+    animation-duration: .5s;
+    animation-name: slidein;
+}
+
+:host ::ng-deep .p-card:hover {
+    cursor: pointer;
+    border: 1px solid rgb(102, 102, 255) !important;
+    font-weight: bold !important;
+    box-shadow: 3px 3px lightblue !important;
+}
+  
+@keyframes slidein {
+    from {
+        top: 0;
+        height: 0%
+    }
+
+    to {
+        height: calc(100% - 1rem);
+    }
+}
