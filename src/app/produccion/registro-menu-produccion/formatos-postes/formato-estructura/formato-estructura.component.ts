@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Planta } from 'src/app/maestros/models/planta';
 import { PlantaService } from 'src/app/maestros/planta.service';
-import { ProduccionRegistroEstructura } from '../../models/produccion-registro-estructura';
-import { OrdenTrabajo } from '../../models/orden-trabajo';
+import { ProduccionRegistroEstructura } from '../../../models/produccion-registro-estructura';
+import { OrdenTrabajo } from '../../../models/orden-trabajo';
 import { MessageService } from 'primeng/api';
-import { OrdenTrabajoService } from '../../orden-trabajo.service';
-import { FormatosService } from '../../formatos.service';
+import { OrdenTrabajoService } from '../../../orden-trabajo.service';
+import { FormatosService } from '../../../formatos.service';
 import { TablaAuxiliarDetalle } from 'src/app/auxiliar/models/tabla-auxiliar-detalle';
 import { forkJoin } from 'rxjs';
 import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
+import { AuthService } from 'src/app/seguridad/auth.service';
+import { UsuarioService } from 'src/app/seguridad/usuario.service';
+import { UsuarioPlanta } from 'src/app/seguridad/models/usuario-planta';
 
 @Component({
   selector: 'app-formato-estructura',
@@ -16,6 +19,8 @@ import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
   styleUrls: ['./formato-estructura.component.css']
 })
 export class FormatoEstructuraComponent implements OnInit {
+
+  usuarioPlanta: UsuarioPlanta;
 
   listado: ProduccionRegistroEstructura[] = [];
 
@@ -28,9 +33,6 @@ export class FormatoEstructuraComponent implements OnInit {
   fecha: Date = new Date();
   responsable: string;
 
-  plantas: Planta[];
-  plantaSeleccionada: Planta;
-
   listadoOrdenesTrabajo: OrdenTrabajo[];
 
   validarFila: number = -1;
@@ -42,11 +44,13 @@ export class FormatoEstructuraComponent implements OnInit {
     private ordenTrabajoService: OrdenTrabajoService,
     private auxiliarService: AuxiliarService,
     private formatoService: FormatosService,
+    private authService: AuthService,
+    private usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
     let fork = forkJoin([
-      this.plantaService.getPlantasActivas(),
+      this.usuarioService.getUsuarioPlantaByUsuarioId(this.authService.usuario.id),
       this.auxiliarService.getListSelect('MEDVAR'),
       this.auxiliarService.getListSelect('MEDANI'),
       this.auxiliarService.getListSelect('NUMESP'),
@@ -56,19 +60,22 @@ export class FormatoEstructuraComponent implements OnInit {
 
     fork.subscribe({
       next: res => {
-        this.plantas = res[0];
+        this.usuarioPlanta = res[0];
+        this.responsable = this.authService.usuario.nombreCompleto;
 
         this.listadoFierroEstructura = res[1]
         this.listadoFierroAnillo = res[2]
         this.listadoAlambreEspiral = res[3]
         this.listadoAlambreAmarre = res[4]
-        this.listadoMedidaRoldana = res[5]
+        this.listadoMedidaRoldana = res[5];
+
+        this.setListado();
       }
     })
   }
 
   setListado() {
-    this.formatoService.getListadoFormato(this.plantaSeleccionada.id, 2).subscribe({
+    this.formatoService.getListadoFormato(this.usuarioPlanta.planta.id, 2).subscribe({
       next: res => {
         if(res.listado) {
           let listadoAux: ProduccionRegistroEstructura[] = res.listado;
@@ -214,7 +221,7 @@ export class FormatoEstructuraComponent implements OnInit {
     estructura.diametroFierroVarillas = JSON.stringify(estructura.listadoDiametrosVarillaAux);
     estructura.cantRoldana = JSON.stringify(estructura.listadoDiametrosRoldanaAux);
 
-    this.formatoService.saveRegistroEstructura(this.plantaSeleccionada.id, estructura).subscribe({
+    this.formatoService.saveRegistroEstructura(this.usuarioPlanta.planta.id, estructura).subscribe({
       next: res => {
         this.messageService.add({severity:'success', summary:'Éxito', detail:'Registro de mezcla guardado correctamente.'});
         this.blnFilaAniadidaSinGuardar = false;

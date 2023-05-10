@@ -1,0 +1,38 @@
+:host ::ng-deep .p-button.p-button-icon-only.p-button-rounded.plus-header {
+    border-radius: 50%;
+    height: 15px;
+    width: 15px;
+}
+
+:host ::ng-deep .p-button.p-button-icon-only.p-button-rounded.btn-body {
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+}
+
+:host ::ng-deep .p-button.p-button-success.p-button-text, .p-buttonset.p-button-success > .p-button.p-button-text, .p-splitbutton.p-button-success > .p-button.p-button-text {
+    background-color: transparent;
+    color: white;
+    border-color: transparent;
+}
+
+:host ::ng-deep .p-button.p-button-success.p-button-text, .p-buttonset.p-button-success > .p-button.p-button-text, .p-splitbutton.p-button-success > .p-button.p-button-text:hover {
+    background-color: transparent;
+    color: white !important;
+    border-color: transparent;
+}
+
+:host ::ng-deep .p-button.p-button-success.p-button-text, .p-buttonset.p-button-success > .p-button.p-button-text, .p-splitbutton.p-button-success > .p-button.p-button-text:focus {
+    background-color: transparent;
+    color: white !important;
+    border-color: transparent;
+}
+
+:host ::ng-deep input.ng-tns-c79-3.p-autocomplete-input.p-inputtext.p-component.ng-star-inserted {
+    background-color: var(--fondo-editable);
+    border-color: transparent;
+}
+
+:host ::ng-deep p-dropdown.ng-star-inserted {
+    padding-left: 0px !important;
+}

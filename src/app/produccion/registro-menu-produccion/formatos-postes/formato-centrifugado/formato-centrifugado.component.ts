@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { Planta } from 'src/app/maestros/models/planta';
-import { PlantaService } from 'src/app/maestros/planta.service';
-import { ProduccionRegistroCentrifugado } from '../../models/produccion-registro-centrifugado';
-import { OrdenTrabajoService } from '../../orden-trabajo.service';
+import { ProduccionRegistroCentrifugado } from '../../../models/produccion-registro-centrifugado';
+import { OrdenTrabajoService } from '../../../orden-trabajo.service';
 import { MessageService } from 'primeng/api';
-import { OrdenTrabajo } from '../../models/orden-trabajo';
-import { FormatosService } from '../../formatos.service';
+import { OrdenTrabajo } from '../../../models/orden-trabajo';
+import { FormatosService } from '../../../formatos.service';
 import { TablaAuxiliarDetalle } from 'src/app/auxiliar/models/tabla-auxiliar-detalle';
 import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
 import { FuncionesComunesService } from 'src/app/commons/funciones-comunes.service';
+import { forkJoin } from 'rxjs'
+import { AuthService } from 'src/app/seguridad/auth.service';
+import { UsuarioService } from 'src/app/seguridad/usuario.service';
+import { UsuarioPlanta } from 'src/app/seguridad/models/usuario-planta';
 
 @Component({
   selector: 'app-formato-centrifugado',
@@ -18,13 +20,12 @@ import { FuncionesComunesService } from 'src/app/commons/funciones-comunes.servi
 })
 export class FormatoCentrifugadoComponent implements OnInit {
 
+  usuarioPlanta: UsuarioPlanta;
+
   listado: ProduccionRegistroCentrifugado[] = [];
 
   fecha: Date = new Date();
   responsable: string;
-
-  plantas: Planta[];
-  plantaSeleccionada: Planta;
 
   listadoOrdenesTrabajo: OrdenTrabajo[];
 
@@ -35,39 +36,38 @@ export class FormatoCentrifugadoComponent implements OnInit {
   blnFilaAniadidaSinGuardar: boolean = false;
 
   constructor(
-    private plantaService: PlantaService,
     private messageService: MessageService,
     private ordenTrabajoService: OrdenTrabajoService,
     private auxiliarService: AuxiliarService,
     private formatoService: FormatosService,
     private funcionesComunes: FuncionesComunesService,
-    private pipe: DatePipe
+    private pipe: DatePipe,
+    private authService: AuthService,
+    private usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
 
-    this.auxiliarService.getListSelect('ESTMAQ').subscribe({
-      next: res => {
-        this.estadoMaquinaSelect = res;
-      }
-    })
+    let fork = forkJoin([
+      this.auxiliarService.getListSelect('ESTMAQ'),
+      this.auxiliarService.getListSelect('VELCEN'),
+      this.usuarioService.getUsuarioPlantaByUsuarioId(this.authService.usuario.id)
+    ])
 
-    this.auxiliarService.getListSelect('VELCEN').subscribe({
+    fork.subscribe({
       next: res => {
-        this.velocidadMaquinaSelect = res;
-      }
-    })
-
-    this.plantaService.getPlantasActivas().subscribe({
-      next: res => {
-        this.plantas = res;
+        this.estadoMaquinaSelect = res[0];
+        this.velocidadMaquinaSelect = res[1];
+        this.usuarioPlanta = res[2];
+        this.responsable = this.authService.usuario.nombreCompleto;
+        this.setListado();
       }
     })
 
   }
 
   setListado() {
-    this.formatoService.getListadoFormato(this.plantaSeleccionada.id, 4).subscribe({
+    this.formatoService.getListadoFormato(this.usuarioPlanta.planta.id, 4).subscribe({
       next: res => {
         if(res.listado) {
           let list: ProduccionRegistroCentrifugado[];
@@ -216,7 +216,7 @@ export class FormatoCentrifugadoComponent implements OnInit {
 
     cent.tiempoVelocidades = JSON.stringify(cent.listadoVelocidades)
 
-    this.formatoService.saveRegistroCentrifugado(this.plantaSeleccionada.id, cent).subscribe({
+    this.formatoService.saveRegistroCentrifugado(this.usuarioPlanta.planta.id, cent).subscribe({
       next: res => {
         this.messageService.add({severity:'success', summary:'Éxito', detail:'Registro de centrifugado guardado correctamente.'});
         this.blnFilaAniadidaSinGuardar = false;

@@ -32,12 +32,10 @@
                         <th rowspan="2" style="--header-table: 80px">Hora</th>
                         <th rowspan="2" style="--header-table: 80px" title="Cantidad de varillas usadas">Cnt. Var.</th>
                         <th [attr.colspan]="listadoFierroEstructura.length" style="--header-table: 80px" title="Cantidad de varillas por diametro">Diam. Var.</th>
-                        <th rowspan="2" style="--header-table: 80px" title="Cantidad de anillos usadis">Cnt. An.</th>
-                        <th rowspan="2" style="--header-table: 80px" title="Diáetro de anillo usado">Diam. Anll.</th>
-                        <th rowspan="2" style="--header-table: 90px" title="Número de alambre en la espiral">Alm. Esp.</th>
                         <th rowspan="2" style="--header-table: 90px" title="Número de alambre en el amarre">Alm. Amrr.</th>
                         <th [attr.colspan]="listadoMedidaRoldana.length" style="--header-table: 80px" title="Cantidad de roldanas por diametro">Diam. Rol.</th>
                         <th rowspan="2" style="--header-table: 80px" title="Cantidad de electrodos usados">Cnt. Elct.</th>
+                        <th rowspan="2" style="--header-table: 80px" title="Cantidad de accesorios armados">Cantidad</th>
                         <th rowspan="2" style="--header-table: 40px" title="Cantidad roldana">C/NC</th>
                         <th rowspan="2" style="--header-table: 300px" title="Cantidad roldana">Observación</th>
                     </tr>
@@ -63,25 +61,13 @@
                             <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</label>
                         </td>
                         <td class="text-center">
-                            <p-calendar *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [(ngModel)]="prod.horaIngreso" appendTo="body" [disabled]="!prod.ordenTrabajoDetalle" [timeOnly]="true" [readonlyInput]="true"></p-calendar>
-                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.horaIngreso | date:'HH:mm'}}</label>
+                            <p-calendar *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [(ngModel)]="prod.hora" appendTo="body" [disabled]="!prod.ordenTrabajoDetalle" [timeOnly]="true" [readonlyInput]="true"></p-calendar>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.hora | date:'HH:mm'}}</label>
                         </td>
                         <td class="text-center">{{prod.cantVarillas | number:'2.0-0'}}</td>
                         <td class="text-center" *ngFor="let vari of prod.listadoDiametrosVarillaAux; let j = index">
                             <p-inputNumber *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" (onInput)="sumCantVarillas($event, i, j)" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="vari.cantidad" class="inputnumber-table"></p-inputNumber>
                             <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{vari.cantidad}}</label>
-                        </td>
-                        <td class="text-center">
-                            <p-inputNumber *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.cantAnillos" class="inputnumber-table"></p-inputNumber>
-                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.cantAnillos | number:'2.0-0'}}</label>
-                        </td>
-                        <td class="text-center" style="--header-table: 90px">
-                            <p-dropdown *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle" [options]="listadoFierroAnillo" [(ngModel)]="prod.diametroFierroAnillos" optionLabel="abreviatura" placeholder="Seleccione" appendTo="body" [autoDisplayFirst]="false"></p-dropdown>
-                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.diametroFierroAnillos.abreviatura}}</label>
-                        </td>
-                        <td class="text-center" style="--header-table: 90px">
-                            <p-dropdown *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle" [options]="listadoAlambreEspiral" [(ngModel)]="prod.nroAlambreEspiral" optionLabel="abreviatura" placeholder="Seleccione" appendTo="body" [autoDisplayFirst]="false"></p-dropdown>
-                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.nroAlambreEspiral.abreviatura}}</label>
                         </td>
                         <td class="text-center" style="--header-table: 90px">
                             <p-dropdown *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle" [options]="listadoAlambreAmarre" [(ngModel)]="prod.nroAlambreAmarre" optionLabel="abreviatura" placeholder="Seleccione" appendTo="body" [autoDisplayFirst]="false"></p-dropdown>
@@ -94,6 +80,10 @@
                         <td class="text-center">
                             <p-inputNumber *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.cantElectrodos" class="inputnumber-table"></p-inputNumber>
                             <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.cantElectrodos | number:'2.0-0'}}</label>
+                        </td>
+                        <td class="text-center">
+                            <p-inputNumber *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.cantidad" class="inputnumber-table"></p-inputNumber>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.cantidad | number:'2.0-0'}}</label>
                         </td>
                         <td class="text-center">
                             <p-checkbox *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.indConforme" [binary]="true"></p-checkbox>

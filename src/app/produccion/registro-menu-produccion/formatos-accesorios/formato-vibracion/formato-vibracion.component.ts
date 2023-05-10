@@ -1,23 +1,24 @@
 import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
+import { TablaAuxiliarDetalle } from 'src/app/auxiliar/models/tabla-auxiliar-detalle';
 import { Planta } from 'src/app/maestros/models/planta';
 import { PlantaService } from 'src/app/maestros/planta.service';
-import { ProduccionRegistroTubosPines } from '../../models/produccion-registro-tubos-pines';
-import { MessageService } from 'primeng/api';
-import { OrdenTrabajoService } from '../../orden-trabajo.service';
-import { OrdenTrabajo } from '../../models/orden-trabajo';
-import { FormatosService } from '../../formatos.service';
-import { TablaAuxiliarDetalle } from 'src/app/auxiliar/models/tabla-auxiliar-detalle';
-import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
-import { forkJoin } from 'rxjs';
+import { FormatosService } from 'src/app/produccion/formatos.service';
+import { OrdenTrabajo } from 'src/app/produccion/models/orden-trabajo';
+import { ProduccionAccesorioRegistroVibracion } from 'src/app/produccion/models/produccion-accesorio-registro-vibracion';
+import { OrdenTrabajoService } from 'src/app/produccion/orden-trabajo.service';
+import { DatePipe } from '@angular/common';
+import { FuncionesComunesService } from 'src/app/commons/funciones-comunes.service';
 
 @Component({
-  selector: 'app-formato-tubos-pines',
-  templateUrl: './formato-tubos-pines.component.html',
-  styleUrls: ['./formato-tubos-pines.component.css']
+  selector: 'app-formato-vibracion',
+  templateUrl: './formato-vibracion.component.html',
+  styleUrls: ['./formato-vibracion.component.css']
 })
-export class FormatoTubosPinesComponent implements OnInit {
+export class FormatoVibracionComponent implements OnInit {
 
-  listado: ProduccionRegistroTubosPines[] = [];
+  listado: ProduccionAccesorioRegistroVibracion[] = [];
 
   fecha: Date = new Date();
   responsable: string;
@@ -26,9 +27,7 @@ export class FormatoTubosPinesComponent implements OnInit {
   plantaSeleccionada: Planta;
 
   listadoOrdenesTrabajo: OrdenTrabajo[];
-
-  listaMedidaPines: TablaAuxiliarDetalle[];
-  listaMedidaPistones: TablaAuxiliarDetalle[]
+  listadoEstadoMaquina: TablaAuxiliarDetalle[];
 
   validarFila: number = -1;
   blnFilaAniadidaSinGuardar: boolean = false;
@@ -39,27 +38,26 @@ export class FormatoTubosPinesComponent implements OnInit {
     private ordenTrabajoService: OrdenTrabajoService,
     private auxiliarService: AuxiliarService,
     private formatoService: FormatosService,
+    private pipe: DatePipe,
+    private funcionesComunes: FuncionesComunesService
   ) { }
 
   ngOnInit(): void {
-    let fork = forkJoin([
-      this.plantaService.getPlantasActivas(),
-      this.auxiliarService.getListSelect('MEDPIS'),
-      this.auxiliarService.getListSelect('MEDPIN'),
-    ])
-
-    fork.subscribe({
+    this.auxiliarService.getListSelect('ESTMQA').subscribe({
       next: res => {
-        this.plantas = res[0];
+        this.listadoEstadoMaquina = res;
+      }
+    })
 
-        this.listaMedidaPistones = res[1];
-        this.listaMedidaPines = res[2];
+    this.plantaService.getPlantasActivas().subscribe({
+      next: res => {
+        this.plantas = res;
       }
     })
   }
 
   setListado() {
-    this.formatoService.getListadoFormato(this.plantaSeleccionada.id, 3).subscribe({
+    this.formatoService.getListadoFormato(this.plantaSeleccionada.id, 9).subscribe({
       next: res => {
         if(res.listado) {
           this.listado = res.listado;
@@ -77,6 +75,24 @@ export class FormatoTubosPinesComponent implements OnInit {
     })
   }
 
+  setHorasHI(event, i: number) {
+    this.listado[i].horaIngreso = event;
+    let horaIngresoStr: string = this.pipe.transform(this.listado[i].horaIngreso, 'HH:mm');
+
+    if(this.listado[i].horaSalida) {
+      this.listado[i].minutosTotal = this.funcionesComunes.getMinutosEntreHoras(horaIngresoStr, this.pipe.transform(this.listado[i].horaSalida, 'HH:mm'));
+    }
+  }
+
+  setHorasHF(event, i: number) {
+    this.listado[i].horaSalida = event;
+    let horaSalidaStr: string = this.pipe.transform(this.listado[i].horaSalida, 'HH:mm');
+
+    if(this.listado[i].horaIngreso) {
+      this.listado[i].minutosTotal = this.funcionesComunes.getMinutosEntreHoras(this.pipe.transform(this.listado[i].horaIngreso, 'HH:mm'), horaSalidaStr);
+    }
+  }
+
   asignarFila(i: number) {
     if(this.blnFilaAniadidaSinGuardar) {
       return;
@@ -90,8 +106,8 @@ export class FormatoTubosPinesComponent implements OnInit {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe terminar de guardar el registro para añadir otro.'})
       return;
     }
-
-    let mezcla: ProduccionRegistroTubosPines = new ProduccionRegistroTubosPines();
+    
+    let mezcla: ProduccionAccesorioRegistroVibracion = new ProduccionAccesorioRegistroVibracion();
 
     mezcla.indConforme = true;
     mezcla.responsable = this.responsable;
@@ -126,51 +142,31 @@ export class FormatoTubosPinesComponent implements OnInit {
   }
 
   guardar(i) {
-    let tubosPines: ProduccionRegistroTubosPines = this.listado[i];
+    let vib: ProduccionAccesorioRegistroVibracion = this.listado[i];
 
-    if(!tubosPines.ordenTrabajo || typeof(tubosPines.ordenTrabajo) == "string") {
+    if(!vib.ordenTrabajo || typeof(vib.ordenTrabajo) == "string") {
       this.messageService.add({severity:'warn', summary:'Error', detail: 'Debe seleccionar una orden de trabajo del autocompletado.'})
       return;
     }
 
-    if(!tubosPines.ordenTrabajoDetalle || typeof(tubosPines.ordenTrabajoDetalle) == "string") {
+    if(!vib.ordenTrabajoDetalle || typeof(vib.ordenTrabajoDetalle) == "string") {
       this.messageService.add({severity:'warn', summary:'Error', detail: 'Debe seleccionar un producto del autocompletado.'})
       return;
     }
 
-    if(!tubosPines.cantidadPines || tubosPines.cantidadPines == 0) {
-      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar la cantidad de pines usados.'});
+    if(!vib.estadoMaquina) {
+      this.messageService.add({severity:'warn', summary:'Error', detail: 'Debe seleccionar el estado de la máquina.'})
       return;
     }
 
-    if(!tubosPines.longitudPines || tubosPines.longitudPines == 0) {
-      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar la longitud de los pines usados.'});
+    if(!vib.indConforme && (!vib.observacion || vib.observacion.length == 0)) {
+      this.messageService.add({severity:'warn', summary:'Error', detail: 'Para una salida inconforme debe ingresar una observación.'})
       return;
     }
 
-    if(!tubosPines.medidaDiametroPines) {
-      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar el diámetro de los pines usados.'});
-      return;
-    }
-
-    if(!tubosPines.cantidadPistones || tubosPines.cantidadPistones == 0) {
-      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar la cantidad de pistones usados.'});
-      return;
-    }
-
-    if(!tubosPines.longitudPistones || tubosPines.longitudPistones == 0) {
-      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar la longitud de los pistones usados.'});
-      return;
-    }
-
-    if(!tubosPines.medidaDiametroPistones) {
-      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar el diámetro de los pistones usados.'});
-      return;
-    }
-
-    this.formatoService.saveRegistroTubosPines(this.plantaSeleccionada.id, tubosPines).subscribe({
+    this.formatoService.saveRegistroVibracionAccesorio(this.plantaSeleccionada.id, vib).subscribe({
       next: res => {
-        this.messageService.add({severity:'success', summary:'Éxito', detail:'Registro de tubos y pines guardado correctamente.'});
+        this.messageService.add({severity:'success', summary:'Éxito', detail:'Registro de curado guardado correctamente.'});
         this.blnFilaAniadidaSinGuardar = false;
         this.validarFila = -1;
         this.setListado()

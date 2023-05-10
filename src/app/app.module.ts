@@ -76,23 +76,31 @@ import { RegistroProduccionComponent } from './produccion/registro-produccion/re
 import { ListadoRegistroProgramacionProduccionComponent } from './produccion/listado-registro-programacion-produccion/listado-registro-programacion-produccion.component';
 import { ModalPagosComponent } from './ventas/cotizaciones/modal-pagos/modal-pagos.component';
 import { RegistroMenuProduccionComponent } from './produccion/registro-menu-produccion/registro-menu-produccion.component';
-import { FormatoMezclaComponent } from './produccion/registro-menu-produccion/formato-mezcla/formato-mezcla.component';
-import { FormatoEstructuraComponent } from './produccion/registro-menu-produccion/formato-estructura/formato-estructura.component';
-import { FormatoTubosPinesComponent } from './produccion/registro-menu-produccion/formato-tubos-pines/formato-tubos-pines.component';
-import { FormatoCentrifugadoComponent } from './produccion/registro-menu-produccion/formato-centrifugado/formato-centrifugado.component';
-import { FormatoDesencrofadoComponent } from './produccion/registro-menu-produccion/formato-desencrofado/formato-desencrofado.component';
-import { FormatoCuradoComponent } from './produccion/registro-menu-produccion/formato-curado/formato-curado.component';
+import { FormatoMezclaComponent } from './produccion/registro-menu-produccion/formatos-postes/formato-mezcla/formato-mezcla.component';
+import { FormatoEstructuraComponent } from './produccion/registro-menu-produccion/formatos-postes/formato-estructura/formato-estructura.component';
+import { FormatoTubosPinesComponent } from './produccion/registro-menu-produccion/formatos-postes/formato-tubos-pines/formato-tubos-pines.component';
+import { FormatoCentrifugadoComponent } from './produccion/registro-menu-produccion/formatos-postes/formato-centrifugado/formato-centrifugado.component';
+import { FormatoDesencrofadoComponent } from './produccion/registro-menu-produccion/formatos-postes/formato-desencrofado/formato-desencrofado.component';
+import { FormatoCuradoComponent } from './produccion/registro-menu-produccion/formatos-postes/formato-curado/formato-curado.component';
+import { FormatoMezclasComponent } from './produccion/registro-menu-produccion/formatos-accesorios/formato-mezclas/formato-mezclas.component';
+import { FormatoArmadoComponent } from './produccion/registro-menu-produccion/formatos-accesorios/formato-armado/formato-armado.component';
+import { FormatoAcabadoComponent } from './produccion/registro-menu-produccion/formatos-accesorios/formato-acabado/formato-acabado.component';
+import { FormatoVibracionComponent } from './produccion/registro-menu-produccion/formatos-accesorios/formato-vibracion/formato-vibracion.component';
 
 registerLocaleData(localeES, 'es-Pe');
 
 const routes: Routes = [
   //Producción
-  { path: 'produccion/formato/mezcla', component: FormatoMezclaComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/estructura', component: FormatoEstructuraComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/tubos-pines', component: FormatoTubosPinesComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/centrifugado', component: FormatoCentrifugadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/desencrofado', component: FormatoDesencrofadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/curado', component: FormatoCuradoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/accesorios/mezcla', component: FormatoMezclasComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/accesorios/armado', component: FormatoArmadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/accesorios/acabado', component: FormatoAcabadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/accesorios/vibracion', component: FormatoVibracionComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/postes/mezcla', component: FormatoMezclaComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/postes/estructura', component: FormatoEstructuraComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/postes/tubos-pines', component: FormatoTubosPinesComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/postes/centrifugado', component: FormatoCentrifugadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/postes/desencrofado', component: FormatoDesencrofadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/formato/postes/curado', component: FormatoCuradoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
   { path: 'produccion/menu-produccion', component: RegistroMenuProduccionComponent, pathMatch: 'full', data: {title: 'Menú de producción', menu: 'Producción | Menú de producción'} },
   { path: 'produccion/registro-produccion-postes/listado', component: ListadoRegistroProgramacionProduccionComponent, pathMatch: 'full', data: {title: 'Registro de Producción de Postes', menu: 'Producción | Registro de Producción de Postes'} },
   { path: 'produccion/registro-produccion-postes', component: RegistroProduccionComponent, pathMatch: 'full', data: {title: 'Registro de Producción de Postes', menu: 'Producción | Registro de Producción de Postes'} },
@@ -172,6 +180,10 @@ const routes: Routes = [
     FormatoCentrifugadoComponent,
     FormatoDesencrofadoComponent,
     FormatoCuradoComponent,
+    FormatoMezclasComponent,
+    FormatoArmadoComponent,
+    FormatoAcabadoComponent,
+    FormatoVibracionComponent,
   ],
   imports: [
     CardModule,

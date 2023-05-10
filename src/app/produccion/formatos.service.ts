@@ -8,6 +8,10 @@ import { ProduccionRegistroTubosPines } from './models/produccion-registro-tubos
 import { ProduccionRegistroCentrifugado } from './models/produccion-registro-centrifugado';
 import { ProduccionRegistroDesencrofado } from './models/produccion-registro-desencrofado';
 import { ProduccionRegistroCurado } from './models/produccion-registro-curado';
+import { ProduccionAccesorioRegistroMezcla } from './models/produccion-accesorio-registro-mezcla';
+import { ProduccionAccesorioRegistroArmado } from './models/produccion-accesorio-registro-armado';
+import { ProduccionAccesorioRegistroVibracion } from './models/produccion-accesorio-registro-vibracion';
+import { ProduccionAccesorioRegistroAcabado } from './models/produccion-accesorio-registro-acabado';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +30,40 @@ export class FormatosService {
     );
   }
 
+  saveRegistroAcabadoAccesorio(plantaId: number, acabado: ProduccionAccesorioRegistroAcabado): Observable<any> {
+    return this.http.post(`${this.urlEndPoint}/accesorios/acabado/create/${plantaId}`, acabado).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
+  saveRegistroVibracionAccesorio(plantaId: number, vibracion: ProduccionAccesorioRegistroVibracion): Observable<any> {
+    return this.http.post(`${this.urlEndPoint}/accesorios/vibracion/create/${plantaId}`, vibracion).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
+  saveRegistroArmadoAccesorio(plantaId: number, armado: ProduccionAccesorioRegistroArmado): Observable<any> {
+    return this.http.post(`${this.urlEndPoint}/accesorios/armado/create/${plantaId}`, armado).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
+  saveRegistroMezclaAccesorio(plantaId: number, mezcla: ProduccionAccesorioRegistroMezcla): Observable<any> {
+    return this.http.post(`${this.urlEndPoint}/accesorios/mezcla/create/${plantaId}`, mezcla).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
   saveRegistroCurado(plantaId: number, curado: ProduccionRegistroCurado): Observable<any> {
-    return this.http.post(`${this.urlEndPoint}/curado/create/${plantaId}`, curado).pipe(
+    return this.http.post(`${this.urlEndPoint}/postes/curado/create/${plantaId}`, curado).pipe(
       catchError(e => {
         return throwError(() => e);
       })
@@ -35,7 +71,7 @@ export class FormatosService {
   }
 
   saveRegistroDesencrofado(plantaId: number, desencrofado: ProduccionRegistroDesencrofado): Observable<any> {
-    return this.http.post(`${this.urlEndPoint}/desencrofado/create/${plantaId}`, desencrofado).pipe(
+    return this.http.post(`${this.urlEndPoint}/postes/desencrofado/create/${plantaId}`, desencrofado).pipe(
       catchError(e => {
         return throwError(() => e);
       })
@@ -43,7 +79,7 @@ export class FormatosService {
   }
 
   saveRegistroCentrifugado(plantaId: number, centrifugado: ProduccionRegistroCentrifugado): Observable<any> {
-    return this.http.post(`${this.urlEndPoint}/centrifugado/create/${plantaId}`, centrifugado).pipe(
+    return this.http.post(`${this.urlEndPoint}/postes/centrifugado/create/${plantaId}`, centrifugado).pipe(
       catchError(e => {
         return throwError(() => e);
       })
@@ -51,7 +87,7 @@ export class FormatosService {
   }
 
   saveRegistroTubosPines(plantaId: number, tubosPines: ProduccionRegistroTubosPines): Observable<any> {
-    return this.http.post(`${this.urlEndPoint}/tubos-pines/create/${plantaId}`, tubosPines).pipe(
+    return this.http.post(`${this.urlEndPoint}/postes/tubos-pines/create/${plantaId}`, tubosPines).pipe(
       catchError(e => {
         return throwError(() => e);
       })
@@ -59,7 +95,7 @@ export class FormatosService {
   }
 
   saveRegistroEstructura(plantaId: number, estructura: ProduccionRegistroEstructura): Observable<any> {
-    return this.http.post(`${this.urlEndPoint}/estructura/create/${plantaId}`, estructura).pipe(
+    return this.http.post(`${this.urlEndPoint}/postes/estructura/create/${plantaId}`, estructura).pipe(
       catchError(e => {
         return throwError(() => e);
       })
@@ -67,7 +103,7 @@ export class FormatosService {
   }
 
   saveRegistroMezcla(plantaId: number, mezcla: ProduccionRegistroMezcla): Observable<any> {
-    return this.http.post(`${this.urlEndPoint}/mezcla/create/${plantaId}`, mezcla).pipe(
+    return this.http.post(`${this.urlEndPoint}/postes/mezcla/create/${plantaId}`, mezcla).pipe(
       catchError(e => {
         return throwError(() => e);
       })

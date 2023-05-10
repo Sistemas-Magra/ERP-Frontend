@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Planta } from 'src/app/maestros/models/planta';
-import { PlantaService } from 'src/app/maestros/planta.service';
-import { ProduccionRegistroDesencrofado } from '../../models/produccion-registro-desencrofado';
-import { OrdenTrabajoService } from '../../orden-trabajo.service';
+import { ProduccionRegistroDesencrofado } from '../../../models/produccion-registro-desencrofado';
+import { OrdenTrabajoService } from '../../../orden-trabajo.service';
 import { MessageService } from 'primeng/api';
-import { OrdenTrabajo } from '../../models/orden-trabajo';
-import { FormatosService } from '../../formatos.service';
+import { OrdenTrabajo } from '../../../models/orden-trabajo';
+import { FormatosService } from '../../../formatos.service';
 import { TablaAuxiliarDetalle } from 'src/app/auxiliar/models/tabla-auxiliar-detalle';
+import { forkJoin } from 'rxjs'
 import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
+import { UsuarioPlanta } from 'src/app/seguridad/models/usuario-planta';
+import { AuthService } from 'src/app/seguridad/auth.service';
+import { UsuarioService } from 'src/app/seguridad/usuario.service';
 
 @Component({
   selector: 'app-formato-desencrofado',
@@ -16,13 +18,12 @@ import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
 })
 export class FormatoDesencrofadoComponent implements OnInit {
 
+  usuarioPlanta: UsuarioPlanta;
+
   listado: ProduccionRegistroDesencrofado[] = [];
 
   fecha: Date = new Date();
   responsable: string;
-
-  plantas: Planta[];
-  plantaSeleccionada: Planta;
 
   listadoOrdenesTrabajo: OrdenTrabajo[];
   listadoInconformidadSelect: TablaAuxiliarDetalle[];
@@ -32,28 +33,33 @@ export class FormatoDesencrofadoComponent implements OnInit {
   blnFilaAniadidaSinGuardar: boolean = false;
 
   constructor(
-    private plantaService: PlantaService,
     private messageService: MessageService,
     private ordenTrabajoService: OrdenTrabajoService,
     private auxiliarService: AuxiliarService,
     private formatoService: FormatosService,
+    private authService: AuthService,
+    private usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
-    this.auxiliarService.getListSelect('INCDES').subscribe({
+
+    let fork = forkJoin([
+      this.auxiliarService.getListSelect('INCDES'),
+      this.usuarioService.getUsuarioPlantaByUsuarioId(this.authService.usuario.id)
+    ])
+
+    fork.subscribe({
       next: res => {
-        this.listadoInconformidadSelect = res;
-      }
-    })
-    this.plantaService.getPlantasActivas().subscribe({
-      next: res => {
-        this.plantas = res;
+        this.listadoInconformidadSelect = res[0];
+        this.usuarioPlanta = res[1];
+        this.responsable = this.authService.usuario.nombreCompleto;
+        this.setListado();
       }
     })
   }
 
   setListado() {
-    this.formatoService.getListadoFormato(this.plantaSeleccionada.id, 5).subscribe({
+    this.formatoService.getListadoFormato(this.usuarioPlanta.planta.id, 5).subscribe({
       next: res => {
         if(res.listado) {
           let list: ProduccionRegistroDesencrofado[] = res.listado
@@ -148,7 +154,7 @@ export class FormatoDesencrofadoComponent implements OnInit {
 
     des.inconformidadProduccion = JSON.stringify(this.inconformidadesSeleccionadas.map(inc => inc.tablaAuxiliarDetalleId.id));
 
-    this.formatoService.saveRegistroDesencrofado(this.plantaSeleccionada.id, des).subscribe({
+    this.formatoService.saveRegistroDesencrofado(this.usuarioPlanta.planta.id, des).subscribe({
       next: res => {
         this.messageService.add({severity:'success', summary:'Éxito', detail:'Registro de tubos y pines guardado correctamente.'});
         this.blnFilaAniadidaSinGuardar = false;

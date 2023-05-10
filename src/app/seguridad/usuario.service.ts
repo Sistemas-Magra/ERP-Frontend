@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Observable, catchError, throwError } from 'rxjs';
+import { UsuarioPlanta } from './models/usuario-planta';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,14 @@ export class UsuarioService {
   private urlEndPoint: string = environment.apiURL + "api/usuario";
 
   constructor(private http: HttpClient) { }
+
+  getUsuarioPlantaByUsuarioId(usuarioId: number): Observable<UsuarioPlanta> {
+    return this.http.get<UsuarioPlanta>(`${this.urlEndPoint}-planta/get-id/${usuarioId}`).pipe(
+      catchError(err => {
+        return throwError(() => {return err})
+      })
+    );
+  }
 
   getDatosEmpleado(id: number): Observable<any> {
     return this.http.get<any>(`${this.urlEndPoint}/datos-empleado/${id}`).pipe(

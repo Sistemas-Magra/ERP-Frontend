@@ -28,14 +28,11 @@
                         </th>
                         <th style="--header-table: 40px">N</th>
                         <th style="--header-table: 100px">Ord. Trab.</th>
-                        <th>Producto</th>
-                        <th style="--header-table: 80px" title="Hora de Ingreso">H. Ing.</th>
-                        <th style="--header-table: 80px" title="Hora de Salida">H. Sal.</th>
-                        <th style="--header-table: 80px" title="Tiempo total del proceso en minutos">Tmp. Total</th>
-                        <th style="--header-table: 80px" title="Presión caldero">Prs. Cald.</th>
-                        <th style="--header-table: 80px" title="Estado manguera">Est. Mang.</th>
+                        <th style="--header-table: 400px">Producto</th>
+                        <th style="--header-table: 80px">Cantidad</th>
+                        <th style="--header-table: 200px" title="Inconformidades">Acabados</th>
                         <th style="--header-table: 40px" title="Conforme/No conforme">C/NC</th>
-                        <th style="--header-table: 400px">Observaciones</th>
+                        <th>Observaciones</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-prod let-i="rowIndex">
@@ -55,28 +52,19 @@
                             <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</label>
                         </td>
                         <td class="text-center">
-                            <p-calendar *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" (onSelect)="setHorasHI($event, i)" [(ngModel)]="prod.horaIngreso" appendTo="body" [disabled]="!prod.ordenTrabajoDetalle" [timeOnly]="true" [readonlyInput]="true"></p-calendar>
-                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.horaIngreso | date:'HH:mm'}}</label>
+                            <p-inputNumber *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" class="inputnumber-table" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.cantidad"></p-inputNumber>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.cantidad | number:'2.0-0'}}</label>
                         </td>
-                        <td class="text-center">
-                            <p-calendar *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" (onSelect)="setHorasHF($event, i)" [(ngModel)]="prod.horaSalida" appendTo="body" [disabled]="!prod.ordenTrabajoDetalle" [timeOnly]="true" [readonlyInput]="true"></p-calendar>
-                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.horaSalida | date:'HH:mm'}}</label>
-                        </td>
-                        <td class="text-center">{{prod.minutosTotal}}</td>
-                        <td class="text-center">
-                            <p-inputNumber *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" class="inputnumber-table" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.presionCaldero"></p-inputNumber>
-                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.presionCaldero | number:'1.2-2'}}</label>
-                        </td>
-                        <td class="text-center" style="--header-table: 90px">
-                            <p-dropdown *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle" [options]="listadoEstadoManguera" [(ngModel)]="prod.estadoManguera" optionLabel="nombre" placeholder="Seleccione" appendTo="body" [autoDisplayFirst]="false"></p-dropdown>
-                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.estadoManguera.abreviatura}}</label>
+                        <td>
+                            <p-multiSelect *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [options]="listadoAcabados" [(ngModel)]="acabadosSeleccionados" optionLabel="nombre"></p-multiSelect>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label" [title]="prod.nombresAcabado">{{prod.abrvsAcabado}}</label>
                         </td>
                         <td class="text-center">
                             <p-checkbox *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.indConforme" [binary]="true"></p-checkbox>
                             <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.indConforme?'C':'NC'}}</label>
                         </td>
                         <td class="last-column">
-                            <input *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" [disabled]="!prod.ordenTrabajoDetalle || prod.indConforme" [(ngModel)]="prod.observacion" pInputText class="custom-input-table" type="text">
+                            <input *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle || prod.indConforme" [(ngModel)]="prod.observacion" pInputText class="custom-input-table" type="text">
                             <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.observacion}}</label>
                         </td>
                     </tr>

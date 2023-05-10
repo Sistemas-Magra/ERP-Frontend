@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Planta } from 'src/app/maestros/models/planta';
-import { PlantaService } from 'src/app/maestros/planta.service';
-import { ProduccionRegistroMezcla } from '../../models/produccion-registro-mezcla';
-import { OrdenTrabajo } from '../../models/orden-trabajo';
+import { ProduccionRegistroMezcla } from '../../../models/produccion-registro-mezcla';
+import { OrdenTrabajo } from '../../../models/orden-trabajo';
 import { MessageService } from 'primeng/api';
-import { OrdenTrabajoService } from '../../orden-trabajo.service';
+import { OrdenTrabajoService } from '../../../orden-trabajo.service';
 import { DatePipe } from '@angular/common';
 import { FuncionesComunesService } from 'src/app/commons/funciones-comunes.service';
-import { FormatosService } from '../../formatos.service';
+import { FormatosService } from '../../../formatos.service';
+import { UsuarioPlanta } from 'src/app/seguridad/models/usuario-planta';
+import { forkJoin } from 'rxjs';
+import { AuthService } from 'src/app/seguridad/auth.service';
+import { UsuarioService } from 'src/app/seguridad/usuario.service';
 
 @Component({
   selector: 'app-formato-mezcla',
@@ -16,13 +18,12 @@ import { FormatosService } from '../../formatos.service';
 })
 export class FormatoMezclaComponent implements OnInit {
 
+  usuarioPlanta: UsuarioPlanta;
+
   listado: ProduccionRegistroMezcla[] = [];
 
   fecha: Date = new Date();
   responsable: string;
-
-  plantas: Planta[];
-  plantaSeleccionada: Planta;
 
   listadoOrdenesTrabajo: OrdenTrabajo[];
 
@@ -30,18 +31,26 @@ export class FormatoMezclaComponent implements OnInit {
   blnFilaAniadidaSinGuardar: boolean = false;
 
   constructor(
-    private plantaService: PlantaService,
     private messageService: MessageService,
     private ordenTrabajoService: OrdenTrabajoService,
     private formatoService: FormatosService,
     private pipe: DatePipe,
-    private funcionesComunes: FuncionesComunesService
+    private funcionesComunes: FuncionesComunesService,
+    private authService: AuthService,
+    private usuarioService: UsuarioService
   ) { }
 
   ngOnInit(): void {
-    this.plantaService.getPlantasActivas().subscribe({
+    let fork = forkJoin([
+      this.usuarioService.getUsuarioPlantaByUsuarioId(this.authService.usuario.id),
+    ])
+
+    fork.subscribe({
       next: res => {
-        this.plantas = res;
+        this.usuarioPlanta = res[0];
+        this.responsable = this.authService.usuario.nombreCompleto;
+
+        this.setListado();
       }
     })
   }
@@ -87,7 +96,7 @@ export class FormatoMezclaComponent implements OnInit {
   }
 
   setListado() {
-    this.formatoService.getListadoFormato(this.plantaSeleccionada.id, 1).subscribe({
+    this.formatoService.getListadoFormato(this.usuarioPlanta.planta.id, 1).subscribe({
       next: res => {
         if(res.listado) {
           this.listado = res.listado;
@@ -206,7 +215,7 @@ export class FormatoMezclaComponent implements OnInit {
       return;
     }
 
-    this.formatoService.saveRegistroMezcla(this.plantaSeleccionada.id, mezcla).subscribe({
+    this.formatoService.saveRegistroMezcla(this.usuarioPlanta.planta.id, mezcla).subscribe({
       next: res => {
         this.messageService.add({severity:'success', summary:'Éxito', detail:'Registro de mezcla guardado correctamente.'});
         this.blnFilaAniadidaSinGuardar = false;

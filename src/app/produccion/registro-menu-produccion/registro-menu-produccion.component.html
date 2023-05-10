@@ -1,10 +1,41 @@
 <div class="container-fluid">
     <div class="row">
+        <label class="col-12 text-center col-form-label"><b style="font-size: 20px !important; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">FORMATOS DE POSTES</b></label>
+    </div>
+    <div class="row">
         <div class="col-4"></div>
         <div class="col-4 text-center">
             <div class="row">
                 <div class="col-4" *ngFor="let option of optionListPostes">
-                    <p-card styleClass="mt-3" (click)="goTo(option)">
+                    <p-card styleClass="mt-3" (click)="goTo(option, 'postes')">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <h1>{{option.title}}</h1>
+                                </div>
+                                <div class="row">
+                                    <h1>{{option.body}}</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </p-card>
+                </div>
+            </div>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    <br>
+    <hr *ngIf="optionListAccesorios.length > 0">
+    <br>
+    <div class="row" *ngIf="optionListAccesorios.length > 0">
+        <label class="col-12 text-center col-form-label"><b style="font-size: 20px !important; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">FORMATOS DE ACCESORIOS</b></label>
+    </div>
+    <div class="row" *ngIf="optionListAccesorios.length > 0">
+        <div class="col-4"></div>
+        <div class="col-4 text-center">
+            <div class="row">
+                <div class="col-4" *ngFor="let option of optionListAccesorios">
+                    <p-card styleClass="mt-3" (click)="goTo(option, 'accesorios')">
                         <div class="row">
                             <div class="col-12">
                                 <div class="row">

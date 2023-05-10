@@ -1,24 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { Planta } from 'src/app/maestros/models/planta';
-import { PlantaService } from 'src/app/maestros/planta.service';
-import { ProduccionRegistroCurado } from '../../models/produccion-registro-curado';
-import { OrdenTrabajo } from '../../models/orden-trabajo';
-import { OrdenTrabajoService } from '../../orden-trabajo.service';
 import { MessageService } from 'primeng/api';
-import { FormatosService } from '../../formatos.service';
 import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
 import { TablaAuxiliarDetalle } from 'src/app/auxiliar/models/tabla-auxiliar-detalle';
-import { DatePipe } from '@angular/common';
-import { FuncionesComunesService } from 'src/app/commons/funciones-comunes.service';
+import { Planta } from 'src/app/maestros/models/planta';
+import { PlantaService } from 'src/app/maestros/planta.service';
+import { FormatosService } from 'src/app/produccion/formatos.service';
+import { OrdenTrabajo } from 'src/app/produccion/models/orden-trabajo';
+import { ProduccionAccesorioRegistroAcabado } from 'src/app/produccion/models/produccion-accesorio-registro-acabado';
+import { OrdenTrabajoService } from 'src/app/produccion/orden-trabajo.service';
 
 @Component({
-  selector: 'app-formato-curado',
-  templateUrl: './formato-curado.component.html',
-  styleUrls: ['./formato-curado.component.css']
+  selector: 'app-formato-acabado',
+  templateUrl: './formato-acabado.component.html',
+  styleUrls: ['./formato-acabado.component.css']
 })
-export class FormatoCuradoComponent implements OnInit {
+export class FormatoAcabadoComponent implements OnInit {
 
-  listado: ProduccionRegistroCurado[] = [];
+  listado: ProduccionAccesorioRegistroAcabado[] = [];
 
   fecha: Date = new Date();
   responsable: string;
@@ -27,7 +25,8 @@ export class FormatoCuradoComponent implements OnInit {
   plantaSeleccionada: Planta;
 
   listadoOrdenesTrabajo: OrdenTrabajo[];
-  listadoEstadoManguera: TablaAuxiliarDetalle[];
+  listadoAcabados: TablaAuxiliarDetalle[];
+  acabadosSeleccionados: TablaAuxiliarDetalle[] = [];
 
   validarFila: number = -1;
   blnFilaAniadidaSinGuardar: boolean = false;
@@ -38,17 +37,14 @@ export class FormatoCuradoComponent implements OnInit {
     private ordenTrabajoService: OrdenTrabajoService,
     private auxiliarService: AuxiliarService,
     private formatoService: FormatosService,
-    private pipe: DatePipe,
-    private funcionesComunes: FuncionesComunesService
   ) { }
 
   ngOnInit(): void {
-    this.auxiliarService.getListSelect('ESTMAN').subscribe({
+    this.auxiliarService.getListSelect('TIPACB').subscribe({
       next: res => {
-        this.listadoEstadoManguera = res;
+        this.listadoAcabados = res;
       }
     })
-
     this.plantaService.getPlantasActivas().subscribe({
       next: res => {
         this.plantas = res;
@@ -57,10 +53,19 @@ export class FormatoCuradoComponent implements OnInit {
   }
 
   setListado() {
-    this.formatoService.getListadoFormato(this.plantaSeleccionada.id, 6).subscribe({
+    this.formatoService.getListadoFormato(this.plantaSeleccionada.id, 10).subscribe({
       next: res => {
         if(res.listado) {
-          this.listado = res.listado;
+          let list: ProduccionAccesorioRegistroAcabado[] = res.listado
+
+          list.forEach(des => {
+            let listInc: number[] = JSON.parse(des.tiposAcabados);
+
+            des.abrvsAcabado = this.listadoAcabados.filter(inc => listInc.includes(inc.tablaAuxiliarDetalleId.id)).map(inc => inc.abreviatura).join(', ');
+            des.nombresAcabado = this.listadoAcabados.filter(inc => listInc.includes(inc.tablaAuxiliarDetalleId.id)).map(inc => inc.nombre).join(', ');
+          })
+
+          this.listado = list;
         } else {
           this.listado = [];
         }
@@ -73,24 +78,6 @@ export class FormatoCuradoComponent implements OnInit {
         }
       }
     })
-  }
-
-  setHorasHI(event, i: number) {
-    this.listado[i].horaIngreso = event;
-    let horaIngresoStr: string = this.pipe.transform(this.listado[i].horaIngreso, 'HH:mm');
-
-    if(this.listado[i].horaSalida) {
-      this.listado[i].minutosTotal = this.funcionesComunes.getMinutosEntreHoras(horaIngresoStr, this.pipe.transform(this.listado[i].horaSalida, 'HH:mm'));
-    }
-  }
-
-  setHorasHF(event, i: number) {
-    this.listado[i].horaSalida = event;
-    let horaSalidaStr: string = this.pipe.transform(this.listado[i].horaSalida, 'HH:mm');
-
-    if(this.listado[i].horaIngreso) {
-      this.listado[i].minutosTotal = this.funcionesComunes.getMinutosEntreHoras(this.pipe.transform(this.listado[i].horaIngreso, 'HH:mm'), horaSalidaStr);
-    }
   }
 
   asignarFila(i: number) {
@@ -107,7 +94,7 @@ export class FormatoCuradoComponent implements OnInit {
       return;
     }
     
-    let mezcla: ProduccionRegistroCurado = new ProduccionRegistroCurado();
+    let mezcla: ProduccionAccesorioRegistroAcabado = new ProduccionAccesorioRegistroAcabado();
 
     mezcla.indConforme = true;
     mezcla.responsable = this.responsable;
@@ -142,46 +129,32 @@ export class FormatoCuradoComponent implements OnInit {
   }
 
   guardar(i) {
-    let cur: ProduccionRegistroCurado = this.listado[i];
+    let acab: ProduccionAccesorioRegistroAcabado = this.listado[i];
 
-    if(!cur.ordenTrabajo || typeof(cur.ordenTrabajo) == "string") {
+    if(!acab.ordenTrabajo || typeof(acab.ordenTrabajo) == "string") {
       this.messageService.add({severity:'warn', summary:'Error', detail: 'Debe seleccionar una orden de trabajo del autocompletado.'})
       return;
     }
 
-    if(!cur.ordenTrabajoDetalle || typeof(cur.ordenTrabajoDetalle) == "string") {
+    if(!acab.ordenTrabajoDetalle || typeof(acab.ordenTrabajoDetalle) == "string") {
       this.messageService.add({severity:'warn', summary:'Error', detail: 'Debe seleccionar un producto del autocompletado.'})
       return;
     }
 
-    if(!cur.presionCaldero) {
-      this.messageService.add({severity:'warn', summary:'Error', detail: 'Debe ingresar la presión usada del caldero.'})
-      return;
-    }
-
-    if(!cur.estadoManguera) {
-      this.messageService.add({severity:'warn', summary:'Error', detail: 'Debe seleccionar el estado de las mangueras.'})
-      return;
-    }
-
-    if(!cur.indConforme && (!cur.observacion || cur.observacion.length == 0)) {
+    if(!acab.indConforme && (!acab.observacion || acab.observacion.length == 0)) {
       this.messageService.add({severity:'warn', summary:'Error', detail: 'Para una salida inconforme debe ingresar una observación.'})
       return;
     }
 
-    this.formatoService.saveRegistroCurado(this.plantaSeleccionada.id, cur).subscribe({
+    acab.tiposAcabados = JSON.stringify(this.acabadosSeleccionados.map(inc => inc.tablaAuxiliarDetalleId.id));
+
+    this.formatoService.saveRegistroAcabadoAccesorio(this.plantaSeleccionada.id, acab).subscribe({
       next: res => {
-        this.messageService.add({severity:'success', summary:'Éxito', detail:'Registro de curado guardado correctamente.'});
+        this.messageService.add({severity:'success', summary:'Éxito', detail:'Registro de tubos y pines guardado correctamente.'});
         this.blnFilaAniadidaSinGuardar = false;
+        this.acabadosSeleccionados = [];
         this.validarFila = -1;
-        this.setListado()
-      },
-      error: err => {
-        if(err.status == 409) {
-          this.messageService.add({severity:'error', summary:'Error', detail:err.error.mensaje})
-        } else {
-          this.messageService.add({severity:'error', summary:'Error', detail:'Error al obtener información del servidor.'})
-        }
+        this.setListado();
       }
     })
   }

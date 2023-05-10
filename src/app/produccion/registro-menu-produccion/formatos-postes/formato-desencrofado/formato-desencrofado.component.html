@@ -1,0 +1,56 @@
+<div class="container-fluid">
+    <div class="row mt-3">
+        <label  class="col-3 col-form-label">Planta: <span class="text-uppercase">{{usuarioPlanta.planta.nombre}}</span></label>
+        <label  class="col-4 col-form-label">Responsable: <span class="text-uppercase">{{responsable}}</span></label>
+        <label class="col-4 col-form-label">Fecha: <span class="text-uppercase">{{fecha | date:'dd MMM yyyy'}}</span></label>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12" style="--height-table:85vh">
+            <p-table [value]="listado" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px" class="text-center" *ngIf="!blnCalidad">
+                            <button (click)="addRegistro()" [disabled]="!usuarioPlanta" pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-success p-button-text plus-header"></button>
+                        </th>
+                        <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 100px">Ord. Trab.</th>
+                        <th style="--header-table: 400px">Producto</th>
+                        <th style="--header-table: 200px" title="Inconformidades">Inconformidades</th>
+                        <th style="--header-table: 40px" title="Conforme/No conforme">C/NC</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr (click)="asignarFila(i)" [ngClass]="{'selected': validarFila == i}">
+                        <td class="text-center">
+                            <div class="col-12 botones" *ngIf="blnFilaAniadidaSinGuardar && validarFila == i">
+                                <button (click)="guardar(i)" pButton pRipple type="button" icon="pi pi-save" class="p-button-rounded p-button-primary btn-body"></button>
+                            </div>
+                        </td>
+                        <td class="text-center">{{i+1 | number:'2.0-0'}}</td>
+                        <td class="text-center">
+                            <p-autoComplete *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" (onSelect)="setOrdenTrabajo($event, i)" [(ngModel)]="prod.ordenTrabajo" (completeMethod)="ordenTrabajoAutocomplete($event)" [suggestions]="listadoOrdenesTrabajo" field="codigo" [minLength]="1" appendTo="body" styleClass="autocomplete-table" [showEmptyMessage]="true"></p-autoComplete>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.ordenTrabajo?.codigo}}</label>
+                        </td>
+                        <td>
+                            <p-autoComplete *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" [(ngModel)]="prod.ordenTrabajoDetalle" (completeMethod)="findProducto($event, i)" [suggestions]="prod.listadoAutocompleteAux" field="ordenVentaDetalle.producto.nombre" [minLength]="1" appendTo="body" styleClass="autocomplete-table" [showEmptyMessage]="true"></p-autoComplete>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</label>
+                        </td>
+                        <td>
+                            <p-multiSelect *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [options]="listadoInconformidadSelect" [(ngModel)]="inconformidadesSeleccionadas" optionLabel="nombre"></p-multiSelect>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label" [title]="prod.nombresInconformidad">{{prod.abrvsInconformidad}}</label>
+                        </td>
+                        <td class="text-center">
+                            <p-checkbox *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle" [(ngModel)]="prod.indConforme" [binary]="true"></p-checkbox>
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.indConforme?'C':'NC'}}</label>
+                        </td>
+                        <td class="last-column">
+                            <input *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!prod.ordenTrabajoDetalle || prod.indConforme" [(ngModel)]="prod.observacion" pInputText class="custom-input-table" type="text">
+                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.observacion}}</label>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
