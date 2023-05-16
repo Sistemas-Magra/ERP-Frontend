@@ -5,7 +5,10 @@ import { Planta } from 'src/app/maestros/models/planta';
 import { PlantaService } from 'src/app/maestros/planta.service';
 import { ProduccionService } from '../produccion.service';
 import { forkJoin } from 'rxjs'
-import { DatePipe } from '@angular/common'
+import { DatePipe } from '@angular/common';
+import { MenuItem } from 'primeng/api';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ModalFormatosComponent } from './modal-formatos/modal-formatos.component';
 
 @Component({
   selector: 'app-listado-registro-programacion-produccion',
@@ -21,14 +24,25 @@ export class ListadoRegistroProgramacionProduccionComponent implements OnInit {
 
   listadosRegistrosProduccion: any[];
 
+  optionsRc: MenuItem[] = [];
+  rowSelected: any;
+  
+  ref: DynamicDialogRef;
+
   constructor(
     private auxiliarService: AuxiliarService,
     private plantaService: PlantaService,
     private produccionService: ProduccionService,
+    private dialogService: DialogService,
     private pipe: DatePipe
   ) { }
 
   ngOnInit(): void {
+
+    this.optionsRc = [
+      {label: 'Revisar Formatos', icon: 'pi pi-fw pi-eye', command: () => this.abrirModalFormatos(this.rowSelected)},
+    ]
+
     let fork = forkJoin([
       this.plantaService.getPlantasActivas(),
       this.auxiliarService.getListSelect('ESTPRD'),
@@ -41,6 +55,17 @@ export class ListadoRegistroProgramacionProduccionComponent implements OnInit {
         this.estadosSelect = res[1];
         this.listadosRegistrosProduccion = res[2];
       }
+    })
+  }
+
+  abrirModalFormatos(item: any) {
+    this.ref = this.dialogService.open(ModalFormatosComponent, {
+      data: {
+        id: item.id,
+        fecha: item.fecha
+      },
+      width: '1200px',
+      height: '900px'
     })
   }
 

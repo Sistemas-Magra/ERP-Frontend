@@ -226,8 +226,8 @@
                                 </td>
                                 <td class="text-center">{{i + 1 | number:'2.0-0'}}</td>
                                 <td>
-                                    <p-autoComplete *ngIf="!indPasarVenta" (onSelect)="asignarPrecio(i, $event)" [(ngModel)]="det.producto" [showEmptyMessage]="true" [suggestions]="listadoProductosAutocomplete" (completeMethod)="autocompleteProducto($event)" field="busqueda" [minLength]="1"></p-autoComplete>
-                                    <label *ngIf="indPasarVenta">{{det.producto.codigo}} - {{det.producto.resumen}}</label>
+                                    <p-autoComplete *ngIf="!indPasarVenta" (onSelect)="asignarPrecio(i, $event)" [(ngModel)]="det.producto" [showEmptyMessage]="true" [suggestions]="listadoProductosAutocomplete" (completeMethod)="autocompleteProducto($event)" field="nombre" [minLength]="1"></p-autoComplete>
+                                    <label *ngIf="indPasarVenta">{{det.producto.nombre}}</label>
                                 </td>
                                 <td class="text-center">
                                     <input type="text" *ngIf="!indPasarVenta" pInputText  class="custom-input-table"  [(ngModel)]="det.cantidad" (input)="calcularTotal(i, $event, 1)">

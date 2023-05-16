@@ -27,11 +27,11 @@
                             <tr>
                                 <td class="text-center">
                                     <div class="col-12 botones">
-                                        <button pButton pRipple type="button" icon="pi pi-arrow-right" class="p-button-rounded p-button-success btn-body" (click)="asignar(i)"></button>
+                                        <button [disabled]="prodDisp.cantidad == 0" pButton pRipple type="button" icon="pi pi-arrow-right" class="p-button-rounded p-button-success btn-body" (click)="asignar(i)"></button>
                                     </div>
                                 </td>
                                 <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
-                                <td>{{prodDisp.producto.resumen}}</td>
+                                <td>{{prodDisp.producto.nombre}}</td>
                                 <td class="text-center last-column">{{prodDisp.cantidad}}</td>
                             </tr>
                         </ng-template>
@@ -62,7 +62,7 @@
                                     </div>
                                 </td>
                                 <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
-                                <td>{{prodAsig.producto.resumen}}</td>
+                                <td>{{prodAsig.producto.nombre}}</td>
                                 <td class="text-center last-column">
                                     <p-inputNumber class="custom-input-table" [(ngModel)]="prodAsig.cantidad" (onInput)="changeAsignacion(i, $event)"></p-inputNumber>
                                 </td>

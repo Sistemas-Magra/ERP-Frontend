@@ -3,6 +3,7 @@ import { TablaAuxiliarDetalle } from "src/app/auxiliar/models/tabla-auxiliar-det
 export class Planta {
     id: number;
     nombre: string;
+    numero: string;
     abreviatura: string;
     alias: string;
     estado: TablaAuxiliarDetalle;

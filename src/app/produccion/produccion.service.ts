@@ -13,6 +13,14 @@ export class ProduccionService {
 
   constructor(private http: HttpClient) { }
 
+  getListadoInventarioMensual(indMes: number): Observable<any> {
+    return this.http.get<any>(`${this.urlEndPoint}/listado-mensual/${indMes}`).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
   getListado(fechaDesde: string, fechaHasta: string, estadoId: number): Observable<any[]> {
     let url: string = `${this.urlEndPoint}/listado`;
 
@@ -37,8 +45,8 @@ export class ProduccionService {
     );
   }
 
-  update(prodPlanta: ProduccionPlanta): Observable<any> {
-    return this.http.put(`${this.urlEndPoint}/update/listado-produccion`, prodPlanta).pipe(
+  update(prodPlanta: ProduccionPlanta, stickerProduccion: string): Observable<any> {
+    return this.http.put(`${this.urlEndPoint}/update/listado-produccion/${stickerProduccion}`, prodPlanta).pipe(
       catchError(e => {
         return throwError(() => e);
       })

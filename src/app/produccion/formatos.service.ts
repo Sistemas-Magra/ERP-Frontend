@@ -22,6 +22,14 @@ export class FormatosService {
 
   constructor(private http: HttpClient) { }
 
+  getListadoFormatoVista(prodId: number, plantaId: number, ind: number): Observable<any> {
+    return this.http.get<any>(`${this.urlEndPoint}/get-listado/${prodId}/${plantaId}/${ind}`).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
   getListadoFormato(plantaId: number, ind: number): Observable<any> {
     return this.http.get<any>(`${this.urlEndPoint}/get-listado/${plantaId}/${ind}`).pipe(
       catchError(e => {

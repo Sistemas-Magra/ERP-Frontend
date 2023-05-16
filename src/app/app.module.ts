@@ -86,11 +86,14 @@ import { FormatoMezclasComponent } from './produccion/registro-menu-produccion/f
 import { FormatoArmadoComponent } from './produccion/registro-menu-produccion/formatos-accesorios/formato-armado/formato-armado.component';
 import { FormatoAcabadoComponent } from './produccion/registro-menu-produccion/formatos-accesorios/formato-acabado/formato-acabado.component';
 import { FormatoVibracionComponent } from './produccion/registro-menu-produccion/formatos-accesorios/formato-vibracion/formato-vibracion.component';
+import { VisorInventarioMensualComponent } from './produccion/visor-inventario-mensual/visor-inventario-mensual.component';
+import { ModalFormatosComponent } from './produccion/listado-registro-programacion-produccion/modal-formatos/modal-formatos.component';
 
 registerLocaleData(localeES, 'es-Pe');
 
 const routes: Routes = [
   //Producción
+  { path: 'produccion/inventario-mensual', component: VisorInventarioMensualComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
   { path: 'produccion/formato/accesorios/mezcla', component: FormatoMezclasComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
   { path: 'produccion/formato/accesorios/armado', component: FormatoArmadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
   { path: 'produccion/formato/accesorios/acabado', component: FormatoAcabadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
@@ -184,6 +187,8 @@ const routes: Routes = [
     FormatoArmadoComponent,
     FormatoAcabadoComponent,
     FormatoVibracionComponent,
+    VisorInventarioMensualComponent,
+    ModalFormatosComponent,
   ],
   imports: [
     CardModule,

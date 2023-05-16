@@ -1,0 +1,403 @@
+<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
+    <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
+        <div class="col-11 float-start mt-1"><span>Vista de Formatos | <span style="color: rgb(187, 143, 0) !important">{{fecha}}</span></span></div>
+        <div class="col-1 btn-close-modal" (click)="close()">
+            <div class="float-end">
+                <i class="pi pi-times me-1"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-form-label col-2">Formato</label>
+                <div class="col-7">
+                    <p-dropdown [options]="listadoFormatos" [(ngModel)]="formatoSeleccionado" placeholder="Seleccione" [group]="true" (onChange)="selectFormatos()">
+                        <ng-template let-group pTemplate="group">
+                            <div class="flex align-items-center">
+                                <span>{{group.label}}</span>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-form-label col-2">Planta</label>
+                <div class="col-5">
+                    <p-dropdown [options]="plantas" [(ngModel)]="plantaSeleccionada" placeholder="Seleccione" [autoDisplayFirst]="false" optionLabel="nombre" (onChange)="selectFormatos()"></p-dropdown>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3" *ngIf="formatoSeleccionado == 1">
+        <div class="col-12 px-0" style="--height-table:70vh">
+            <p-table [value]="listado" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 100px">Ord. Trab.</th>
+                        <th style="--header-table: 150px">Producto</th>
+                        <th style="--header-table: 80px" title="Cantidad de bolsas de cemento usadas">Bls. Cmnt.</th>
+                        <th style="--header-table: 80px" title="Cantidad de carretillas de piedra usadas">Crrt. Piedra</th>
+                        <th style="--header-table: 80px" title="Cantidad de carretillas de arena usadas">Crrt. Arena</th>
+                        <th style="--header-table: 100px" title="Tipo de cemento usado">Tip. Cmnt.</th>
+                        <th style="--header-table: 150px" title="Marca de cemento usado">Marca Cemento</th>
+                        <th style="--header-table: 80px" title="Litros de agua usados">Ltrs. Agua</th>
+                        <th style="--header-table: 150px" title="Relación de agua y cemento usados">Rel. Agua/Cmnt.</th>
+                        <th style="--header-table: 80px" title="Hora de Ingreso">H. Ing.</th>
+                        <th style="--header-table: 80px" title="Hora de Salida">H. Sal.</th>
+                        <th style="--header-table: 80px" title="Tiempo total del proceso en minutos">Tmp. Total</th>
+                        <th style="--header-table: 40px" title="Conforme/No conforme">C/NC</th>
+                        <th style="--header-table: 400px">Observaciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">{{i+1 | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.ordenTrabajo?.codigo}}</td>
+                        <td>{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</td>
+                        <td class="text-center">{{prod.bolsasCemento | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.carretillaPiedra | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.carretillaArena | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.tipoCemento | number:'2.0-0'}}</td>
+                        <td>{{prod.marcaCemento}}</td>
+                        <td class="text-center">{{prod.litrosAgua | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.relacionAguaCemento | number:'1.2-2':'en'}}</td>
+                        <td class="text-center">{{prod.horaIngreso | date:'HH:mm'}}</td>
+                        <td class="text-center">{{prod.horaSalida | date:'HH:mm'}}</td>
+                        <td class="text-center">{{prod.minutosTotal}}</td>
+                        <td class="text-center">{{prod.indConforme?'C':'NC'}}</td>
+                        <td class="last-column">{{prod.observacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-3" *ngIf="formatoSeleccionado == 2">
+        <div class="col-12 px-0" style="--height-table:70vh">
+            <p-table [value]="listado" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th rowspan="2" style="--header-table: 40px">N</th>
+                        <th rowspan="2" style="--header-table: 100px">Ord. Trab.</th>
+                        <th rowspan="2" style="--header-table: 150px">Producto</th>
+                        <th rowspan="2" style="--header-table: 80px">Hora</th>
+                        <th rowspan="2" style="--header-table: 80px" title="Cantidad de varillas usadas">Cnt. Var.</th>
+                        <th [attr.colspan]="listadoDiametrosVarillas.length" style="--header-table: 80px" title="Cantidad de varillas por diametro">Diam. Var.</th>
+                        <th rowspan="2" style="--header-table: 80px" title="Cantidad de anillos usadis">Cnt. An.</th>
+                        <th rowspan="2" style="--header-table: 80px" title="Diáetro de anillo usado">Diam. Anll.</th>
+                        <th rowspan="2" style="--header-table: 90px" title="Número de alambre en la espiral">Alm. Esp.</th>
+                        <th rowspan="2" style="--header-table: 90px" title="Número de alambre en el amarre">Alm. Amrr.</th>
+                        <th [attr.colspan]="listadoDiametrosRoldanas.length" style="--header-table: 80px" title="Cantidad de roldanas por diametro">Diam. Rol.</th>
+                        <th rowspan="2" style="--header-table: 80px" title="Cantidad de electrodos usados">Cnt. Elct.</th>
+                        <th rowspan="2" style="--header-table: 40px" title="Cantidad roldana">C/NC</th>
+                        <th rowspan="2" style="--header-table: 300px" title="Cantidad roldana">Observación</th>
+                    </tr>
+                    <tr>
+                        <th *ngFor="let vari of listadoDiametrosVarillas" style="--header-table: 60px">{{vari.abreviatura}}</th>
+                        <th *ngFor="let rol of listadoDiametrosRoldanas" style="--header-table: 60px">{{rol.abreviatura}}</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">{{i+1 | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.ordenTrabajo?.codigo}}</td>
+                        <td>{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</td>
+                        <td class="text-center">{{prod.horaIngreso | date:'HH:mm'}}</td>
+                        <td class="text-center">{{prod.cantVarillas | number:'2.0-0'}}</td>
+                        <td class="text-center" *ngFor="let vari of prod.listadoDiametrosVarillaAux">{{vari.cantidad}}</td>
+                        <td class="text-center">{{prod.cantAnillos | number:'2.0-0'}}</td>
+                        <td class="text-center" style="--header-table: 90px">{{prod.diametroFierroAnillos.abreviatura}}</td>
+                        <td class="text-center" style="--header-table: 90px">{{prod.nroAlambreEspiral.abreviatura}}</td>
+                        <td class="text-center" style="--header-table: 90px">{{prod.nroAlambreAmarre.abreviatura}}</td>
+                        <td class="text-center" *ngFor="let rol of prod.listadoDiametrosRoldanaAux">{{rol.cantidad}}</td>
+                        <td class="text-center">{{prod.cantElectrodos | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.indConforme?'C':'NC'}}</td>
+                        <td class="last-column">{{prod.observacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-3" *ngIf="formatoSeleccionado == 3">
+        <div class="col-12 px-0" style="--height-table:70vh">
+            <p-table [value]="listado" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 100px">Ord. Trab.</th>
+                        <th style="--header-table: 150px">Producto</th>
+                        <th style="--header-table: 100px" title="Cantidad de Pines">Cant. Pns.</th>
+                        <th style="--header-table: 100px" title="Longitud de Pines">Long. Pns. (m)</th>
+                        <th style="--header-table: 150px" title="Diámetro de Pines">Diam. Pns.</th>
+                        <th style="--header-table: 100px" title="Cantidad de Pistones">Cant. Pst.</th>
+                        <th style="--header-table: 100px" title="Longitud de Pistones">Long. Pst. (m)</th>
+                        <th style="--header-table: 150px" title="Diámetro de Pistones">Diam. Pst.</th>
+                        <th style="--header-table: 40px" title="Cantidad roldana">C/NC</th>
+                        <th style="--header-table: 300px" title="Cantidad roldana">Observación</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">{{i+1 | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.ordenTrabajo?.codigo}}</td>
+                        <td>{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</td>
+                        <td class="text-center">{{prod.cantidadPines | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.longitudPines | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.medidaDiametroPines.abreviatura}}</td>
+                        <td class="text-center">{{prod.cantidadPistones | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.longitudPistones | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.medidaDiametroPistones.abreviatura}}</td>
+                        <td class="text-center">{{prod.indConforme?'C':'NC'}}</td>
+                        <td class="last-column">{{prod.observacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-3" *ngIf="formatoSeleccionado == 4">
+        <div class="col-12 px-0" style="--height-table:70vh">
+            <p-table [value]="listado" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th rowspan="2" style="--header-table: 40px">N</th>
+                        <th rowspan="2" style="--header-table: 100px">Ord. Trab.</th>
+                        <th rowspan="2" style="--header-table: 150px">Producto</th>
+                        <th rowspan="2" style="--header-table: 100px">Hora Ingreso</th>
+                        <th rowspan="2" style="--header-table: 100px">Hora Salida</th>
+                        <th rowspan="2" style="--header-table: 100px">Tmp. Tot. (min)</th>
+                        <th [attr.colspan]="velocidadMaquinaSelect.length">Velocidades</th>
+                        <th rowspan="2" style="--header-table: 100px">Est. Máq.</th>
+                        <th rowspan="2" style="--header-table: 40px" title="Conforme/No conforme">C/NC</th>
+                        <th rowspan="2" style="--header-table: 400px">Observaciones</th>
+                    </tr>
+                    <tr>
+                        <th *ngFor="let vel of velocidadMaquinaSelect" style="--header-table: 60px">{{vel.abreviatura}}</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">{{i+1 | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.ordenTrabajo?.codigo}}</td>
+                        <td>{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</td>
+                        <td class="text-center">{{prod.horaIngreso | date:'HH:mm'}}</td>
+                        <td class="text-center">{{prod.horaSalida | date:'HH:mm'}}</td>
+                        <td class="text-center">{{prod.minutosTotal}}</td>
+                        <td class="text-center" *ngFor="let vel of prod.listadoVelocidades">{{vel.minutos | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.estadoMaquina.abreviatura}}</td>
+                        <td class="text-center">{{prod.indConforme?'C':'NC'}}</td>
+                        <td class="last-column">{{prod.observacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-3" *ngIf="formatoSeleccionado == 5">
+        <div class="col-12 px-0" style="--height-table:70vh">
+            <p-table [value]="listado" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 100px">Ord. Trab.</th>
+                        <th style="--header-table: 400px">Producto</th>
+                        <th style="--header-table: 200px" title="Inconformidades">Inconformidades</th>
+                        <th style="--header-table: 40px" title="Conforme/No conforme">C/NC</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">{{i+1 | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.ordenTrabajo?.codigo}}</td>
+                        <td>{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</td>
+                        <td [title]="prod.nombresInconformidad">{{prod.abrvsInconformidad}}</td>
+                        <td class="text-center">{{prod.indConforme?'C':'NC'}}</td>
+                        <td class="last-column">{{prod.observacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-3" *ngIf="formatoSeleccionado == 6">
+        <div class="col-12 px-0" style="--height-table:70vh">
+            <p-table [value]="listado" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 100px">Ord. Trab.</th>
+                        <th style="--header-table: 150px">Producto</th>
+                        <th style="--header-table: 80px" title="Hora de Ingreso">H. Ing.</th>
+                        <th style="--header-table: 80px" title="Hora de Salida">H. Sal.</th>
+                        <th style="--header-table: 80px" title="Tiempo total del proceso en minutos">Tmp. Total</th>
+                        <th style="--header-table: 80px" title="Presión caldero">Prs. Cald.</th>
+                        <th style="--header-table: 80px" title="Estado manguera">Est. Mang.</th>
+                        <th style="--header-table: 40px" title="Conforme/No conforme">C/NC</th>
+                        <th style="--header-table: 400px">Observaciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">{{i+1 | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.ordenTrabajo?.codigo}}</td>
+                        <td>{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</td>
+                        <td class="text-center">{{prod.horaIngreso | date:'HH:mm'}}</td>
+                        <td class="text-center">{{prod.horaSalida | date:'HH:mm'}}</td>
+                        <td class="text-center">{{prod.minutosTotal}}</td>
+                        <td class="text-center">{{prod.presionCaldero | number:'1.2-2'}}</td>
+                        <td class="text-center">{{prod.estadoManguera.abreviatura}}</td>
+                        <td class="text-center">{{prod.indConforme?'C':'NC'}}</td>
+                        <td class="last-column">{{prod.observacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-3" *ngIf="formatoSeleccionado == 7">
+        <div class="col-12 px-0" style="--height-table:70vh">
+            <p-table [value]="listado" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 100px">Ord. Trab.</th>
+                        <th style="--header-table: 150px">Producto</th>
+                        <th style="--header-table: 80px" title="Cantidad de bolsas de cemento usadas">Bls. Cmnt.</th>
+                        <th style="--header-table: 80px" title="Cantidad de carretillas de piedra usadas">Crrt. Piedra</th>
+                        <th style="--header-table: 80px" title="Cantidad de carretillas de arena usadas">Crrt. Arena</th>
+                        <th style="--header-table: 80px" title="Litros de agua usados">Ltrs. Agua</th>
+                        <th style="--header-table: 100px" title="Tipo de cemento usado">Tip. Cmnt.</th>
+                        <th style="--header-table: 150px" title="Marca de cemento usado">Marca Cemento</th>
+                        <th style="--header-table: 150px" title="Cantidad de accesorios en la mezcla">Cnt. Acc.</th>
+                        <th style="--header-table: 80px" title="Hora de Ingreso">H. Ing.</th>
+                        <th style="--header-table: 80px" title="Hora de Salida">H. Sal.</th>
+                        <th style="--header-table: 40px" title="Conforme/No conforme">C/NC</th>
+                        <th style="--header-table: 400px">Observaciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">{{i+1 | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.ordenTrabajo?.codigo}}</td>
+                        <td>{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</td>
+                        <td class="text-center">{{prod.bolsasCemento | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.carretillaPiedra | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.carretillaArena | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.litrosAgua | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.tipoCemento | number:'2.0-0'}}</td>
+                        <td>{{prod.marcaCemento}}</td>
+                        <td class="text-center">{{prod.cantidad | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.horaIngreso | date:'HH:mm'}}</td>
+                        <td class="text-center">{{prod.horaSalida | date:'HH:mm'}}</td>
+                        <td class="text-center">{{prod.indConforme?'C':'NC'}}</td>
+                        <td class="last-column">{{prod.observacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-3" *ngIf="formatoSeleccionado == 8">
+        <div class="col-12 px-0" style="--height-table:70vh">
+            <p-table [value]="listado" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th rowspan="2" style="--header-table: 40px">N</th>
+                        <th rowspan="2" style="--header-table: 100px">Ord. Trab.</th>
+                        <th rowspan="2" style="--header-table: 150px">Producto</th>
+                        <th rowspan="2" style="--header-table: 80px">Hora</th>
+                        <th rowspan="2" style="--header-table: 80px" title="Cantidad de varillas usadas">Cnt. Var.</th>
+                        <th [attr.colspan]="listadoDiametrosVarillas.length" style="--header-table: 80px" title="Cantidad de varillas por diametro">Diam. Var.</th>
+                        <th rowspan="2" style="--header-table: 90px" title="Número de alambre en el amarre">Alm. Amrr.</th>
+                        <th [attr.colspan]="listadoDiametrosRoldanas.length" style="--header-table: 80px" title="Cantidad de roldanas por diametro">Diam. Rol.</th>
+                        <th rowspan="2" style="--header-table: 80px" title="Cantidad de electrodos usados">Cnt. Elct.</th>
+                        <th rowspan="2" style="--header-table: 80px" title="Cantidad de accesorios armados">Cantidad</th>
+                        <th rowspan="2" style="--header-table: 40px" title="Cantidad roldana">C/NC</th>
+                        <th rowspan="2" style="--header-table: 300px" title="Cantidad roldana">Observación</th>
+                    </tr>
+                    <tr>
+                        <th *ngFor="let vari of listadoDiametrosVarillas" style="--header-table: 60px">{{vari.abreviatura}}</th>
+                        <th *ngFor="let rol of listadoDiametrosRoldanas" style="--header-table: 60px">{{rol.abreviatura}}</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">{{i+1 | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.ordenTrabajo?.codigo}}</td>
+                        <td class="text-center">{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</td>
+                        <td class="text-center">{{prod.hora | date:'HH:mm'}}</td>
+                        <td class="text-center">{{prod.cantVarillas | number:'2.0-0'}}</td>
+                        <td class="text-center" *ngFor="let vari of prod.listadoDiametrosVarillaAux">{{vari.cantidad}}</td>
+                        <td class="text-center">{{prod.nroAlambreAmarre.abreviatura}}</td>
+                        <td class="text-center" *ngFor="let rol of prod.listadoDiametrosRoldanaAux">{{rol.cantidad}}</td>
+                        <td class="text-center">{{prod.cantElectrodos | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.cantidad | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.indConforme?'C':'NC'}}</td>
+                        <td class="last-column">{{prod.observacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-3" *ngIf="formatoSeleccionado == 9">
+        <div class="col-12 px-0" style="--height-table:70vh">
+            <p-table [value]="listado" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 100px">Ord. Trab.</th>
+                        <th style="--header-table: 150px">Producto</th>
+                        <th style="--header-table: 80px" title="Hora de Ingreso">H. Ing.</th>
+                        <th style="--header-table: 80px" title="Hora de Salida">H. Sal.</th>
+                        <th style="--header-table: 80px" title="Estado manguera">Est. Máq.</th>
+                        <th style="--header-table: 80px">Cantidad</th>
+                        <th style="--header-table: 40px" title="Conforme/No conforme">C/NC</th>
+                        <th style="--header-table: 400px">Observaciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">{{i+1 | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.ordenTrabajo?.codigo}}</td>
+                        <td>{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</td>
+                        <td class="text-center">{{prod.horaIngreso | date:'HH:mm'}}</td>
+                        <td class="text-center">{{prod.horaSalida | date:'HH:mm'}}</td>
+                        <td class="text-center">{{prod.estadoMaquina.abreviatura}}</td>
+                        <td class="text-center">{{prod.cantidad | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.indConforme?'C':'NC'}}</td>
+                        <td class="last-column">{{prod.observacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-3" *ngIf="formatoSeleccionado == 10">
+        <div class="col-12 px-0" style="--height-table:70vh">
+            <p-table [value]="listado" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="--header-table: 40px">N</th>
+                        <th style="--header-table: 100px">Ord. Trab.</th>
+                        <th style="--header-table: 400px">Producto</th>
+                        <th style="--header-table: 80px">Cantidad</th>
+                        <th style="--header-table: 200px" title="Inconformidades">Acabados</th>
+                        <th style="--header-table: 40px" title="Conforme/No conforme">C/NC</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr>
+                        <td class="text-center">{{i+1 | number:'2.0-0'}}</td>
+                        <td class="text-center">{{prod.ordenTrabajo?.codigo}}</td>
+                        <td>{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</td>
+                        <td class="text-center">{{prod.cantidad | number:'2.0-0'}}</td>
+                        <td [title]="prod.nombresAcabado">{{prod.abrvsAcabado}}</td>
+                        <td class="text-center">{{prod.indConforme?'C':'NC'}}</td>
+                        <td class="last-column">{{prod.observacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

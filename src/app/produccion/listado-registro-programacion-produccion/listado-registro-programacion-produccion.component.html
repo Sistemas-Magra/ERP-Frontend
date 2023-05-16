@@ -20,7 +20,7 @@
     <div class="row" *ngIf="plantas">
         <div class="col-12 ps-0">
             <div class="row mt-3" style="--height-table:45vh">
-                <p-table [value]="listadosRegistrosProduccion" responsiveLayout="scroll" class="datatable-multiheader">
+                <p-table #miTabla [value]="listadosRegistrosProduccion" [contextMenu]="cm"[(contextMenuSelection)]="rowSelected" responsiveLayout="scroll" class="datatable-multiheader">
                     <ng-template pTemplate="header">
                         <tr>
                             <th rowspan="2" style="--header-table: 40px">N</th>
@@ -34,7 +34,7 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rp let-i="rowIndex">
-                        <tr>
+                        <tr [pContextMenuRow]="rp">
                             <td class="text-center">{{ i + 1 | number:'2.0-0' }}</td>
                             <td class="text-center">{{ rp.fecha }}</td>
                             <td class="text-center">{{ rp.cantidad | number:'2.0-0' }}</td>
@@ -53,3 +53,4 @@
         </div>
     </div>
 </div>
+<p-contextMenu #cm [model]="optionsRc"></p-contextMenu>

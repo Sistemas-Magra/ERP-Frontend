@@ -11,6 +11,7 @@ import { OrdenTrabajo } from '../models/orden-trabajo';
 import { OrdenTrabajoService } from '../orden-trabajo.service';
 import { ProduccionPlanta } from '../models/produccion-planta';
 import { ProduccionService } from '../produccion.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-registro-produccion',
@@ -47,7 +48,8 @@ export class RegistroProduccionComponent implements OnInit {
     private produccionService: ProduccionService,
     private plantaService: PlantaService,
     private dialogService: DialogService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private pipe: DatePipe
   ) { }
 
   ngOnInit(): void {
@@ -192,6 +194,10 @@ export class RegistroProduccionComponent implements OnInit {
 
     let newRow: ProduccionPlantaPoste = new ProduccionPlantaPoste();
     newRow.nroProduccion = this.listadoProduccion.length + 1;
+
+    let nroProd: string = (newRow.nroProduccion < 10?`0${newRow.nroProduccion}`:`${newRow.nroProduccion}`)
+
+    newRow.stickerProduccion = `${this.plantaSeleccionada.numero}${this.pipe.transform(new Date(), 'yyyyMMdd')}${nroProd}`;
     this.blnFilaAniadidaSinGuardar = true;
     this.validarFila = this.listadoProduccion.length;
     this.listadoProduccion.push(newRow);
@@ -218,9 +224,13 @@ export class RegistroProduccionComponent implements OnInit {
       return;
     }
 
+    if(this.listadoProduccion[i].cantidad > this.listadoProduccion[i].ordenTrabajoDetalle.cantidadPendiente) {
+      this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: `La cantidad que está ingresando es más de la que está en el pedido.`})
+    }
+
     this.produccionPlanta.detallePostes = this.listadoProduccion;
 
-    this.produccionService.update(this.produccionPlanta).subscribe({
+    this.produccionService.update(this.produccionPlanta, this.listadoProduccion[i].stickerProduccion).subscribe({
       next: res => {
         console.log(res);
         this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Poste registrado correctamente.'})

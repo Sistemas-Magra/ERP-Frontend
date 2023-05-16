@@ -197,8 +197,6 @@ export class FormatoCentrifugadoComponent implements OnInit {
       sumaTiempos += Number(vel.minutos);
     })
 
-    console.log(sumaTiempos, cent.minutosTotal)
-
     if(sumaTiempos != cent.minutosTotal) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'El tiempo total de las velocidades debe coincidir con el tiempo en el que el poste estuvo en la máquina.'});
       return;

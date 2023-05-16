@@ -1,0 +1,67 @@
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-1">
+            <div class="row">
+                <label class="col-2 col-form-label">Mes:</label>
+                <div class="col-10">
+                    <p-dropdown [options]="listMeses" [(ngModel)]="mesSeleccionado" placeholder="Seleccione" appendTo="body" [autoDisplayFirst]="false" optionLabel="nombre"></p-dropdown>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="row mt-3" style="--height-table:75vh">
+                <p-table [value]="listado" responsiveLayout="scroll" class="datatable-multiheader">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th rowspan="3" class="static" style="--header-table: 40px">N</th>
+                            <th rowspan="3" class="static" style="--header-table: 80px" title="Número del pedido">N° Pedido</th>
+                            <th rowspan="3" class="static" style="--header-table: 80px" title="Orden de trabajo">Ord. Trab.</th>
+                            <th rowspan="3" class="static" style="--header-table: 250px">Producto</th>
+                            <th rowspan="3" class="static" style="--header-table: 150px">Cliente</th>
+                            <th rowspan="3" class="static" style="--header-table: 60px" title="Cantidad Solicitada"><label class="label-rot">Cant. Sol.</label></th>
+                            <th rowspan="3" class="static" style="--header-table: 60px" title="Cantidad pendiente por fabricar"><label class="label-rot">Pend. Fab.</label></th>
+                            <th rowspan="3" class="static" style="--header-table: 60px" title="Cantidad pendiente de despachar"><label class="label-rot">Pend. Desp.</label></th>
+                            <th rowspan="3" class="static" style="--header-table: 60px" title="Cantidad despachados"><label class="label-rot">Desp.</label></th>
+                            <th [attr.colspan]="plantas.length" class="static">Stock por Plantas</th>
+                            <th rowspan="3" class="static" style="--header-table: 80px" title="Total de ingresos">Ing.</th>
+                            <th rowspan="3" class="static" style="--header-table: 80px" title="Total de salidas">Sal.</th>
+                            <th rowspan="3" class="static" style="--header-table: 80px" title="Saldo Final">Sald. Fin.</th>
+                            <th [attr.colspan]="plantas.length*(i==0?1:3)" *ngFor="let p of listDias; let i = index">{{p.nombre}}</th>
+                        </tr>
+                        <tr>
+                            <th rowspan="2" class="static" *ngFor="let p of plantas" style="--header-table: 80px">{{p.nombre}}</th>
+                            <th [attr.colspan]="i<=3?1:3" *ngFor="let p of listDiasPlanta; let i = index">{{p.nombre}}</th>
+                        </tr>
+                        <tr>
+                            <th class="tercer-nivel" style="--header-table: 40px" *ngFor="let p of listDiasPlantaItems">{{p.nombre}}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rp let-i="rowIndex">
+                        <tr>
+                            <td class="static-body text-center">{{i + 1 | number:'2.0-0'}}</td>
+                            <td class="static-body text-center">{{rp.nro_pedido}}</td>
+                            <td class="static-body text-center">{{rp.orden_trabajo}}</td>
+                            <td class="static-body ps-container" style="--header-table: 250px" [title]="rp.producto">
+                                <div class="ps">{{rp.producto}}</div>
+                            </td>
+                            <td class="static-body ps-container" style="--header-table: 150px" [title]="rp.cliente">
+                                <div class="ps">{{rp.cliente}}</div>
+                            </td>
+                            <td class="static-body text-center">{{rp.cantidad_solicitada | number:'2.0-0'}}</td>
+                            <td class="static-body text-center">{{rp.cantidad_pendiente | number:'2.0-0'}}</td>
+                            <td class="static-body text-center">{{rp.pendiente_despacho | number:'2.0-0'}}</td>
+                            <td class="static-body text-center">{{rp.despacho_realizado | number:'2.0-0'}}</td>
+                            <td class="static-body text-center" *ngFor="let p of plantas">{{rp['stock' + p.abreviatura] | number:'2.0-0'}}</td>
+                            <td class="static-body text-center">{{rp.ingresos | number:'2.0-0'}}</td>
+                            <td class="static-body text-center">{{rp.salidas | number:'2.0-0'}}</td>
+                            <td class="static-body text-center">{{rp.saldoFinal | number:'2.0-0'}}</td>
+                            <td class="text-center" *ngFor="let pi of listDiasPlantaItems">{{rp[pi.codigo] | number:'2.0-0'}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>

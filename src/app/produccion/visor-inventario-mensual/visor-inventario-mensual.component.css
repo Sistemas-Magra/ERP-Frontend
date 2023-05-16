@@ -1,0 +1,127 @@
+.label-rot {
+    transform: rotate(-90deg) !important;
+}
+
+table {
+    table-layout: fixed;
+}
+
+tr:not(nth-child(1)){
+    z-index: 1 !important;
+}
+
+.static {
+    position: sticky !important;
+    z-index: 1000 !important;
+    background-color: #f5f5f5;
+}
+
+.static-body {
+    position: sticky !important;
+    z-index: 2 !important;
+    background-color: #f5f5f5;
+}
+
+.tercer-nivel {
+    top: 52.38px !important
+}
+  
+tr:nth-child(1) > th:nth-child(1),
+tr > td:nth-child(1) {
+    left: 0 !important;
+}
+
+tr:nth-child(1) > th:nth-child(2),
+tr > td:nth-child(2) {
+    left: 40px !important;
+}
+
+tr:nth-child(1) > th:nth-child(3),
+tr > td:nth-child(3) {
+    left: 120px !important;
+}
+
+tr:nth-child(1) > th:nth-child(4),
+tr > td:nth-child(4) {
+    left: 200px !important;
+}
+
+tr:nth-child(1) > th:nth-child(5),
+tr > td:nth-child(5) {
+    left: 450px !important;
+}
+
+tr:nth-child(1) > th:nth-child(6),
+tr > td:nth-child(6) {
+    left: 600px !important;
+}
+
+tr:nth-child(1) > th:nth-child(7),
+tr > td:nth-child(7) {
+    left: 660px !important;
+}
+
+tr:nth-child(1) > th:nth-child(8),
+tr > td:nth-child(8) {
+    left: 720px !important;
+}
+
+tr:nth-child(1) > th:nth-child(9),
+tr > td:nth-child(9) {
+    left: 780px !important;
+}
+
+tr:nth-child(1) >  th:nth-child(10),
+tr > td:nth-child(10) {
+    left: 840px !important;
+}
+
+tr:nth-child(2) > th:nth-child(1) {
+    left: 840px !important;  
+}
+
+tr:nth-child(2) > th:nth-child(2),
+tr > td:nth-child(11){
+    left: 920px !important;  
+}
+
+tr:nth-child(2) > th:nth-child(3),
+tr > td:nth-child(12){
+    left: 1000px !important;  
+}
+
+tr:nth-child(2) > th:nth-child(4),
+tr > td:nth-child(13) {
+    left: 1080px !important;  
+}
+
+tr:nth-child(1) > th:nth-child(11),
+tr > td:nth-child(14)  {
+    left: 1160px !important;
+}
+
+tr:nth-child(1) > th:nth-child(12),
+tr > td:nth-child(15)  {
+    left: 1240px !important;
+}
+
+tr:nth-child(1) > th:nth-child(13),
+tr > td:nth-child(16)  {
+    left: 1320px !important;
+
+    border-right: 1px solid white !important;
+}
+
+.ps-container {
+    position: relative;
+}
+
+.ps {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    position: absolute !important;
+    left: 5px !important;
+    right: 5px !important;
+    top: 0 !important;
+}
