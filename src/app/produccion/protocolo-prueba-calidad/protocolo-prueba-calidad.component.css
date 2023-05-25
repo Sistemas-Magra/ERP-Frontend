@@ -1,0 +1,8 @@
+:host ::ng-deep .p-inputtextarea {
+    height: 300px !important;
+    width: 100% !important;
+}
+
+:host ::ng-deep p-dropdown.tpruebas {
+    padding-left: 0 !important;
+}

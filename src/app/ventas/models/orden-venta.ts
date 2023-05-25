@@ -8,6 +8,7 @@ import { Pago } from "./pago";
 import { OrdenVentaDespacho } from "./orden-venta-despacho";
 
 export class OrdenVenta {
+
     id: number;
     codigo: string;
     empresaPartida: Empresa;
@@ -23,10 +24,12 @@ export class OrdenVenta {
     nombreTrabajo: string;
     estado: TablaAuxiliarDetalle;
     fechaEntregaBase: Date;
+	tipoPago: TablaAuxiliarDetalle;
     adelanto: number = 0;
     adelantoPorc: number = 0;
+	metodoPago: TablaAuxiliarDetalle;
+    diasPagoCredito:number;
     pagoPendiente: number = 0;
-    saldoPago: TablaAuxiliarDetalle;
     tipoMoneda: Moneda;
     descuentoTotal: number = 0;
     referencia: string;

@@ -1,0 +1,7 @@
+:host ::ng-deep p-dropdown.p-element.p-inputwrapper.ng-star-inserted {
+    padding-left: 0 !important;
+}
+
+:host ::ng-deep p-password.p-element.p-inputwrapper.ng-star-inserted {
+    padding-left: 0 !important;
+}

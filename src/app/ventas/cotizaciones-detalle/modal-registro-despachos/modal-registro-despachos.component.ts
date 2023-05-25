@@ -44,7 +44,7 @@ export class ModalRegistroDespachosComponent implements OnInit {
     this.despachos  = this.config.data.despachos;
     this.fechaMax   = this.config.data.fechaEntrega;
     this.total   = this.config.data.total;
-    this.adelanto   = this.config.data.adelanto;
+    this.adelanto   = this.config.data.adelanto==null?0:this.config.data.adelanto;
 
     this.productosAux = JSON.parse(JSON.stringify(this.productos))
   }

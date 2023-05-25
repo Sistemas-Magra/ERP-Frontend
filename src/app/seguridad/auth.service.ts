@@ -72,7 +72,7 @@ export class AuthService {
   login(usuario: Usuario): Observable<any> {
     const urlEndPoint = environment.apiURL + 'oauth/token';
     const credenciales = btoa('angularapp' + ':' + '12345');
-    const httpHeaders = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', 'Authorization': 'Basic ' + credenciales });
+    const httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8', 'Authorization': 'Basic ' + credenciales });
 
     let params = new URLSearchParams();
     params.set('grant_type', 'password');

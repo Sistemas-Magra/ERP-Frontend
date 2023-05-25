@@ -1,0 +1,225 @@
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="float-end">
+                <p-button label="Guardar" styleClass="default-button" (click)="guardar()" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-8">
+            <p-card styleClass="p-card-shadow">
+                <div class="row" style="height: 0 !important">
+                    <div class="col-12" style="height: 0 !important">
+                        <label class="contenedor-label"> <b>Datos Principales</b> </label>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <label class="col-form-label col-2"><b>NTP 339.027 - 2002</b></label>
+                    <div class="col-3">
+                        <div class="row">
+                            <label class="col-form-label col-3">Cliente</label>
+                            <div class="col-9">
+                                <p-autoComplete id="auto-cliente" [(ngModel)]="protocolo.cliente" (completeMethod)="searchCliente($event)" [suggestions]="clientesAutocomplete" field="razonSocial" [minLength]="1" appendTo="body" [showEmptyMessage]="true"></p-autoComplete>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <label class="col-form-label col-5">Nro. Pedido</label>
+                            <div class="col-7">
+                                <p-autoComplete id="auto-pedido" [(ngModel)]="protocolo.ordenVenta" [disabled]="!protocolo.cliente || validarObject(protocolo.cliente)" (onFocus)="validarAutocompletePedido()" (onSelect)="setOrdenVenta($event)" (completeMethod)="searchOrdenVentaByCliente($event)" [suggestions]="ordenesVentaAutocomplete" field="codigo" [minLength]="1" appendTo="body" [showEmptyMessage]="true"></p-autoComplete>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <label class="col-form-label col-3">Producto</label>
+                            <div class="col-9">
+                                <p-autoComplete (onSelect)="setProducto($event)" [(ngModel)]="protocolo.producto" [disabled]="!protocolo.ordenVenta || validarObject(protocolo.ordenVenta)" (onFocus)="validarAutocompleteProducto()" (completeMethod)="searchProducto($event)" [suggestions]="productosAutocomplete" field="nombre" [minLength]="1" appendTo="body" [showEmptyMessage]="true"></p-autoComplete>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">
+                        <div class="row">
+                            <label class="col-form-label col-3">Ent. Licitante</label>
+                            <div class="col-9">
+                                <input type="text" pInputText [(ngModel)]="protocolo.entidadLicitante">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <label class="col-form-label col-5">Tipo Prueba:</label>
+                            <div class="col-7">
+                                <p-dropdown class="tpruebas" appendTo="body" [autoDisplayFirst]="false" [options]="tiposPrueba" [(ngModel)]="protocolo.tipoPrueba" optionLabel="nombre"></p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <label class="col-form-label col-6">Fecha: <span class="text-uppercase">{{protocolo.fechaInicio | date:'dd MMM yyyy'}}</span></label>
+                            <div class="col-6">
+                                <div class="row">
+                                    <label class="col-form-label col-4">Lote</label>
+                                    <div class="col-4">
+                                        <p-inputNumber [(ngModel)]="protocolo.lote" mode="decimal" :min="1" [maxFractionDigits]="0" locale="en"></p-inputNumber>
+                                    </div>
+                                    <label class="col-form-label col-4">UND.</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3" *ngIf="protocolo.ordenVenta && !validarObject(protocolo.ordenVenta)">
+                    <div class="col-12">
+                        <div class="row">
+                            <label class="col-form-label"><b>Obra</b></label>
+                        </div>
+                        <div class="row">
+                            <label class="col-form-label">"{{protocolo.ordenVenta?.nombreTrabajo}}"</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3" *ngIf="protocolo.producto && !validarObject(protocolo.producto)">
+                    <div class="col-5"><hr></div>
+                    <label class="col-form-label col-2 text-center"><b>Detalles del Producto</b></label>
+                    <div class="col-5"><hr></div>
+                </div>
+                <div class="row mt-3" *ngIf="protocolo.producto && !validarObject(protocolo.producto)">
+                    <div class="col-4">
+                        <div class="row">
+                            <label class="col-form-label col-6"><b>LONGITUD (m):</b></label>
+                            <label class="col-form-label col-4">{{protocolo.producto?.longitud | number:'1.2-2'}}</label>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <label class="col-form-label col-7"><b>EMPOTRAMIENTO (m):</b></label>
+                            <div class="col-2">
+                                <p-inputNumber [(ngModel)]="protocolo.empotramiento" mode="decimal" :min="1" [maxFractionDigits]="2" locale="en"></p-inputNumber>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <label class="col-form-label col-6"><b>LONGITUD UTIL (m):</b></label>
+                            <label class="col-form-label col-3">{{protocolo.producto?.longitud - protocolo.empotramiento | number:'1.2-2'}}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3" *ngIf="protocolo.producto && !validarObject(protocolo.producto)">
+                    <div class="col-4">
+                        <div class="row">
+                            <label class="col-form-label col-6"><b>CARGA DE TRABAJO (kg):</b></label>
+                            <label class="col-form-label col-4">{{protocolo.producto?.cargaTrabajo | number:'1.2-2'}}</label>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <label class="col-form-label col-7"><b>COEFICIENTE DE SEGURIDAD:</b></label>
+                            <div class="col-2">
+                                <p-inputNumber [(ngModel)]="protocolo.coeficienteSeguridad" mode="decimal" :min="1" [maxFractionDigits]="2" locale="en"></p-inputNumber>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <label class="col-form-label col-6"><b>CARGA DE ROTURA (kg.):</b></label>
+                            <label class="col-form-label col-3">{{protocolo.producto?.cargaTrabajo*protocolo.coeficienteSeguridad | number:'1.2-2'}}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3" *ngIf="protocolo.producto && !validarObject(protocolo.producto)">
+                    <div class="col-4">
+                        <div class="row">
+                            <label class="col-form-label col-6"><b>DEFLEX. MAX.:</b></label>
+                            <div class="col-2">
+                                <p-inputNumber (onInput)="setDeflexValue($event)" [(ngModel)]="protocolo.porcentajeDeflexMax" mode="decimal" :min="1" [maxFractionDigits]="2" locale="en"></p-inputNumber>
+                            </div>
+                            <label class="col-form-label col-2 ps-0">% </label>
+                            <label class="col-form-label col-2 ps-0">{{protocolo.deflexMax | number:'0.2-2':'en'}} mm</label>
+                        </div>
+                    </div> 
+                </div>
+                <div class="row mt-3" *ngIf="protocolo.producto && !validarObject(protocolo.producto)">
+                    <div class="col-4">
+                        <div class="row">
+                            <label class="col-form-label col-6"><b>DEFORM. MAX. PERM.:</b></label>
+                            <div class="col-2">
+                                <p-inputNumber (onInput)="setDeformValue($event)" [(ngModel)]="protocolo.porcentajeDeformxMax" mode="decimal" :min="1" [maxFractionDigits]="2" locale="en"></p-inputNumber>
+                            </div>
+                            <label class="col-form-label col-2 ps-0">% </label>
+                            <label class="col-form-label col-2 ps-0">{{protocolo.deformMax | number:'0.2-2':'en'}} mm</label>
+                        </div>
+                    </div>                    
+                </div>
+            </p-card>
+            <p-card styleClass="p-card-shadow mt-3" *ngIf="protocolo.producto && !validarObject(protocolo.producto)">
+                <div class="row" style="height: 0 !important">
+                    <div class="col-12" style="height: 0 !important">
+                        <label class="contenedor-label"> <b>Pruebas</b> </label>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-4" style="--height-table:30vh">
+                        <p-table [value]="protocolo.pruebasCargaTrabajo" responsiveLayout="scroll">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th rowspan="3" style="--header-table: 20px;">N</th>
+                                    <th [attr.colspan]="listaPorcentajesCargaTrabajo.length + 1" (click)="addFilaCargaTrabajo()" style="cursor:pointer;">PRUEBA CARGA DE TRABAJO</th>
+                                </tr>
+                                <tr>
+                                    <th *ngFor="let i of listaPorcentajesCargaTrabajo" style="--header-table: 60px; top: 26.19px">{{i.abreviatura}}</th>
+                                </tr>
+                                <tr>
+                                    <th *ngFor="let i of listaPorcentajesCargaTrabajo" style="--header-table: 60px; top: 52.38px">{{getPorcentajeCarga(i.valor)}}</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                                <tr>
+                                    <td class="text-center" (dblclick)="quitar(i, 1)">{{i + 1 | number:'2.0-0'}}</td>
+                                    <td *ngFor="let i of prod.muestras" [ngClass]="{'last-column': prod.muestras.indexOf(i) == prod.muestras.length - 1}">
+                                        <input type="text" pInputText [(ngModel)]="i.valor">
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                    <div class="col-8" style="--height-table:30vh">
+                        <p-table [value]="protocolo.pruebasRotura" responsiveLayout="scroll">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th rowspan="3" style="--header-table: 20px;">N</th>
+                                    <th [attr.colspan]="listaPorcentajesRotura.length + 1" (click)="addFilaRotura()" style="cursor:pointer;">PRUEBA DE CARGA DE ROTURA</th>
+                                </tr>
+                                <tr>
+                                    <th *ngFor="let i of listaPorcentajesRotura" style="--header-table: 60px; top: 26.19px">{{i.abreviatura}}</th>
+                                </tr>
+                                <tr>
+                                    <th *ngFor="let i of listaPorcentajesRotura" style="--header-table: 60px; top: 52.38px">{{getPorcentajeCarga(i.valor)}}</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                                <tr>
+                                    <td class="text-center" (dblclick)="quitar(i, 2)">{{i + 1 | number:'2.0-0'}}</td>
+                                    <td *ngFor="let i of prod.muestras" [ngClass]="{'last-column': prod.muestras.indexOf(i) == prod.muestras.length - 1}">
+                                        <input type="text" pInputText [(ngModel)]="i.valor">
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-4">
+            <span class="p-float-label">
+                <textarea inputId="textarea" [(ngModel)]="protocolo.conclusion" [rows]="50" [cols]="30" pInputTextarea style="resize: none !important;"></textarea>
+                <label for="textarea">Conclusión</label>
+            </span>
+        </div>
+    </div>
+</div>

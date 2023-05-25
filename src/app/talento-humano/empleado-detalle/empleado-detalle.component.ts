@@ -79,7 +79,7 @@ export class EmpleadoDetalleComponent implements OnInit {
   ngOnInit(): void {
     
     let fork = forkJoin(
-      this.auxiliarService.getListSelect('CATEMP'),
+      [this.auxiliarService.getListSelect('CATEMP'),
       this.auxiliarService.getListSelect('TIPDOC'),
       this.auxiliarService.getListSelect('GRDINS'),
       this.auxiliarService.getDetalleById('ESTGRL', 1),
@@ -91,7 +91,7 @@ export class EmpleadoDetalleComponent implements OnInit {
       this.bancoService.getBancosActivos(),
       this.auxiliarService.getListSelect('TIPPEM'),
       this.auxiliarService.getListSelect('PERPAG'),
-      this.departamentoService.getAll(),
+      this.departamentoService.getAll(),]
     )
 
     fork.subscribe(res => {

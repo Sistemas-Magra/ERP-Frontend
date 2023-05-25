@@ -5,6 +5,9 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth.service';
 import { Usuario } from '../models/usuario';
 import { ModuloService } from '../modulo.service';
+import { Empresa } from 'src/app/gestion/models/empresa';
+import { Sede } from 'src/app/gestion/models/sede';
+import { EmpresaService } from 'src/app/gestion/empresa.service';
 
 @Component({
   selector: 'app-login',
@@ -20,11 +23,18 @@ export class LoginComponent {
 
   blnCargando: boolean = false;
 
+  empresas: Empresa[];
+  empresaSeleccionada: Empresa = new Empresa();
+
+  sedes: Sede[] = [];
+  sedeSeleccionada: Sede;
+
   constructor(
     private router: Router,
     private authService: AuthService,
     private moduloService: ModuloService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private empresaService: EmpresaService
   ) { }
 
   ngOnInit(): void {
@@ -33,7 +43,18 @@ export class LoginComponent {
       this.router.navigate(['/']);
     }
 
+    this.empresaService.getEmpresasActivas().subscribe({
+      next: res => {
+        this.empresas = res;
+        this.empresaSeleccionada = this.empresas[0];
+      }
+    })
+
     /**/
+  }
+
+  setEmpresa() {
+    this.sedes = this.empresaSeleccionada.sedes?this.empresaSeleccionada.sedes:[];
   }
 
   registrarUsuario() {
@@ -41,8 +62,24 @@ export class LoginComponent {
   }
 
   login(): void {
-    if(this.usuario.username == null || this.usuario.password == null || this.usuario.username == '' || this.usuario.password == '') {
-      this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: 'Usuario o contraseña vacíos'});
+
+    if(!this.empresaSeleccionada) {
+      this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: 'Debe seleccionar una empresa.'});
+      return;
+    }
+
+    if(!this.sedeSeleccionada) {
+      this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: 'Debe seleccionar una sede.'});
+      return;
+    }
+
+    if(this.usuario.username == null || this.usuario.username == '') {
+      this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: 'Debe ingresar su nombre de usuario.'});
+      return;
+    }
+
+    if(this.usuario.password == null || this.usuario.password == '') {
+      this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: 'Debe ingresar su contraseña.'});
       return;
     }
 
@@ -57,6 +94,9 @@ export class LoginComponent {
             this.authService.guardarToken(res.access_token);
             this.authService.guardarModulos(mod);
             
+            localStorage.setItem("empresa_id", this.empresaSeleccionada.id.toString());
+            localStorage.setItem("sede_id", this.sedeSeleccionada.id.toString());
+
             /*TODO: Traer esta info de la BD*/
             this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Ha iniciado sesión correctamente'});
             this.router.navigate(['/']);

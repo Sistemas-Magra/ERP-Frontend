@@ -13,6 +13,30 @@ export class OrdenTrabajoService {
 
   constructor(private http: HttpClient) { }
 
+  getProductosFromOrdenTrabajo(id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlEndPoint}/listado-productos-calidad/${id}`).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
+  getListadoProducto(ordenTrabajoId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlEndPoint}/listado-productos/${ordenTrabajoId}`).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
+  getListadoPedidos(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlEndPoint}/listado-pedidos`).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
   autocomplete(term: string): Observable<OrdenTrabajo[]> {
     return this.http.get<OrdenTrabajo[]>(`${this.urlEndPoint}/autocomplete/${term}`).pipe(
       map(ots => {

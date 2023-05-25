@@ -73,7 +73,3 @@
 .input-file>input{ 
     display: none;
 }
-
-p-dropdown.p-element.p-inputwrapper.ng-star-inserted {
-    padding-left: 0 !important;
-}

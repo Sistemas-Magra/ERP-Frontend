@@ -1,0 +1,69 @@
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-2">
+            <div class="row">
+                <label class="col-form-label col-3">Cliente:</label>
+                <div class="col-9">
+                    <input type="text" pInputText>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <label class="col-form-label col-4">Orden Trab.:</label>
+                <div class="col-8">
+                    <input type="text" pInputText>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <label class="col-form-label col-3">Producto:</label>
+                <div class="col-9">
+                    <input type="text" pInputText>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <label class="col-form-label col-5">Fecha:</label>
+                <div class="col-7">
+                    <input type="text" pInputText>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="float-end">
+                <p-button label="Nuevo" styleClass="default-button" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3" style="--height-table:85vh">
+        <p-table [value]="listado" responsiveLayout="scroll" class="datatable-multiheader">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="--header-table: 40px">N</th>
+                    <th style="--header-table: 120px">Orden Trabajo</th>
+                    <th style="--header-table: 120px">Pedido</th>
+                    <th style="--header-table: 150px">Fecha</th>
+                    <th style="--header-table: 450px">Cliente</th>
+                    <th>Producto</th>
+                    <th style="--header-table: 90px">Cnt. C.T.</th>
+                    <th style="--header-table: 90px">Cnt. C.R.</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-prot let-i="rowIndex">
+                <tr (click)="setFila(i)" (dblclick)="goToDetalle(prot.id)" [ngClass]="{'selected': validarFila == i}">
+                    <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
+                    <td class="text-center">{{prot.orden_trabajo}}</td>
+                    <td class="text-center">{{prot.orden_venta}}</td>
+                    <td class="text-center">{{prot.fecha}}</td>
+                    <td>{{prot.cliente}}</td>
+                    <td>{{prot.producto}}</td>
+                    <td class="text-center">{{prot.cant_carg_trab | number: '2.0-0'}}</td>
+                    <td class="text-center">{{prot.cant_rot | number: '2.0-0'}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

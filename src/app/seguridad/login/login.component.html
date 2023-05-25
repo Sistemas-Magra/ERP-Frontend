@@ -3,6 +3,7 @@
         <div class="col"></div>
         <div class="col-4" >
             <p-card styleClass="p-card-shadow">
+                <!--Bienvenida-->
                 <div class="text-center mb-1">
                     <h1 style="font-size: 20px !important;">Bienvenido a {{ empresa }}</h1>
                 </div>
@@ -17,6 +18,19 @@
                     </div>
                 </div>
 
+                <!--Loggin-->
+                <div class="row mt-3">
+                    <label for="usuario" class="col-2 col-form-label">Empresa:</label>
+                    <div class="col-10">
+                        <p-dropdown (onChange)="setEmpresa()" [options]="empresas" [(ngModel)]="empresaSeleccionada" optionLabel="razonSocial" placeholder="Seleccione" appendTo="body" [autoDisplayFirst]="false"></p-dropdown>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <label for="usuario" class="col-2 col-form-label">Sede:</label>
+                    <div class="col-10">
+                        <p-dropdown styleClass="pitem" [disabled]="!empresaSeleccionada || sedes.length == 0" [options]="sedes" [(ngModel)]="sedeSeleccionada" optionLabel="nombre" placeholder="Seleccione" appendTo="body" [autoDisplayFirst]="false"></p-dropdown>
+                    </div>
+                </div>
                 <div class="row mt-5">
                     <label for="usuario" class="col-2 col-form-label">Usuario:</label>
                     <div class="col-10">

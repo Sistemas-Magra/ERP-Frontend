@@ -88,22 +88,32 @@ import { FormatoAcabadoComponent } from './produccion/registro-menu-produccion/f
 import { FormatoVibracionComponent } from './produccion/registro-menu-produccion/formatos-accesorios/formato-vibracion/formato-vibracion.component';
 import { VisorInventarioMensualComponent } from './produccion/visor-inventario-mensual/visor-inventario-mensual.component';
 import { ModalFormatosComponent } from './produccion/listado-registro-programacion-produccion/modal-formatos/modal-formatos.component';
+import { ListadoOrdenesTrabajoComponent } from './produccion/listado-ordenes-trabajo/listado-ordenes-trabajo.component';
+import { ModalAvanceComponent } from './produccion/listado-ordenes-trabajo/modal-avance/modal-avance.component';
+import { ProtocoloPruebaCalidadComponent } from './produccion/protocolo-prueba-calidad/protocolo-prueba-calidad.component';
+import { ModalDatosCartaCalidadComponent } from './produccion/listado-ordenes-trabajo/modal-datos-carta-calidad/modal-datos-carta-calidad.component';
+import { ModalDatosActaConformidadComponent } from './produccion/listado-ordenes-trabajo/modal-datos-acta-conformidad/modal-datos-acta-conformidad.component';
+import { ListadoProtocoloPruebaComponent } from './produccion/listado-protocolo-prueba/listado-protocolo-prueba.component';
 
-registerLocaleData(localeES, 'es-Pe');
+registerLocaleData(localeES);
 
 const routes: Routes = [
   //Producción
-  { path: 'produccion/inventario-mensual', component: VisorInventarioMensualComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/accesorios/mezcla', component: FormatoMezclasComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/accesorios/armado', component: FormatoArmadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/accesorios/acabado', component: FormatoAcabadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/accesorios/vibracion', component: FormatoVibracionComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/postes/mezcla', component: FormatoMezclaComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/postes/estructura', component: FormatoEstructuraComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/postes/tubos-pines', component: FormatoTubosPinesComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/postes/centrifugado', component: FormatoCentrifugadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/postes/desencrofado', component: FormatoDesencrofadoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
-  { path: 'produccion/formato/postes/curado', component: FormatoCuradoComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Formato de Mezcla'} },
+  { path: 'produccion/listado-protocolo-prueba', component: ListadoProtocoloPruebaComponent, pathMatch: 'full', data: {title: 'Listado de Protocolo de Prueba de Calidad', menu: 'Producción | Listado de Protocolo de Prueba de Calidad'} },
+  { path: 'produccion/protocolo-prueba', redirectTo: 'produccion/protocolo-prueba/0', pathMatch: 'full', data: {title: 'Protocolo de Prueba de Calidad', menu: 'Producción | Protocolo de Prueba de Calidad'} },
+  { path: 'produccion/protocolo-prueba/:id', component: ProtocoloPruebaCalidadComponent, pathMatch: 'full', data: {title: 'Protocolo de Prueba de Calidad', menu: 'Producción | Protocolo de Prueba de Calidad'} },
+  { path: 'produccion/ordenes-pedido', component: ListadoOrdenesTrabajoComponent, pathMatch: 'full', data: {title: 'Listado de órdenes de trabajo', menu: 'Producción | Listado de órdenes de trabajo'} },
+  { path: 'produccion/inventario-mensual', component: VisorInventarioMensualComponent, pathMatch: 'full', data: {title: 'Inventario Mensual', menu: 'Producción | Inventario Mensual'} },
+  { path: 'produccion/formato/accesorios/mezcla', component: FormatoMezclasComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Accesorios | Formato de Mezcla'} },
+  { path: 'produccion/formato/accesorios/armado', component: FormatoArmadoComponent, pathMatch: 'full', data: {title: 'Formato de Armado', menu: 'Producción | Accesorios | Formato de Armado'} },
+  { path: 'produccion/formato/accesorios/acabado', component: FormatoAcabadoComponent, pathMatch: 'full', data: {title: 'Formato de Acabado', menu: 'Producción | Accesorios | Formato de Acabado'} },
+  { path: 'produccion/formato/accesorios/vibracion', component: FormatoVibracionComponent, pathMatch: 'full', data: {title: 'Formato de Vibración', menu: 'Producción | Accesorios | Formato de Vibración'} },
+  { path: 'produccion/formato/postes/mezcla', component: FormatoMezclaComponent, pathMatch: 'full', data: {title: 'Formato de Mezcla', menu: 'Producción | Postes | Formato de Mezcla'} },
+  { path: 'produccion/formato/postes/estructura', component: FormatoEstructuraComponent, pathMatch: 'full', data: {title: 'Formato de Estructura', menu: 'Producción | Postes | Formato de Estructura'} },
+  { path: 'produccion/formato/postes/tubos-pines', component: FormatoTubosPinesComponent, pathMatch: 'full', data: {title: 'Formato de Tubos y pines', menu: 'Producción  | Postes| Formato de Tubos y pines'} },
+  { path: 'produccion/formato/postes/centrifugado', component: FormatoCentrifugadoComponent, pathMatch: 'full', data: {title: 'Formato de Centrifugado', menu: 'Producción | Postes | Formato de Centrifugado'} },
+  { path: 'produccion/formato/postes/desencrofado', component: FormatoDesencrofadoComponent, pathMatch: 'full', data: {title: 'Formato de Desencrofado', menu: 'Producción | Postes | Formato de Desencrofado'} },
+  { path: 'produccion/formato/postes/curado', component: FormatoCuradoComponent, pathMatch: 'full', data: {title: 'Formato de Curado', menu: 'Producción | Postes | Formato de Curado'} },
   { path: 'produccion/menu-produccion', component: RegistroMenuProduccionComponent, pathMatch: 'full', data: {title: 'Menú de producción', menu: 'Producción | Menú de producción'} },
   { path: 'produccion/registro-produccion-postes/listado', component: ListadoRegistroProgramacionProduccionComponent, pathMatch: 'full', data: {title: 'Registro de Producción de Postes', menu: 'Producción | Registro de Producción de Postes'} },
   { path: 'produccion/registro-produccion-postes', component: RegistroProduccionComponent, pathMatch: 'full', data: {title: 'Registro de Producción de Postes', menu: 'Producción | Registro de Producción de Postes'} },
@@ -189,6 +199,12 @@ const routes: Routes = [
     FormatoVibracionComponent,
     VisorInventarioMensualComponent,
     ModalFormatosComponent,
+    ListadoOrdenesTrabajoComponent,
+    ModalAvanceComponent,
+    ProtocoloPruebaCalidadComponent,
+    ModalDatosCartaCalidadComponent,
+    ModalDatosActaConformidadComponent,
+    ListadoProtocoloPruebaComponent,
   ],
   imports: [
     CardModule,
@@ -227,7 +243,7 @@ const routes: Routes = [
     MessageService,
     DialogService,
     DatePipe,
-    { provide: LOCALE_ID, useValue: 'es-Pe' },
+    { provide: LOCALE_ID, useValue: 'es' },
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

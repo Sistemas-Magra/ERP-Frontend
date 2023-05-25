@@ -14,6 +14,22 @@ export class CotizacionService {
 
   constructor(private http: HttpClient) { }
 
+  downloadFile(filename: string, ind: number): Observable<any> {
+    return this.http.get(`${this.urlEndPoint}/descargar-archivos/${ind}/${filename}`, { responseType: 'blob' }).pipe(
+      catchError(err => {
+        return throwError(() => {return err});
+      })
+    );
+  }
+
+  autocompleteByCliente(clienteId: number, term: string): Observable<OrdenVenta[]> {
+    return this.http.get<OrdenVenta[]>(`${this.urlEndPoint}/autocomplete-c/${clienteId}/${term}`).pipe(
+      catchError(err => {
+        return throwError(() => {return err});
+      })
+    );
+  }
+
   registrarPagos(id: number, pago: Pago, adelanto: number, total: number, pendiente: number): Observable<any> {
     let url: string = `${this.urlEndPoint}/registrar-pago/${id}`;
     
@@ -110,8 +126,8 @@ export class CotizacionService {
     );
   }
 
-  create(ov: OrdenVenta): Observable<any> {
-    return this.http.post(`${this.urlEndPoint}/create`, ov).pipe(
+  create(ov: OrdenVenta, empresaId: number): Observable<any> {
+    return this.http.post(`${this.urlEndPoint}/create/${empresaId}`, ov).pipe(
       catchError(err => {
         return throwError(() => {return err})
       })

@@ -34,7 +34,7 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rp let-i="rowIndex">
-                        <tr [pContextMenuRow]="rp">
+                        <tr [pContextMenuRow]="rp" (click)="asignarFila(i)" [ngClass]="{'selected': validarFila == i}" (contextmenu)="asignarFila(i)">
                             <td class="text-center">{{ i + 1 | number:'2.0-0' }}</td>
                             <td class="text-center">{{ rp.fecha }}</td>
                             <td class="text-center">{{ rp.cantidad | number:'2.0-0' }}</td>

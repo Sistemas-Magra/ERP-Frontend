@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { MenuItem } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ModalFormatosComponent } from './modal-formatos/modal-formatos.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-listado-registro-programacion-produccion',
@@ -29,18 +30,22 @@ export class ListadoRegistroProgramacionProduccionComponent implements OnInit {
   
   ref: DynamicDialogRef;
 
+  validarFila: number = -1;
+
   constructor(
     private auxiliarService: AuxiliarService,
     private plantaService: PlantaService,
     private produccionService: ProduccionService,
     private dialogService: DialogService,
-    private pipe: DatePipe
+    private pipe: DatePipe,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
 
     this.optionsRc = [
       {label: 'Revisar Formatos', icon: 'pi pi-fw pi-eye', command: () => this.abrirModalFormatos(this.rowSelected)},
+      {label: 'Registrar calidad', icon: 'pi pi-fw pi-check', command: () => this.registrarCalidad(this.rowSelected)},
     ]
 
     let fork = forkJoin([
@@ -56,6 +61,15 @@ export class ListadoRegistroProgramacionProduccionComponent implements OnInit {
         this.listadosRegistrosProduccion = res[2];
       }
     })
+  }
+
+  asignarFila(i: number) {
+    this.validarFila = i;
+  }
+
+  registrarCalidad(item) {
+    sessionStorage.setItem("idCalidad", item.id);
+    this.router.navigate(['/produccion/registro-produccion-postes'])
   }
 
   abrirModalFormatos(item: any) {

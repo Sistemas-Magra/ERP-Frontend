@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row my-3">
         <div class="col-12">
-            <div class="float-end">
+            <div class="float-end" *ngIf="!blnEditar">
                 <p-button label="Guardar" styleClass="default-button" (click)="guardar()" [style]="{width: '90px', height: '26px'}"></p-button>
             </div>
         </div>
@@ -17,26 +17,26 @@
                 <div class="row">
                     <div class="col-10">
                         <span class="p-float-label">
-                            <p-dropdown inputId="tipdoc" [autoDisplayFirst]="false" [options]="documentoIdentidadSelect" [(ngModel)]="cliente.tipoDocumentoIdentidad" optionLabel="nombre" appendTo="body"></p-dropdown>
+                            <p-dropdown [disabled]="blnEditar" inputId="tipdoc" [autoDisplayFirst]="false" [options]="documentoIdentidadSelect" [(ngModel)]="cliente.tipoDocumentoIdentidad" optionLabel="nombre" appendTo="body"></p-dropdown>
                             <label for="tipdoc">Tipo de Doc. de Identidad</label>
                         </span>
                     </div>
                     <div class="col-2">
-                        <i style="cursor: pointer; color: green; font-weight: bold; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar('TIPDOC')"></i>
+                        <i *ngIf="!blnEditar" style="cursor: pointer; color: green; font-weight: bold; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar('TIPDOC')"></i>
                     </div>
                 </div>
             </div>
             <div class="col-2">
                 <div class="row">
                     <span class="p-float-label">
-                        <input type="text" id="nrodoc" (keydown.enter)="buscarRuc()" pInputText [(ngModel)]="cliente.nroDocumentoIdentidad"> 
+                        <input [disabled]="blnEditar" type="text" id="nrodoc" (keydown.enter)="buscarRuc()" pInputText [(ngModel)]="cliente.nroDocumentoIdentidad"> 
                         <label for="nrodoc">Número de Documento</label>
                     </span>
                 </div>
             </div>
             <div class="col-6">
                 <span class="p-float-label">
-                    <input type="text" id="nombre" pInputText [(ngModel)]="cliente.razonSocial"> 
+                    <input [disabled]="blnEditar" type="text" id="nombre" pInputText [(ngModel)]="cliente.razonSocial"> 
                     <label for="nombre">Nombre</label>
                 </span>
             </div>
@@ -50,25 +50,25 @@
         <div class="row mt-3">
             <div class="col-2">
                 <span class="p-float-label">
-                    <p-dropdown inputId="dep" [autoDisplayFirst]="false" [options]="departamentos" [(ngModel)]="departamentoSeleccionado" optionLabel="nombre" appendTo="body"></p-dropdown>
+                    <p-dropdown [disabled]="blnEditar" inputId="dep" [autoDisplayFirst]="false" [options]="departamentos" [(ngModel)]="departamentoSeleccionado" optionLabel="nombre" appendTo="body"></p-dropdown>
                     <label for="dep">Departamento</label>
                 </span>
             </div>
             <div class="col-2">
                 <span class="p-float-label">
-                    <p-dropdown inputId="prov" [disabled]="!departamentoSeleccionado" [autoDisplayFirst]="false" [options]="departamentoSeleccionado?.provincias" [(ngModel)]="provinciaSeleccionada" optionLabel="nombre" appendTo="body"></p-dropdown>
+                    <p-dropdown [disabled]="blnEditar" inputId="prov" [disabled]="!departamentoSeleccionado" [autoDisplayFirst]="false" [options]="departamentoSeleccionado?.provincias" [(ngModel)]="provinciaSeleccionada" optionLabel="nombre" appendTo="body"></p-dropdown>
                     <label for="prov">Provincia</label>
                 </span>
             </div>
             <div class="col-2">
                 <span class="p-float-label">
-                    <p-dropdown inputId="dist" [disabled]="!provinciaSeleccionada" [autoDisplayFirst]="false" [options]="provinciaSeleccionada?.distritos" [(ngModel)]="cliente.distrito" optionLabel="nombre" appendTo="body"></p-dropdown>
+                    <p-dropdown [disabled]="blnEditar" inputId="dist" [disabled]="!provinciaSeleccionada" [autoDisplayFirst]="false" [options]="provinciaSeleccionada?.distritos" [(ngModel)]="cliente.distrito" optionLabel="nombre" appendTo="body"></p-dropdown>
                     <label for="dist">Distrito</label>
                 </span>
             </div>
             <div class="col-4">
                 <span class="p-float-label">
-                    <input type="text" id="dir" pInputText [(ngModel)]="cliente.direccion"> 
+                    <input [disabled]="blnEditar" type="text" id="dir" pInputText [(ngModel)]="cliente.direccion"> 
                     <label for="dir">Dirección</label>
                 </span>
             </div>
@@ -76,12 +76,12 @@
                 <div class="row">
                     <div class="col-10">
                         <span class="p-float-label">
-                            <p-dropdown inputId="cntct" [autoDisplayFirst]="false" [options]="cliente?.contactos" [(ngModel)]="ordenVenta.contacto" optionLabel="nombreCompleto" appendTo="body"></p-dropdown>
+                            <p-dropdown [disabled]="blnEditar" inputId="cntct" [autoDisplayFirst]="false" [options]="cliente?.contactos" [(ngModel)]="ordenVenta.contacto" optionLabel="nombreCompleto" appendTo="body"></p-dropdown>
                             <label for="cntct">Contacto</label>
                         </span>
                     </div>
                     <div class="col-2">
-                        <i style="cursor: pointer; color: green; font-weight: bold; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarContacto()"></i>
+                        <i *ngIf="!blnEditar" style="cursor: pointer; color: green; font-weight: bold; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarContacto()"></i>
                     </div>
                 </div>
                 <div class="row" *ngIf="ordenVenta.contacto">
@@ -104,72 +104,86 @@
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-2">
+            <div class="col-2" *ngIf="indPasarVenta">
                 <div class="row">
                     <div class="col-10">
                         <span class="p-float-label">
-                            <p-dropdown inputId="fpago" [autoDisplayFirst]="false" [options]="saldosPagoSelect" [(ngModel)]="ordenVenta.saldoPago" optionLabel="nombre" appendTo="body"></p-dropdown>
-                            <label for="fpago">Saldo de Pago</label>
+                            <p-dropdown [disabled]="blnEditar" inputId="fpago" [autoDisplayFirst]="false" [options]="formasPagoSelect" [(ngModel)]="ordenVenta.tipoPago" optionLabel="nombre" appendTo="body" (onChange)="setMetodoPago()"></p-dropdown>
+                            <label for="fpago">Forma de Pago</label>
                         </span>
                     </div>
                     <div class="col-2">
-                        <i style="cursor: pointer; color: green; font-weight: bold; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar('TIPSPG')"></i>
+                        <i *ngIf="!blnEditar" style="cursor: pointer; color: green; font-weight: bold; font-weight: bold;" class="pi pi-plus mt-2" (click)="agregarAuxiliar('TIPFPG')"></i>
                     </div>
                 </div>
             </div>
             <div class="col-2">
                 <span class="p-float-label">
-                    <p-calendar inputId="fecha" [(ngModel)]="ordenVenta.fechaEntregaBase" appendTo="body" dateFormat="dd M yy"></p-calendar>
+                    <p-calendar [disabled]="blnEditar" inputId="fecha" [(ngModel)]="ordenVenta.fechaEntregaBase" appendTo="body" dateFormat="dd M yy"></p-calendar>
                     <label for="fecha">Fecha</label>
                 </span>
             </div>
             <div class="col-2">
                 <span class="p-float-label">
-                    <input type="text" id="spago" pInputText [(ngModel)]="ordenVenta.referencia"> 
+                    <input [disabled]="blnEditar" type="text" id="spago" pInputText [(ngModel)]="ordenVenta.referencia"> 
                     <label for="spago">Referencia</label>
                 </span>
             </div>
             <div class="col-2">
                 <span class="p-float-label">
-                    <p-dropdown inputId="fpago" [autoDisplayFirst]="false" [options]="monedaSelect" [(ngModel)]="ordenVenta.tipoMoneda" optionLabel="nombre" appendTo="body" (onChange)="setMoneda()"></p-dropdown>
+                    <p-dropdown [disabled]="blnEditar" inputId="fpago" [autoDisplayFirst]="false" [options]="monedaSelect" [(ngModel)]="ordenVenta.tipoMoneda" optionLabel="nombre" appendTo="body" (onChange)="setMoneda()"></p-dropdown>
                     <label for="fpago">Moneda de Pago</label>
                 </span>
             </div>
             <div class="col-1" *ngIf="ordenVenta?.tipoMoneda">
                 <span class="p-float-label">
-                    <input type="text" id="spago" pInputText [(ngModel)]="ordenVenta.tipoCambio"> 
+                    <input disabled type="text" id="spago" pInputText [(ngModel)]="ordenVenta.tipoCambio"> 
                     <label for="spago">Tipo de Cambio</label>
                 </span>
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-2" *ngIf="indPasarVenta">
+            <div class="col-2" *ngIf="indPasarVenta && ordenVenta.tipoPago?.tablaAuxiliarDetalleId?.id == 2">
                 <div class="row ps-1">
                     <label class="col-3 ms-1 col-form-label">Adelanto:</label>
                     <div class="col-4">
-                        <p-inputNumber [(ngModel)]="ordenVenta.adelanto" mode="decimal" [maxFractionDigits]="2" locale="en-US" (onInput)="inputAdelanto($event)"></p-inputNumber>
+                        <p-inputNumber [disabled]="blnEditar" [(ngModel)]="ordenVenta.adelanto" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2" locale="en-US" (onInput)="inputAdelanto($event)"></p-inputNumber>
                     </div>
                     <div class="col-3">
-                        <p-inputNumber [(ngModel)]="ordenVenta.adelantoPorc" mode="decimal" [maxFractionDigits]="2" locale="en-US" (onInput)="inputAdelantoPorc($event)"></p-inputNumber>
+                        <p-inputNumber [disabled]="blnEditar" [(ngModel)]="ordenVenta.adelantoPorc" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2" locale="en-US" (onInput)="inputAdelantoPorc($event)"></p-inputNumber>
                     </div>
                     <label class="col-1 col-form-label">%</label>
                 </div>
             </div>
+            <div class="col-2" *ngIf="indPasarVenta && ordenVenta.tipoPago?.tablaAuxiliarDetalleId?.id == 1">
+                <div class="row ps-1">
+                    <label class="col-3 ms-1 col-form-label">Días Cred.:</label>
+                    <div class="col-3">
+                        <p-inputNumber [disabled]="blnEditar" [(ngModel)]="ordenVenta.diasPagoCredito" mode="decimal" [maxFractionDigits]="2" locale="en-US"></p-inputNumber>
+                    </div>
+                    <div class="col-5">
+                        <span class="p-float-label">
+                            <p-dropdown [disabled]="blnEditar" inputId="fpago" [autoDisplayFirst]="false" [options]="metodosPagoSelect" [(ngModel)]="ordenVenta.metodoPago" optionLabel="nombre" appendTo="body"></p-dropdown>
+                            <label for="fpago">Método</label>
+                        </span>
+                    </div>
+                </div>
+            </div>
             <div class="col-2">
                 <span class="p-float-label">
-                    <input type="text" id="spago" pInputText [(ngModel)]="ordenVenta.diasValidez"> 
+                    <input type="text" [disabled]="blnEditar" id="spago" pInputText [(ngModel)]="ordenVenta.diasValidez"> 
                     <label for="spago">Validez (días)</label>
                 </span>
             </div>
             <div class="col-2">
                 <span class="p-float-label">
-                    <input type="text" id="spago" pInputText [(ngModel)]="ordenVenta.aniosGarantia"> 
+                    <input type="text" [disabled]="blnEditar" id="spago" pInputText [(ngModel)]="ordenVenta.aniosGarantia"> 
                     <label for="spago">Garantía (años)</label>
                 </span>
             </div>
             <div class="col-2">
                 <span class="p-float-label">
-                    <input type="text" id="spago" pInputText [(ngModel)]="ordenVenta.plazoEntrega"> 
+                    <input type="text" [disabled]="blnEditar" id="spago" pInputText [(ngModel)]="ordenVenta.plazoEntrega"> 
                     <label for="spago">Plazo de Entrega</label>
                 </span>
             </div>
@@ -178,23 +192,23 @@
                     <div class="col-6">
                         <div class="row">
                             <div class="col-1"> 
-                                <p-checkbox [(ngModel)]="ordenVenta.indIncluyeIgv" [binary]="true" (onChange)="calcularTotal2()"></p-checkbox>
+                                <p-checkbox [disabled]="blnEditar" [(ngModel)]="ordenVenta.indIncluyeIgv" [binary]="true" (onChange)="calcularTotal2()"></p-checkbox>
                             </div>
                             <label class="col-8">Incluye Igv</label>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="float-end" *ngIf="indPasarVenta">
-                            <p-button label="Despachos" styleClass="default-button" [disabled]="!ordenVenta.adelanto || !ordenVenta.fechaEntregaBase" (click)="registrarDespachos()" [style]="{width: '90px', height: '26px'}"></p-button>
+                        <div class="float-end" *ngIf="indPasarVenta && !blnEditar">
+                            <p-button label="Despachos" styleClass="default-button" [disabled]="!ordenVenta.tipoPago || !ordenVenta.fechaEntregaBase" (click)="registrarDespachos()" [style]="{width: '90px', height: '26px'}"></p-button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row mt-3" *ngIf="indPasarVenta">
+        <div class="row mt-4" *ngIf="indPasarVenta">
             <div class="col-10 no-affect">
                 <span class="p-float-label">
-                    <input type="text" id="obra" pInputText [(ngModel)]="ordenVenta.nombreTrabajo"> 
+                    <input [disabled]="blnEditar" type="text" id="obra" pInputText [(ngModel)]="ordenVenta.nombreTrabajo"> 
                     <label for="obra">Nombre de la Obra</label>
                 </span>
             </div>
@@ -226,16 +240,16 @@
                                 </td>
                                 <td class="text-center">{{i + 1 | number:'2.0-0'}}</td>
                                 <td>
-                                    <p-autoComplete *ngIf="!indPasarVenta" (onSelect)="asignarPrecio(i, $event)" [(ngModel)]="det.producto" [showEmptyMessage]="true" [suggestions]="listadoProductosAutocomplete" (completeMethod)="autocompleteProducto($event)" field="nombre" [minLength]="1"></p-autoComplete>
+                                    <p-autoComplete [disabled]="blnEditar" *ngIf="!indPasarVenta" (onSelect)="asignarPrecio(i, $event)" [(ngModel)]="det.producto" [showEmptyMessage]="true" [suggestions]="listadoProductosAutocomplete" (completeMethod)="autocompleteProducto($event)" field="nombre" [minLength]="1" appendTo="body"></p-autoComplete>
                                     <label *ngIf="indPasarVenta">{{det.producto.nombre}}</label>
                                 </td>
                                 <td class="text-center">
-                                    <input type="text" *ngIf="!indPasarVenta" pInputText  class="custom-input-table"  [(ngModel)]="det.cantidad" (input)="calcularTotal(i, $event, 1)">
+                                    <input [disabled]="blnEditar" type="text" *ngIf="!indPasarVenta" pInputText  class="custom-input-table"  [(ngModel)]="det.cantidad" (input)="calcularTotal(i, $event, 1)">
                                     <label class="text-center" *ngIf="indPasarVenta">{{det.cantidad}}</label>
                                 </td>
                                 <td class="text-center" *ngIf="indPasarVenta">
                                     <div class="row">
-                                        <div class="input-file col-6">
+                                        <div class="input-file col-6" *ngIf="!blnEditar">
                                             <label [for]="'file-input' + i">
                                                 <i style="cursor: pointer;" class="pi pi-paperclip"></i>
                                             </label>
@@ -248,7 +262,7 @@
                                 </td>
                                 <td class="text-center" *ngIf="indPasarVenta">
                                     <div class="row">
-                                        <div class="input-file col-6">
+                                        <div class="input-file col-6" *ngIf="!blnEditar">
                                             <label [for]="'file-input-2' + i">
                                                 <i style="cursor: pointer;" class="pi pi-paperclip"></i>
                                             </label>

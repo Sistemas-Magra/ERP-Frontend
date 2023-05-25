@@ -31,6 +31,8 @@ export class CotizacionesComponent implements OnInit {
 
   ref: DynamicDialogRef;
 
+  validarFila: number = -1;
+
   constructor(
     private router: Router,
     private pipe: DatePipe,
@@ -41,15 +43,19 @@ export class CotizacionesComponent implements OnInit {
 
   ngOnInit(): void {
     this.optionsRc = [
-      {label: 'Ver Detalle', icon: 'pi pi-fw pi-eye', command: () => this.irDetalle(this.rowSelected)},
       {label: 'Registrar Venta', icon: 'pi pi-fw pi-money-bill', command: () => this.irDetalleVenta(this.rowSelected)},
       {label: 'Registrar Pagos', icon: 'pi pi-fw pi-money-bill', command: () => this.registrarPago(this.rowSelected)},
     ]
     this.filtrar();
   }
 
-  irDetalle(item: any) {
+  setFila(i: number) {
+    this.validarFila = i;
+  }
 
+  irDetalle(item: any) {
+    sessionStorage.setItem("indEditar", "0");
+    this.router.navigate([`/ventas/cotizacion/detalle/${item.id}`]);
   }
 
   irDetalleVenta(item: any) {
@@ -58,7 +64,7 @@ export class CotizacionesComponent implements OnInit {
       return;
     }
 
-    this.router.navigate([`/ventas/cotizacion/detalle/${item.id}`])
+    this.router.navigate([`/ventas/cotizacion/detalle/${item.id}`]);
   }
 
   registrarPago(item: any) {

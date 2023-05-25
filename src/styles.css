@@ -515,5 +515,6 @@ table.ng-star-inserted {
 }
 
 p-dropdownitem.p-element {
-    height: 30px !important
+    line-height: 15px !important;
+    padding: 0 !important;
 }

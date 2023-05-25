@@ -1,0 +1,58 @@
+<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
+    <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
+        <div class="col-11 float-start mt-1"><span>Datos para Acta de Coformidad
+        </span></div>
+        <div class="col-1 btn-close-modal" (click)="close()">
+            <div class="float-end">
+                <i class="pi pi-times me-1"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-4">
+            <div class="row">
+                <label class="col-form-label col-4">Fecha:</label>
+                <div class="col-8">
+                    <p-calendar [(ngModel)]="fechaInicio" appendTo="body" dateFormat="dd M yy" [showTime]="true"></p-calendar>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <label class="col-form-label col-4">Fecha:</label>
+                <div class="col-8">
+                    <p-calendar [(ngModel)]="fechaFin" appendTo="body" dateFormat="dd M yy" [showTime]="true"></p-calendar>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="float-end">
+                <p-button label="Generar" styleClass="default-button" (click)="generar()" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3" style="--height-table: 30vh">
+        <p-table [value]="listado" responsiveLayout="scroll" class="datatable-multiheader px-0">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="--header-table: 40px"></th>
+                    <th>Producto</th>
+                    <th style="--header-table: 80px" title="Cantidad producida">Pend.</th>
+                    <th style="--header-table: 80px" title="Cantidad solicitada">Cant.</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-ot let-i="rowIndex">
+                <tr [ngClass]="{'selected': ot.indUso}"> <!-- (click)="selectRow(i)"-->
+                    <td class="text-center">
+                        <p-checkbox (onChange)="setUso(i)" [(ngModel)]="ot.indUso" [binary]="true"></p-checkbox>
+                    </td>
+                    <td>{{ot.producto}}</td>
+                    <td class="text-center">{{ot.cantidad_pendiente}}</td>
+                    <td class="text-center last-column">
+                        <p-inputNumber [disabled]="!ot.indUso" [max]="ot.cantidad_pendiente" class="inputnumber-table" [(ngModel)]="ot.cantidad"></p-inputNumber>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

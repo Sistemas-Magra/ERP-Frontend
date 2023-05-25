@@ -15,7 +15,7 @@
         </div>
         <div class="col-6">
             <div class="float-end">
-                <p-button [disabled]="!blnHayResponsable || !blnCalidad" label="Iniciar Cal." title="Iniciar proceso de calidad" styleClass="default-button" (click)="calidad()" [style]="{width: '90px', height: '26px'}"></p-button>
+                <p-button *ngIf="blnCalidad" label="Guardar" title="Guardar registros de calidad" styleClass="default-button" (click)="calidad()" [style]="{width: '90px', height: '26px'}"></p-button>
             </div>
         </div>
     </div>
@@ -40,8 +40,8 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-prod let-i="rowIndex">
                     <tr (click)="asignarFila(i)" [ngClass]="{'selected': validarFila == i}">
-                        <td class="text-center">
-                            <div class="col-12 botones" *ngIf="!blnCalidad">
+                        <td class="text-center" *ngIf="!blnCalidad">
+                            <div class="col-12 botones">
                                 <button *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" pButton pRipple type="button" (click)="guardar(i)" icon="pi pi-save" class="p-button-rounded p-button-primary btn-body"></button>
                             </div>
                         </td>
@@ -68,16 +68,16 @@
                             <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.stickerProduccion}}</label>
                         </td>
                         <td class="text-center">
-                            <p-checkbox *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="!blnCalidad" [(ngModel)]="prod.indConformidad" [binary]="true"></p-checkbox>
-                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.indConformidad?'SÍ':'NO'}}</label>
+                            <p-checkbox *ngIf="blnCalidad && !prod.idUsuarioCalidad" [disabled]="!blnCalidad" [(ngModel)]="prod.indConformidad" [binary]="true"></p-checkbox>
+                            <label *ngIf="!blnCalidad || prod.idUsuarioCalidad" class="col-form-label">{{prod.indConformidad?'SÍ':'NO'}}</label>
+                        </td>
+                        <td class="text-center">
+                            <input *ngIf="blnCalidad && !prod.idUsuarioCalidad" pInputText class="custom-input-table" type="text" [disabled]="!blnCalidad || !prod.indConformidad" [(ngModel)]="prod.stickerCalidad">
+                            <label *ngIf="!blnCalidad || prod.idUsuarioCalida" class="col-form-label">{{prod.stickerCalidad}}</label>                            
                         </td>
                         <td>
-                            <input *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" pInputText class="custom-input-table" type="text" [disabled]="!blnCalidad || !prod.indConformidad" [(ngModel)]="prod.stickerCalidad">
-                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.stickerCalidad}}</label>                            
-                        </td>
-                        <td>
-                            <input *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" pInputText class="custom-input-table" type="text" [disabled]="!blnCalidad || !prod.indConformidad" [(ngModel)]="prod.observacion">
-                            <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.observacion}}</label>
+                            <input *ngIf="blnCalidad && !prod.idUsuarioCalidad" pInputText class="custom-input-table" type="text" [disabled]="!blnCalidad || prod.indConformidad" [(ngModel)]="prod.observacion">
+                            <label *ngIf="!blnCalidad || prod.idUsuarioCalida" class="col-form-label">{{prod.observacion}}</label>
                         </td>
                     </tr>
                 </ng-template>

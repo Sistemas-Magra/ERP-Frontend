@@ -45,7 +45,7 @@
                                 <p-autoComplete appendTo="body" styleClass="autocomplete-table" (onSelect)="setOrdenTrabajoByAutocomplete($event, i, j)" [(ngModel)]="psc.ordenTrabajo" [showEmptyMessage]="true" [suggestions]="ordenesTrabajoAutocomplete" (completeMethod)="autocompleteOrdenTrabajo($event)" field="autocompleteShow" [minLength]="1"></p-autoComplete>
                             </td>
                             <td>
-                                <p-dropdown appendTo="body" [autoDisplayFirst]="false" [disabled]="!psc.ordenTrabajo" [options]="psc.ordenTrabajo?.detalle" [(ngModel)]="psc.ordenTrabajoDetalle" (onChange)="[setProducto($event, i, j)]" optionLabel="ordenVentaDetalle.producto.resumen"></p-dropdown>
+                                <p-dropdown appendTo="body" [autoDisplayFirst]="false" [disabled]="!psc.ordenTrabajo" [options]="psc.ordenTrabajo?.detalle" [(ngModel)]="psc.ordenTrabajoDetalle" (onChange)="[setProducto($event, i, j)]" optionLabel="ordenVentaDetalle.producto.nombre"></p-dropdown>
                             </td>
                             <td>{{psc.ordenTrabajo?.ordenVenta?.cliente?.razonSocial}}</td>
                             <td class="text-center">{{psc.ordenTrabajoDetalle?.ordenVentaDetalle?.cantidad}}</td>   

@@ -1,0 +1,32 @@
+<div class="container-fluid">
+    <div class="row mt-3">
+
+    </div>
+    <div class="row mt-3" style="--height-table: 90vh">
+        <p-table [value]="listado" responsiveLayout="scroll" class="datatable-multiheader" [contextMenu]="cm"[(contextMenuSelection)]="rowSelected">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="--header-table: 40px">N</th>
+                    <th style="--header-table: 140px">Pedido</th>
+                    <th style="--header-table: 140px">Ord. Trab.</th>
+                    <th>Cliente</th>
+                    <th style="--header-table: 140px">Estado</th>
+                    <th style="--header-table: 80px">Prods.</th>
+                    <th style="--header-table: 80px">% Avnc.</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-ot let-i="rowIndex">
+                <tr (contextmenu)="onRightClick($event, i)" (dblclick)="verAvance(ot.orden_trabajo_id)" (click)="selectRow(i)" [ngClass]="{'selected': validarFila == i}" [pContextMenuRow]="ot">
+                    <td class="text-center">{{i + 1 | number:'2.0-0'}}</td>
+                    <td class="text-center">{{ot.pedido}}</td>
+                    <td class="text-center">{{ot.ord_trab}}</td>
+                    <td>{{ot.cliente}}</td>
+                    <td class="text-center">{{ot.estado}}</td>
+                    <td class="text-center">{{ot.cant_productos}}</td>
+                    <td class="text-center last-column">{{ot.porc_avance | number:'2.2-2':'en'}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+<p-contextMenu #cm [model]="optionsRc"></p-contextMenu>

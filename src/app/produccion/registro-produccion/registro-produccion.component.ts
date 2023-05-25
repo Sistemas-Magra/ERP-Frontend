@@ -12,6 +12,7 @@ import { OrdenTrabajoService } from '../orden-trabajo.service';
 import { ProduccionPlanta } from '../models/produccion-planta';
 import { ProduccionService } from '../produccion.service';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro-produccion',
@@ -41,6 +42,8 @@ export class RegistroProduccionComponent implements OnInit {
   blnFilaAniadidaSinGuardar: boolean = false;
   validarFila: number = -1;
 
+  id: number;
+
   constructor(
     private authService: AuthService,
     private encargadoPlantaService: EncargadoPlantaService,
@@ -49,10 +52,14 @@ export class RegistroProduccionComponent implements OnInit {
     private plantaService: PlantaService,
     private dialogService: DialogService,
     private messageService: MessageService,
-    private pipe: DatePipe
+    private pipe: DatePipe,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+    
+    this.id = +sessionStorage.getItem("idCalidad");
+    sessionStorage.removeItem("idCalidad");
 
     this.plantaService.getPlantasActivas().subscribe({
       next: res => {
@@ -76,91 +83,137 @@ export class RegistroProduccionComponent implements OnInit {
   }
 
   validarEncargado() {
-    this.encargadoPlantaService.getEncargadosPlantasporPlanta(this.plantaSeleccionada.id).subscribe({
-      next: res => {
 
-        if(res.length > 0) {
-
-          if(res[0].id == this.authService.usuario.id) {
-            this.encargado = this.authService.usuario.nombreCompleto;
-            this.blnHayResponsable = true;
-
-            this.produccionPlanta.planta = this.plantaSeleccionada;
-
-            this.produccionService.create(this.produccionPlanta).subscribe({
-              next: resp => {
-                this.blnProduccion = true;
-                this.produccionPlanta = resp.object;
-                this.listadoProduccion = this.produccionPlanta.detallePostes;
-              },
-              error: err => {
-                if(err.status == 409) {
-                  this.messageService.add({severity:'error', summary:'Error', detail:err.error.mensaje})
-                } else {
-                  this.messageService.add({severity:'error', summary:'Error', detail:'Error al obtener información del servidor.'})
+    if(!this.id) {
+      this.encargadoPlantaService.getEncargadosPlantasporPlanta(this.plantaSeleccionada.id).subscribe({
+        next: res => {
+  
+          if(res.length > 0) {
+  
+            if(res[0].id == this.authService.usuario.id) {
+              this.encargado = this.authService.usuario.nombreCompleto;
+              this.blnHayResponsable = true;
+  
+              this.produccionPlanta.planta = this.plantaSeleccionada;
+  
+              this.produccionService.create(this.produccionPlanta).subscribe({
+                next: resp => {
+                  this.blnProduccion = true;
+                  this.produccionPlanta = resp.object;
+                  this.listadoProduccion = this.produccionPlanta.detallePostes;
+                },
+                error: err => {
+                  if(err.status == 409) {
+                    this.messageService.add({severity:'error', summary:'Error', detail:err.error.mensaje})
+                  } else {
+                    this.messageService.add({severity:'error', summary:'Error', detail:'Error al obtener información del servidor.'})
+                  }
                 }
+              })
+
+            } else {
+              this.messageService.add({severity:'warn', summary:'Advertencia', detail:'La planta seleccionada ya tiene un encargado asignado.'})
+              this.encargado = null;
+              this.blnHayResponsable = false;
+            }
+  
+          } else {
+            this.ref = this.dialogService.open(ModalSiNoComponent, {
+              data: {
+                titulo: 'Confirmación de Asignación de Planta',
+                texto: `¿Desea asignarse como el encargado de la ${this.plantaSeleccionada.nombre} del día de hoy?`,
+                botonAceptacion: 'Sí',
+                botonDeclinacion: 'No'
+              },
+              width: '400px',
+              height: '170px',
+            })
+    
+            this.ref.onClose.subscribe(resp => {
+              if(resp.res == 1) {
+                this.encargadoPlantaService.create(this.authService.usuario.id, this.plantaSeleccionada.id).subscribe({
+                  next: respns => {
+                    this.messageService.add({severity:'success', summary:'Éxito', detail:'Asignación realizada correctamente.'});
+                    this.blnHayResponsable = true;
+                    this.encargado = this.authService.usuario.nombreCompleto;
+  
+                    this.produccionPlanta.planta = this.plantaSeleccionada;
+  
+                    this.produccionService.create(this.produccionPlanta).subscribe({
+                      next: resp3 => {
+                        this.blnProduccion = true;
+                        this.messageService.add({severity: 'success', summary: 'Éxito', detail: resp3.mensaje});
+                        this.produccionPlanta = resp3.object;
+                      },
+                      error: err => {
+                        if(err.status == 409) {
+                          this.messageService.add({severity:'error', summary:'Error', detail:err.error.mensaje})
+                        } else {
+                          this.messageService.add({severity:'error', summary:'Error', detail:'Error al obtener información del servidor.'})
+                        }
+                      }
+                    })
+                  }
+                })
+              } else {
+                this.encargado = null;
+                this.blnHayResponsable = false;
+                this.plantaSeleccionada = null;
               }
             })
-          } else {
-            this.messageService.add({severity:'warn', summary:'Advertencia', detail:'La planta seleccionada ya tiene un encargado asignado.'})
-            this.encargado = null;
-            this.blnHayResponsable = false;
           }
+        },
+        
+        error: err => {
+          if(err.status == 409) {
+            this.messageService.add({severity:'error', summary:'Error', detail:err.error.mensaje})
+          } else {
+            this.messageService.add({severity:'error', summary:'Error', detail:'Error al obtener información del servidor.'})
+          }
+        }
+      })
 
-        } else {
+    } else {
+
+      this.produccionService.getProduccionPlantaByPlantaIdProduccionId(this.plantaSeleccionada.id, this.id).subscribe({
+        next: res => {
+
           this.ref = this.dialogService.open(ModalSiNoComponent, {
             data: {
-              titulo: 'Confirmación de Asignación de Planta',
-              texto: `¿Desea asignarse como el encargado de la ${this.plantaSeleccionada.nombre} del día de hoy?`,
+              titulo: 'Confirmación de Inicio de Calidad',
+              texto: `¿Desea asignarse iniciar el proceso de calidad en la ${this.plantaSeleccionada.nombre}?`,
               botonAceptacion: 'Sí',
               botonDeclinacion: 'No'
             },
             width: '400px',
             height: '170px',
           })
-  
+    
           this.ref.onClose.subscribe(resp => {
             if(resp.res == 1) {
-              this.encargadoPlantaService.create(this.authService.usuario.id, this.plantaSeleccionada.id).subscribe({
-                next: respns => {
-                  this.messageService.add({severity:'success', summary:'Éxito', detail:'Asignación realizada correctamente.'});
-                  this.blnHayResponsable = true;
-                  this.encargado = this.authService.usuario.nombreCompleto;
 
-                  this.produccionPlanta.planta = this.plantaSeleccionada;
+              this.blnCalidad = true;
+              this.produccionPlanta = res.obj;
+              this.listadoProduccion = this.produccionPlanta.detallePostes;
 
-                  this.produccionService.create(this.produccionPlanta).subscribe({
-                    next: resp3 => {
-                      this.blnProduccion = true;
-                      this.messageService.add({severity: 'success', summary: 'Éxito', detail: resp3.mensaje});
-                      this.produccionPlanta = resp3.object;
-                    },
-                    error: err => {
-                      if(err.status == 409) {
-                        this.messageService.add({severity:'error', summary:'Error', detail:err.error.mensaje})
-                      } else {
-                        this.messageService.add({severity:'error', summary:'Error', detail:'Error al obtener información del servidor.'})
-                      }
-                    }
-                  })
-                }
-              })
             } else {
               this.encargado = null;
               this.blnHayResponsable = false;
               this.plantaSeleccionada = null;
             }
           })
+        }, error: err => {
+          if(err.status == 409) {
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje})
+          } else {
+            this.messageService.add({severity:'error', summary:'Error', detail:'Error al obtener información del servidor.'})
+          }
+          this.encargado = null;
+          this.blnHayResponsable = false;
+          this.plantaSeleccionada = null;
         }
-      },
-      error: err => {
-        if(err.status == 409) {
-          this.messageService.add({severity:'error', summary:'Error', detail:err.error.mensaje})
-        } else {
-          this.messageService.add({severity:'error', summary:'Error', detail:'Error al obtener información del servidor.'})
-        }
-      }
-    })
+      })
+    }
   }
 
   ordenTrabajoAutocomplete(event) {
@@ -232,7 +285,6 @@ export class RegistroProduccionComponent implements OnInit {
 
     this.produccionService.update(this.produccionPlanta, this.listadoProduccion[i].stickerProduccion).subscribe({
       next: res => {
-        console.log(res);
         this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Poste registrado correctamente.'})
         this.produccionPlanta = res.object;
         this.listadoProduccion = this.produccionPlanta.detallePostes;
@@ -242,7 +294,34 @@ export class RegistroProduccionComponent implements OnInit {
   }
 
   calidad() {
+    let blnSticker: boolean = false;
+    this.listadoProduccion.forEach(p => {
+      if(!p.idUsuarioCalidad) {
+        p.idUsuarioCalidad = this.authService.usuario.id;
+      }
 
+      if(p.indConformidad && !p.stickerCalidad) {
+        blnSticker = true;
+      }
+
+      if(p.indConformidad == null) {
+        p.indConformidad = false;
+      }
+    });
+
+    if(blnSticker) {
+      this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: 'Hay postes aprobados sin stickers de calidad.'});
+      return;
+    }
+
+    this.produccionPlanta.detallePostes = this.listadoProduccion;
+
+    this.produccionService.updateCalidad(this.produccionPlanta).subscribe({
+      next: res => {
+        this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Datos de calidad guardados correctamente.'});
+        this.router.navigate(['/produccion/registro-produccion-postes/listado']);
+      }
+    });
   }
 
 }

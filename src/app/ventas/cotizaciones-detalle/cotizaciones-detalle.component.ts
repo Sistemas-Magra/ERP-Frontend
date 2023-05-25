@@ -41,7 +41,7 @@ export class CotizacionesDetalleComponent implements OnInit {
   documentoIdentidadSelect: TablaAuxiliarDetalle[];
 
   formasPagoSelect: TablaAuxiliarDetalle[];
-  saldosPagoSelect: TablaAuxiliarDetalle[];
+  metodosPagoSelect: TablaAuxiliarDetalle[];
   monedaSelect: Moneda[]
 
   departamentos: Departamento[];
@@ -55,6 +55,8 @@ export class CotizacionesDetalleComponent implements OnInit {
   ref: DynamicDialogRef;
 
   indPasarVenta: boolean = false;
+
+  blnEditar: boolean = false;
 
   constructor(
     private clienteService: ClienteService,
@@ -77,7 +79,7 @@ export class CotizacionesDetalleComponent implements OnInit {
       [
         this.auxiliarService.getListSelect('TIPDOC'),
         this.auxiliarService.getListSelect('TIPFPG'),
-        this.auxiliarService.getListSelect('TIPSPG'),
+        this.auxiliarService.getListSelect('TIPMPG'),
         this.monedaService.getAllMonedas(),
         this.departamentoService.getAll(),
         this.tipoCambioService.getUltimoTipoCambio(),
@@ -89,12 +91,17 @@ export class CotizacionesDetalleComponent implements OnInit {
     fork.subscribe(resp => {
       this.documentoIdentidadSelect = resp[0]
       this.formasPagoSelect = resp[1]
-      this.saldosPagoSelect = resp[2]
+      this.metodosPagoSelect = resp[2]
       this.monedaSelect = resp[3]
       this.departamentos = resp[4];
 
       this.activatedRoute.params.subscribe(param => {
         this.ordenVenta.id = +param['id'];
+
+        let numInd: number = sessionStorage.getItem("indEditar")?Number(sessionStorage.getItem("indEditar")):null;
+        sessionStorage.removeItem("indEditar");
+        console.log(numInd)
+        this.blnEditar = (numInd == 0);
 
         if(!this.ordenVenta.id || this.ordenVenta.id == 0) {
 
@@ -160,11 +167,31 @@ export class CotizacionesDetalleComponent implements OnInit {
   }
 
   downloadFile(i: number) {
-    FileSaver.saveAs(this.ordenVenta.detalle[i].planoFile, this.ordenVenta.detalle[i].plano)
+    let ordVentaDetalle: OrdenVentaDetalle = this.ordenVenta.detalle[i];
+
+    if(!ordVentaDetalle.id) {
+      FileSaver.saveAs(ordVentaDetalle.planoFile, this.ordenVenta.detalle[i].plano)
+    } else {
+      this.cotizacionService.downloadFile(ordVentaDetalle.plano, 1).subscribe({
+        next: res => {
+          FileSaver.saveAs(res, ordVentaDetalle.plano)
+        }
+      })
+    }
   }
 
   downloadFileEspTec(i: number) {
-    FileSaver.saveAs(this.ordenVenta.detalle[i].especificacionesTecnicasFile, this.ordenVenta.detalle[i].especificacionesTecnicas)
+    let ordVentaDetalle: OrdenVentaDetalle = this.ordenVenta.detalle[i];
+
+    if(!ordVentaDetalle.id) {
+      FileSaver.saveAs(ordVentaDetalle.especificacionesTecnicasFile, this.ordenVenta.detalle[i].especificacionesTecnicas)
+    } else {
+      this.cotizacionService.downloadFile(ordVentaDetalle.especificacionesTecnicas, 2).subscribe({
+        next: res => {
+          FileSaver.saveAs(res, ordVentaDetalle.especificacionesTecnicas)
+        }
+      })
+    }
   }
 
   asignarCliente(event) {
@@ -238,8 +265,8 @@ export class CotizacionesDetalleComponent implements OnInit {
         id = this.formasPagoSelect.length + 1;
         break;
       }
-      case 'TIPSPG': {
-        id = this.saldosPagoSelect.length + 1;
+      case 'TIPMPG': {
+        id = this.metodosPagoSelect.length + 1;
         break;
       }
     }
@@ -264,8 +291,8 @@ export class CotizacionesDetalleComponent implements OnInit {
             this.formasPagoSelect.push(resp.response);
             break;
           }
-          case 'TIPSPG': {
-            this.saldosPagoSelect.push(resp.response);
+          case 'TIPMPG': {
+            this.metodosPagoSelect.push(resp.response);
             break;
           }
         }
@@ -451,6 +478,19 @@ export class CotizacionesDetalleComponent implements OnInit {
     })
   }
 
+  setMetodoPago(){
+    if(this.ordenVenta.tipoPago?.tablaAuxiliarDetalleId?.id == 1) {
+      this.ordenVenta.adelanto = null;
+      this.ordenVenta.adelantoPorc = null;
+    } else if(this.ordenVenta.tipoPago?.tablaAuxiliarDetalleId?.id == 2) {
+      this.ordenVenta.metodoPago = null;
+      this.ordenVenta.diasPagoCredito = null;
+
+      this.ordenVenta.adelantoPorc = 50;
+      this.ordenVenta.adelanto = this.ordenVenta.adelantoPorc*this.ordenVenta.total/100;
+    }
+  }
+
   inputAdelanto(event) {
     let adelanto: number = Number(event.value);
     this.ordenVenta.adelantoPorc = 100*adelanto/this.ordenVenta.total;
@@ -488,13 +528,8 @@ export class CotizacionesDetalleComponent implements OnInit {
       return;
     }
     
-    if(!this.ordenVenta.contacto && this.indPasarVenta) {
+    if(!this.ordenVenta.contacto) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar un contacto del cliente.'});
-      return;
-    }
-    
-    if(!this.ordenVenta.saldoPago && this.indPasarVenta) {
-      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar un saldo de pago.'});
       return;
     }
     
@@ -548,7 +583,22 @@ export class CotizacionesDetalleComponent implements OnInit {
       return;
     }
     
-    if((!this.ordenVenta.adelanto || !this.ordenVenta.adelantoPorc) && this.indPasarVenta) {
+    if(!this.ordenVenta.tipoPago && this.indPasarVenta) {
+      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe seleccionar un tipo de pago.'});
+      return;
+    }
+    
+    if(this.ordenVenta.diasPagoCredito == 0 && this.indPasarVenta && this.ordenVenta.tipoPago.tablaAuxiliarDetalleId.id==1) {
+      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar los días de crédito.'});
+      return;
+    }
+    
+    if(!this.ordenVenta.metodoPago && this.indPasarVenta && this.ordenVenta.tipoPago.tablaAuxiliarDetalleId.id==1) {
+      this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar el método de pago.'});
+      return;
+    }
+    
+    if((!this.ordenVenta.adelanto || !this.ordenVenta.adelantoPorc) && this.indPasarVenta && this.ordenVenta.tipoPago.tablaAuxiliarDetalleId.id==2) {
       this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Debe ingresar el adelanto de la venta.'});
       return;
     }
@@ -611,8 +661,10 @@ export class CotizacionesDetalleComponent implements OnInit {
 
       this.ordenVenta.idUsuarioCrea = this.authService.usuario.id;
       this.ordenVenta.fechaCrea = new Date();
+
+      let empresaId: number = Number(localStorage.getItem('empresa_id'))
   
-      this.cotizacionService.create(this.ordenVenta).subscribe({
+      this.cotizacionService.create(this.ordenVenta, empresaId).subscribe({
         next: res => {
           this.messageService.add({severity:'success', summary:'Éxito', detail:'Cotización registrada correctamente.'});
           this.router.navigate(['/ventas/cotizacion'])

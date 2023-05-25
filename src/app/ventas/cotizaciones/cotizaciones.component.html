@@ -45,8 +45,9 @@
                         <th>Cliente</th>
                         <th style="--header-table: 100px">Fecha Ent.</th>
                         <th style="--header-table: 300px">Contacto</th>
-                        <th style="--header-table: 150px">Sld. Pago</th>
-                        <th style="--header-table: 60px" title="moneda">Mnd.</th>
+                        <th style="--header-table: 90px">Tipo Pago</th>
+                        <th style="--header-table: 250px">Descripción</th>
+                        <th style="--header-table: 60px" title="Moneda">Mnd.</th>
                         <th style="--header-table: 150px">Venta</th>
                         <th style="--header-table: 150px">Pendiente</th>
                         <th style="--header-table: 100px" title="Cantidad de Productos">Cnt. Prods.</th>
@@ -54,7 +55,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-emp let-i="rowIndex">
-                    <tr [ngClass]="{'selected':indFilaEditada == i}" [pContextMenuRow]="emp">
+                    <tr (dblclick)="irDetalle(emp)" (click)="setFila(i)" [ngClass]="{'selected':validarFila == i}" [pContextMenuRow]="emp">
                         <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
                         <td class="text-uppercase text-center">{{emp.codigo}}</td>
                         <td class="text-uppercase text-center" [style]="'background-color: ' + emp.color + ' !important; color: ' + emp.fcolor + ' !important; font-weight: bold'">{{emp.est}}</td>
@@ -63,7 +64,8 @@
                         <td class="text-uppercase">{{emp.cliente}}</td>
                         <td class="text-uppercase text-center">{{emp.fecha_entrega_base | date:'dd MMM yyyy'}}</td>
                         <td class="text-uppercase">{{emp.contacto}}</td>
-                        <td class="text-uppercase" [title]="emp.saldo_pago">{{emp.saldo_pago_abrv}}</td>
+                        <td class="text-uppercase text-center" [title]="emp.tipo_pago">{{emp.tipo_pago_abrv}}</td>
+                        <td class="text-uppercase">{{emp.descripcion}}</td>
                         <td class="text-center" [title]="emp.nmon">{{emp.snom}}</td>
                         <td class="text-end">{{emp.total | number:'2.2-2':'en'}}</td>
                         <td class="text-end" [title]="emp.pendiente">{{emp.pendiente | number:'2.2-2':'en'}}</td>
