@@ -10,6 +10,10 @@ import { ProduccionAccesorioRegistroVibracion } from 'src/app/produccion/models/
 import { OrdenTrabajoService } from 'src/app/produccion/orden-trabajo.service';
 import { DatePipe } from '@angular/common';
 import { FuncionesComunesService } from 'src/app/commons/funciones-comunes.service';
+import { UsuarioPlanta } from 'src/app/seguridad/models/usuario-planta';
+import { AuthService } from 'src/app/seguridad/auth.service';
+import { UsuarioService } from 'src/app/seguridad/usuario.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-formato-vibracion',
@@ -18,13 +22,12 @@ import { FuncionesComunesService } from 'src/app/commons/funciones-comunes.servi
 })
 export class FormatoVibracionComponent implements OnInit {
 
+  usuarioPlanta: UsuarioPlanta;
+
   listado: ProduccionAccesorioRegistroVibracion[] = [];
 
   fecha: Date = new Date();
   responsable: string;
-
-  plantas: Planta[];
-  plantaSeleccionada: Planta;
 
   listadoOrdenesTrabajo: OrdenTrabajo[];
   listadoEstadoMaquina: TablaAuxiliarDetalle[];
@@ -33,7 +36,8 @@ export class FormatoVibracionComponent implements OnInit {
   blnFilaAniadidaSinGuardar: boolean = false;
 
   constructor(
-    private plantaService: PlantaService,
+    private usuarioService: UsuarioService,
+    private authService: AuthService,
     private messageService: MessageService,
     private ordenTrabajoService: OrdenTrabajoService,
     private auxiliarService: AuxiliarService,
@@ -43,21 +47,24 @@ export class FormatoVibracionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.auxiliarService.getListSelect('ESTMQA').subscribe({
-      next: res => {
-        this.listadoEstadoMaquina = res;
-      }
-    })
 
-    this.plantaService.getPlantasActivas().subscribe({
+    let fork = forkJoin([
+      this.auxiliarService.getListSelect('ESTMQA'),
+      this.usuarioService.getUsuarioPlantaByUsuarioId(this.authService.usuario.id)
+    ])
+
+    fork.subscribe({
       next: res => {
-        this.plantas = res;
+        this.listadoEstadoMaquina = res[0];
+        this.usuarioPlanta = res[1];
+        this.responsable = this.authService.usuario.nombreCompleto;
+        this.setListado();
       }
     })
   }
 
   setListado() {
-    this.formatoService.getListadoFormato(this.plantaSeleccionada.id, 9).subscribe({
+    this.formatoService.getListadoFormato(this.usuarioPlanta.planta.id, 9).subscribe({
       next: res => {
         if(res.listado) {
           this.listado = res.listado;
@@ -164,7 +171,7 @@ export class FormatoVibracionComponent implements OnInit {
       return;
     }
 
-    this.formatoService.saveRegistroVibracionAccesorio(this.plantaSeleccionada.id, vib).subscribe({
+    this.formatoService.saveRegistroVibracionAccesorio(this.usuarioPlanta.planta.id, vib).subscribe({
       next: res => {
         this.messageService.add({severity:'success', summary:'Éxito', detail:'Registro de curado guardado correctamente.'});
         this.blnFilaAniadidaSinGuardar = false;

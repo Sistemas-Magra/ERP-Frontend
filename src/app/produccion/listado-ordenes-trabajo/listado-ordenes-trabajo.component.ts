@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { OrdenTrabajoService } from '../orden-trabajo.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ModalAvanceComponent } from './modal-avance/modal-avance.component';
@@ -27,7 +27,8 @@ export class ListadoOrdenesTrabajoComponent implements OnInit {
   constructor(
     private ordenTrabajoService: OrdenTrabajoService,
     private dialogService: DialogService,
-    private produccionService: ProduccionService
+    private produccionService: ProduccionService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -42,6 +43,12 @@ export class ListadoOrdenesTrabajoComponent implements OnInit {
     this.ordenTrabajoService.getListadoPedidos().subscribe({
       next: res => {
         this.listado = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -49,7 +56,13 @@ export class ListadoOrdenesTrabajoComponent implements OnInit {
   descargarProtocolos(item: any) {
     this.produccionService.descargarProtocolos(item.orden_venta_id).subscribe({
       next: (blob: Blob) => {
-        FileSaver.saveAs(blob, 'archivo5.xlsx');
+        FileSaver.saveAs(blob, `Protocolo de Prueba ${item.pedido}-${item.cliente}.xlsx`);
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail: 'No hay protocolos de pruebas realizados en el pedido seleccionado.'});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail:err.error.mensaje});
+        }
       }
     })
   }
@@ -57,7 +70,9 @@ export class ListadoOrdenesTrabajoComponent implements OnInit {
   descargarControlCalidad(item: any) {
     this.ref = this.dialogService.open(ModalDatosCartaCalidadComponent, {
       data:{
-        id: item.orden_trabajo_id
+        id: item.orden_trabajo_id,
+        pedido: item.pedido,
+        cliente: item.cliente
       },
       width:'900px',
       height: '450px'
@@ -68,7 +83,13 @@ export class ListadoOrdenesTrabajoComponent implements OnInit {
     let sedeId: number = Number(localStorage.getItem('sede_id'));
     this.produccionService.descargarCartaGarantia(sedeId, item.orden_trabajo_id).subscribe({
       next: (blob: Blob) => {
-        FileSaver.saveAs(blob, 'archivo5.zip');
+        FileSaver.saveAs(blob, `Carta Garantia ${item.pedido}-${item.cliente}.zip`);
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -76,7 +97,9 @@ export class ListadoOrdenesTrabajoComponent implements OnInit {
   descargarActaConformidad(item: any) {
     this.ref = this.dialogService.open(ModalDatosActaConformidadComponent, {
       data:{
-        id: item.orden_trabajo_id
+        id: item.orden_trabajo_id,
+        pedido: item.pedido,
+        cliente: item.cliente
       },
       width:'900px',
       height: '450px'

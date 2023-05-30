@@ -52,6 +52,12 @@ export class MaestroUsuariosComponent implements OnInit {
         this.indFilaEditada = -1;
         this.blnEditandoCreando = false;
         this.blnCargando = false;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -131,6 +137,12 @@ export class MaestroUsuariosComponent implements OnInit {
     this.empleadoService.autocomplete(event.query).subscribe({
       next: res => {
         this.empleadosAutocomplete = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

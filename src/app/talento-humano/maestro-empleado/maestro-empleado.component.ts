@@ -77,6 +77,12 @@ export class MaestroEmpleadoComponent implements OnInit {
       next: res2 => {
         this.totalRecords = res2[0].total;
         this.empleados = res2;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -203,6 +209,12 @@ export class MaestroEmpleadoComponent implements OnInit {
                 next: res4 => {
                   this.totalRecords = res4[0].total;
                   this.empleados = res4;
+                }, error: err => {
+                  if(err.status == 409) {
+                    this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+                  } else {
+                    this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+                  }
                 }
               })
             }
@@ -230,6 +242,12 @@ export class MaestroEmpleadoComponent implements OnInit {
           this.totalRecords = 0;
           this.empleados = res
         }
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -250,6 +268,12 @@ export class MaestroEmpleadoComponent implements OnInit {
         } else {
           this.totalRecords = 0;
           this.empleados = res2
+        }
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
         }
       }
     })

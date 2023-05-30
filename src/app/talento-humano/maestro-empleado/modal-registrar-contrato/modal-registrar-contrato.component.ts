@@ -91,6 +91,12 @@ export class ModalRegistrarContratoComponent implements OnInit {
       next: res => {
         this.messageService.add({severity:'success', summary:'Éxito', detail:'Contrato registrado correctamente.'})
         this.ref.close()
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

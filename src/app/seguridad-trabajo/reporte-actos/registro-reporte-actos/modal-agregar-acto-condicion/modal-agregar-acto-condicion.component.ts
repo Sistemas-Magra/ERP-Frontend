@@ -45,12 +45,24 @@ export class ModalAgregarActoCondicionComponent implements OnInit {
       this.condicionService.create(this.newCondicion).subscribe({
         next: res => {
           this.ref.close(res.condicion);
+        }, error: err => {
+          if(err.status == 409) {
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+          } else {
+            this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+          }
         }
       })
     } else if(this.ind == 2) {
       this.caracteristicaService.create(this.newActo).subscribe({
         next: res => {
           this.ref.close(res.caracteristica);          
+        }, error: err => {
+          if(err.status == 409) {
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+          } else {
+            this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+          }
         }
       })
     }

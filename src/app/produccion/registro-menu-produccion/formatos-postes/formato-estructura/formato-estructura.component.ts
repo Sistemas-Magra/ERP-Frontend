@@ -227,6 +227,12 @@ export class FormatoEstructuraComponent implements OnInit {
         this.blnFilaAniadidaSinGuardar = false;
         this.validarFila = -1;
         this.setListado();
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 

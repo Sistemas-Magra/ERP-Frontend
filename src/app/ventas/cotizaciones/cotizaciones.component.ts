@@ -95,6 +95,12 @@ export class CotizacionesComponent implements OnInit {
       next: res => {
         this.totalRecords = res[0]?.totalRecords
         this.cotizaciones = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

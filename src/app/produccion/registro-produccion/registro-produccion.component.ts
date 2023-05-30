@@ -64,6 +64,12 @@ export class RegistroProduccionComponent implements OnInit {
     this.plantaService.getPlantasActivas().subscribe({
       next: res => {
         this.plantas = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 
@@ -289,6 +295,12 @@ export class RegistroProduccionComponent implements OnInit {
         this.produccionPlanta = res.object;
         this.listadoProduccion = this.produccionPlanta.detallePostes;
         this.blnFilaAniadidaSinGuardar = false;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -320,6 +332,12 @@ export class RegistroProduccionComponent implements OnInit {
       next: res => {
         this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Datos de calidad guardados correctamente.'});
         this.router.navigate(['/produccion/registro-produccion-postes/listado']);
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     });
   }

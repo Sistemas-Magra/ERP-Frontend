@@ -5,6 +5,7 @@ import { FuncionesComunesService } from 'src/app/commons/funciones-comunes.servi
 import { HijoEmpleado } from '../../models/hijo-empleado';
 import { TablaAuxiliarDetalle } from 'src/app/auxiliar/models/tabla-auxiliar-detalle';
 import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-modal-hijos-empleado',
@@ -26,7 +27,8 @@ export class ModalHijosEmpleadoComponent implements OnInit {
     private config: DynamicDialogConfig,
     private funcionesComunes: FuncionesComunesService,
     private auxiliarService: AuxiliarService,
-    private pipe: DatePipe
+    private pipe: DatePipe,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -34,6 +36,12 @@ export class ModalHijosEmpleadoComponent implements OnInit {
     this.auxiliarService.getListSelect('TIPDOC').subscribe({
       next: res => {
         this.tiposDocumento = res
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 

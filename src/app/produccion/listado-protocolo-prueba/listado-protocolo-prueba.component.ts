@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProtocoloService } from '../protocolo.service';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-listado-protocolo-prueba',
@@ -20,7 +21,8 @@ export class ListadoProtocoloPruebaComponent implements OnInit {
 
   constructor(
     private protocoloService: ProtocoloService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -43,6 +45,12 @@ export class ListadoProtocoloPruebaComponent implements OnInit {
     this.protocoloService.getListado(this.clFilter, this.otFilter, this.prFilter, this.feFilter).subscribe({
       next: res => {
         this.listado = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 

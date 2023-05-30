@@ -65,6 +65,12 @@ export class ProtocoloPruebaCalidadComponent implements OnInit {
                   setTimeout(() => {
                     this.protocolo = res;
                   }, 200)
+                }, error: err => {
+                  if(err.status == 409) {
+                    this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+                  } else {
+                    this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+                  }
                 }
               })
             } else {
@@ -85,6 +91,12 @@ export class ProtocoloPruebaCalidadComponent implements OnInit {
     this.clienteService.getClientesAutocomplete(event.query).subscribe({
       next: res => {
         this.clientesAutocomplete = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -100,6 +112,12 @@ export class ProtocoloPruebaCalidadComponent implements OnInit {
     this.ordenVentaService.autocompleteByCliente(this.protocolo.cliente.id, event.query).subscribe({
       next: res => {
         this.ordenesVentaAutocomplete = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -249,6 +267,12 @@ export class ProtocoloPruebaCalidadComponent implements OnInit {
       this.protocoloService.update(this.protocolo).subscribe({
         next: res => {
           this.messageService.add({severity:'success', summary:'Éxito', detail:'Protocolo de prueba actualizado correctamente.'});
+        }, error: err => {
+          if(err.status == 409) {
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+          } else {
+            this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+          }
         }
       })
     } else {
@@ -256,6 +280,12 @@ export class ProtocoloPruebaCalidadComponent implements OnInit {
       this.protocoloService.create(this.protocolo).subscribe({
         next: res => {
           this.messageService.add({severity:'success', summary:'Éxito', detail:'Protocolo de prueba registrado correctamente.'});
+        }, error: err => {
+          if(err.status == 409) {
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+          } else {
+            this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+          }
         }
       })
     }

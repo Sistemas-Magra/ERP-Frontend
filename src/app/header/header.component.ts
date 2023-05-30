@@ -64,7 +64,10 @@ export class HeaderComponent implements OnInit {
           let menus: MenuItem[] = [];
 
           sm.menus.forEach(me => {
-            menus.push({label: me.nombre, routerLink: me.ruta})
+            menus.push({label: me.nombre, command: () => {
+              this.router.navigate([`/${me.ruta}`]);
+              this.closeSideBar();
+            }})
           })
           
           let subModulo: MenuItem = {label: sm.nombre, items: menus}

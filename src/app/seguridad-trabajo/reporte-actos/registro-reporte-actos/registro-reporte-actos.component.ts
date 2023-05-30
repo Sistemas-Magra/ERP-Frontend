@@ -69,42 +69,84 @@ export class RegistroReporteActosComponent implements OnInit {
     this.usuarioService.getDatosEmpleado(this.authService.usuario.id).subscribe({
       next: res => {
         this.usuario = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 
     this.auxiliarService.getDetalleById('ESTRST', 1).subscribe({
       next: res => {
         this.reporte.estado = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 
     this.auxiliarService.getListSelect('TIPEVN').subscribe({
       next: res => {
         this.tiposEventoSelect = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 
     this.auxiliarService.getListSelect('TIPAFE').subscribe({
       next: res => {
         this.tiposAfectacionSelect = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 
     this.plantaService.getPlantasActivas().subscribe({
       next: res => {
         this.plantas = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 
     this.caracteristicaService.getAll().subscribe({
       next: res => {
         this.caracteristicasSelect = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 
     this.condicionService.getAll().subscribe({
       next: res => {
         this.condicionSelect = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -113,6 +155,12 @@ export class RegistroReporteActosComponent implements OnInit {
     this.empleadoService.autocomplete(event.query).subscribe({
       next: res => {
         this.empleadosAutocomplete = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -206,6 +254,12 @@ export class RegistroReporteActosComponent implements OnInit {
     this.reporteService.create(this.reporte).subscribe({
       next: res => {
         this.messageService.add({severity:'success', summary:'Éxito', detail:'Datos guardados correctamente.'})
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

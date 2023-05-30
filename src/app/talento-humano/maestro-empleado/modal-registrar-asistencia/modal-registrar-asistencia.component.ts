@@ -76,6 +76,12 @@ export class ModalRegistrarAsistenciaComponent implements OnInit {
     this.auxiliarService.getListSelect('TIPMAR').subscribe({
       next: res => {
         this.tiposMarcacion = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 
@@ -159,6 +165,12 @@ export class ModalRegistrarAsistenciaComponent implements OnInit {
         })
 
         this.blnEditar = si;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -257,6 +269,12 @@ export class ModalRegistrarAsistenciaComponent implements OnInit {
       next: res => {
         this.messageService.add({severity:'success', summary:'Éxito', detail:'Asistencia registrada.'})
         this.traerDatos();
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

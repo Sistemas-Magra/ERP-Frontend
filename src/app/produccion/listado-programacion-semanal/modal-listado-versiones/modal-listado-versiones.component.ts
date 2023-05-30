@@ -3,6 +3,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ProgramacionSemanalService } from '../../programacion-semanal.service';
 import { Router } from '@angular/router';
 import { Planta } from 'src/app/maestros/models/planta';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-modal-listado-versiones',
@@ -18,13 +19,20 @@ export class ModalListadoVersionesComponent implements OnInit {
     private ref: DynamicDialogRef,
     private config:DynamicDialogConfig,
     private programacionService: ProgramacionSemanalService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
     this.programacionService.getListadoVersiones(this.config.data.id).subscribe({
       next: res => {
         this.listado = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

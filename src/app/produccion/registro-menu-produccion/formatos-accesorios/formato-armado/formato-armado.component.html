@@ -1,21 +1,7 @@
 <div class="container-fluid">
     <div class="row mt-3">
-        <div class="col-1">
-            <div class="row">
-                <label  class="col-3 col-form-label">Planta</label> 
-                <div class="col-9">
-                    <p-dropdown placeholder="Seleccione" (onChange)="setListado()" [options]="plantas" [(ngModel)]="plantaSeleccionada" placeholder="Seleccione" appendTo="body" [autoDisplayFirst]="false" optionLabel="nombre"></p-dropdown>
-                </div>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="row">
-                <label  class="col-4 col-form-label">Responsable</label> 
-                <div class="col-8">
-                    <input type="text" pInputText [(ngModel)]="responsable">
-                </div>
-            </div>
-        </div>
+        <label  class="col-3 col-form-label">Planta: <span class="text-uppercase">{{usuarioPlanta.planta.nombre}}</span></label>
+        <label  class="col-4 col-form-label">Responsable: <span class="text-uppercase">{{responsable}}</span></label>
         <label class="col-4 col-form-label">Fecha: <span class="text-uppercase">{{fecha | date:'dd MMM yyyy'}}</span></label>
     </div>
     <div class="row mt-3">
@@ -24,7 +10,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th rowspan="2" style="--header-table: 40px" class="text-center">
-                            <button (click)="addRegistro()" [disabled]="!plantaSeleccionada || !responsable " pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-success p-button-text plus-header"></button>
+                            <button (click)="addRegistro()" [disabled]="!usuarioPlanta" pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-success p-button-text plus-header"></button>
                         </th>
                         <th rowspan="2" style="--header-table: 40px">N</th>
                         <th rowspan="2" style="--header-table: 100px">Ord. Trab.</th>
@@ -56,7 +42,7 @@
                             <p-autoComplete *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" (onSelect)="setOrdenTrabajo($event, i)" [(ngModel)]="prod.ordenTrabajo" (completeMethod)="ordenTrabajoAutocomplete($event)" [suggestions]="listadoOrdenesTrabajo" field="codigo" [minLength]="1" appendTo="body" styleClass="autocomplete-table" [showEmptyMessage]="true"></p-autoComplete>
                             <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.ordenTrabajo?.codigo}}</label>
                         </td>
-                        <td class="text-center">
+                        <td>
                             <p-autoComplete *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" [(ngModel)]="prod.ordenTrabajoDetalle" (completeMethod)="findProducto($event, i)" [suggestions]="prod.listadoAutocompleteAux" field="ordenVentaDetalle.producto.nombre" [minLength]="1" appendTo="body" styleClass="autocomplete-table" [showEmptyMessage]="true"></p-autoComplete>
                             <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</label>
                         </td>

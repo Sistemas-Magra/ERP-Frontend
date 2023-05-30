@@ -144,6 +144,12 @@ export class CotizacionesDetalleComponent implements OnInit {
               }, 200)
 
               this.indPasarVenta = true;
+            }, error: err => {
+              if(err.status == 409) {
+                this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+              } else {
+                this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+              }
             }
           })
         }
@@ -175,6 +181,12 @@ export class CotizacionesDetalleComponent implements OnInit {
       this.cotizacionService.downloadFile(ordVentaDetalle.plano, 1).subscribe({
         next: res => {
           FileSaver.saveAs(res, ordVentaDetalle.plano)
+        }, error: err => {
+          if(err.status == 409) {
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+          } else {
+            this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+          }
         }
       })
     }
@@ -189,6 +201,12 @@ export class CotizacionesDetalleComponent implements OnInit {
       this.cotizacionService.downloadFile(ordVentaDetalle.especificacionesTecnicas, 2).subscribe({
         next: res => {
           FileSaver.saveAs(res, ordVentaDetalle.especificacionesTecnicas)
+        }, error: err => {
+          if(err.status == 409) {
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+          } else {
+            this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+          }
         }
       })
     }
@@ -226,6 +244,12 @@ export class CotizacionesDetalleComponent implements OnInit {
     this.clienteService.getClientesAutocomplete(event.query).subscribe({
       next: res => {
         this.clientesAutocomplete = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -367,6 +391,12 @@ export class CotizacionesDetalleComponent implements OnInit {
             }
           }
         }
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -375,6 +405,12 @@ export class CotizacionesDetalleComponent implements OnInit {
     this.productoVentaService.autocomplete(event.query).subscribe({
       next: res => {
         this.listadoProductosAutocomplete = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -654,6 +690,12 @@ export class CotizacionesDetalleComponent implements OnInit {
               }
             }
           })
+        }, error: err => {
+          if(err.status == 409) {
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+          } else {
+            this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+          }
         }
       })
 

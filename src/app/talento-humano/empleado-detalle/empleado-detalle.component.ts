@@ -161,6 +161,12 @@ export class EmpleadoDetalleComponent implements OnInit {
                 this.empleado = JSON.parse(JSON.stringify(empl));
                 this.fotoAux = empl.foto;
               }, 300)
+            }, error: err => {
+              if(err.status == 409) {
+                this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+              } else {
+                this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+              }
             }
           })
         }
@@ -272,6 +278,12 @@ export class EmpleadoDetalleComponent implements OnInit {
     this.empleadoService.getCodigo(this.empleado.codigo).subscribe({
       next: res => {
         this.empleado.codigo = res.codigo
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 
@@ -506,6 +518,12 @@ export class EmpleadoDetalleComponent implements OnInit {
               next: succ => {
                 this.messageService.add({severity:'success', summary:'Éxito', detail:'Personal asignado correctamente.'})
                 this.router.navigate(['/empleado'])
+              }, error: err => {
+                if(err.status == 409) {
+                  this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+                } else {
+                  this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+                }
               }
             })
           } else {

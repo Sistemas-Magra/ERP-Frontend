@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectItemGroup } from 'primeng/api';
+import { MessageService, SelectItemGroup } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Planta } from 'src/app/maestros/models/planta';
 import { PlantaService } from 'src/app/maestros/planta.service';
@@ -61,7 +61,8 @@ export class ModalFormatosComponent implements OnInit {
     private config: DynamicDialogConfig,
     private plantaService: PlantaService,
     private auxiliarService: AuxiliarService,
-    private formatoService: FormatosService
+    private formatoService: FormatosService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -102,6 +103,12 @@ export class ModalFormatosComponent implements OnInit {
     this.formatoService.getListadoFormatoVista(this.config.data.id, this.plantaSeleccionada?.id, this.formatoSeleccionado).subscribe({
       next: res => {
         this.listado = res.listado;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

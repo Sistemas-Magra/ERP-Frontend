@@ -65,6 +65,12 @@ export class ModalMostrarContratoComponent implements OnInit {
           this.messageService.add({severity:'warn', summary:'Advertencia', detail:'El empleado no tiene un contrato vigente en esta fecha.'})
         } 
         this.datos = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

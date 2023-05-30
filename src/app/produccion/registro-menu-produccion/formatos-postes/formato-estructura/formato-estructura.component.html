@@ -44,7 +44,7 @@
                             <p-autoComplete *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" (onSelect)="setOrdenTrabajo($event, i)" [(ngModel)]="prod.ordenTrabajo" (completeMethod)="ordenTrabajoAutocomplete($event)" [suggestions]="listadoOrdenesTrabajo" field="codigo" [minLength]="1" appendTo="body" styleClass="autocomplete-table" [showEmptyMessage]="true"></p-autoComplete>
                             <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.ordenTrabajo?.codigo}}</label>
                         </td>
-                        <td class="text-center">
+                        <td>
                             <p-autoComplete *ngIf="prod.ordenTrabajo && (blnFilaAniadidaSinGuardar && validarFila == i)" [(ngModel)]="prod.ordenTrabajoDetalle" (completeMethod)="findProducto($event, i)" [suggestions]="prod.listadoAutocompleteAux" field="ordenVentaDetalle.producto.nombre" [minLength]="1" appendTo="body" styleClass="autocomplete-table" [showEmptyMessage]="true"></p-autoComplete>
                             <label *ngIf="!blnFilaAniadidaSinGuardar || validarFila != i" class="col-form-label">{{prod.ordenTrabajoDetalle?.ordenVentaDetalle?.producto?.nombre}}</label>
                         </td>

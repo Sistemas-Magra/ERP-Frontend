@@ -30,6 +30,12 @@ export class ModalAsignarRolesComponent implements OnInit {
     this.roleService.getAllRoles().subscribe({
       next: res => {
         this.rolesAsignados = res.filter(r => this.config.data.roles.includes(r.id));
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -48,6 +54,12 @@ export class ModalAsignarRolesComponent implements OnInit {
     this.roleService.autocompleteAsignacion(event.query).subscribe({
       next: res => {
         this.rolesAutocomplete = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

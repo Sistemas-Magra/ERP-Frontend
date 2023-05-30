@@ -56,12 +56,12 @@ export class ProgramacionProduccionSemanalComponent implements OnInit {
     
         this.progSem.fechaInicio = new Date(`${fechaStr} 00:00:00.000000`);
     
-        while((new Date(fechaStr)).getDay() < 6) {
+        while((new Date(`${fechaStr} 00:00:00.000000`)).getDay() < 6) {
           this.dias.push(new Date(`${fechaStr} 00:00:00.000000`));
+
+          fechaStr = this.funcionesComunes.agregarDias(fechaStr, 1);
     
-          fechaStr = `${fechaStr.split('-')[0]}-${fechaStr.split('-')[1]}-${+fechaStr.split('-')[2] + 1}`
-    
-          if((new Date(fechaStr)).getDay() == 6) {
+          if((new Date(`${fechaStr} 00:00:00.000000`)).getDay() == 6) {
             this.dias.push(new Date(`${fechaStr} 00:00:00.000000`));
             this.progSem.fechaFin = new Date(`${fechaStr} 00:00:00.000000`);
           }
@@ -87,12 +87,20 @@ export class ProgramacionProduccionSemanalComponent implements OnInit {
         })
 
       } else {
-        this.programacionService.getVigenciaById(this.vigente.id).subscribe({
+    
+        let fork = forkJoin([
+          this.auxiliarService.getListSelect('TIPDIA'),
+          this.programacionService.getVigenciaById(this.vigente.id)
+        ])
+    
+        fork.subscribe({
           next: res => {
+            this.diasAux = res[0];
 
-            this.dias = res.versionesProgramacionSemanal.find(ps => ps.version == res.version).detallePlantas[0].detalleCliente[0].detalleDiarios.map(d => d.fecha);
-            this.vigente = res;
-            this.progSem = JSON.parse(JSON.stringify(this.vigente.versionesProgramacionSemanal.find(ps => ps.version == res.version)));
+            this.dias = res[1].versionesProgramacionSemanal.find(ps => ps.version == res[1].version).detallePlantas[0].detalleCliente[0].detalleDiarios.map(d => new Date(`${d.fecha} 00:00:00.0000`));
+            //console.log(this.dias)
+            this.vigente = res[1];
+            this.progSem = JSON.parse(JSON.stringify(this.vigente.versionesProgramacionSemanal.find(ps => ps.version == res[1].version)));
             this.progSem.id = 0; 
           }
         })
@@ -108,6 +116,12 @@ export class ProgramacionProduccionSemanalComponent implements OnInit {
     this.otService.autocomplete(event.query).subscribe({
       next: res => {
         this.ordenesTrabajoAutocomplete = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -258,7 +272,14 @@ export class ProgramacionProduccionSemanalComponent implements OnInit {
       this.programacionService.guardarProgramacionSemanal(this.vigente).subscribe({
         next: res => {
           this.messageService.add({severity:'success', summary:'Éxito', detail:'Programación guardada correctamente.'});
+          this.router.navigate(['/produccion/programacion-semanal/listado']);
           return;
+        }, error: err => {
+          if(err.status == 409) {
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+          } else {
+            this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+          }
         }
       })
 
@@ -279,7 +300,13 @@ export class ProgramacionProduccionSemanalComponent implements OnInit {
       this.programacionService.actualizarProgramacionSemanal(this.vigente).subscribe({
         next: res => {
           this.messageService.add({severity:'success', summary:'Éxito', detail:'Programación guardada correctamente.'});
-          this.router.navigate(['/produccion/programacion-semanal/listado'])
+          this.router.navigate(['/produccion/programacion-semanal/listado']);
+        }, error: err => {
+          if(err.status == 409) {
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+          } else {
+            this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+          }
         }
       })
     }

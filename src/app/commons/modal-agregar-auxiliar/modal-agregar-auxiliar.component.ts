@@ -35,6 +35,12 @@ export class ModalAgregarAuxiliarComponent implements OnInit {
     this.auxiliarService.getByCodAux(this.config.data.codAux).subscribe({
       next: res => {
         this.newAux.tablaAuxiliarDetalleId.tablaAuxiliar = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -69,6 +75,12 @@ export class ModalAgregarAuxiliarComponent implements OnInit {
         this.auxiliarService.create(this.newAux).subscribe({
           next: response => {
             this.dialogRef.close({response});
+          }, error: err => {
+            if(err.status == 409) {
+              this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+            } else {
+              this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+            }
           }
         })
       }

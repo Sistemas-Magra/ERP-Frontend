@@ -37,6 +37,12 @@ export class ModalRegistroCesesComponent implements OnInit {
     this.auxiliarService.getListSelect('MOTCSE').subscribe({
       next: res => {
         this.motivosCese = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 
@@ -45,6 +51,12 @@ export class ModalRegistroCesesComponent implements OnInit {
         console.log(res)
         this.cese.periodoCts = res.cts;
         this.cese.periodoGratificacion = res.grati;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

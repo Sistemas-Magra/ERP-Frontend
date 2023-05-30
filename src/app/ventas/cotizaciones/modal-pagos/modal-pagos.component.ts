@@ -55,6 +55,12 @@ export class ModalPagosComponent implements OnInit {
     this.auxiliarService.getListSelect('TIPPAG').subscribe({
       next: res => {
         this.formasPagoSelect = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -97,6 +103,12 @@ export class ModalPagosComponent implements OnInit {
             this.pagos = resPagos;
             this.blnAgregando = false;
             this.validarFila = -1;
+          }, error: err => {
+            if(err.status == 409) {
+              this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+            } else {
+              this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+            }
           }
         })
       }

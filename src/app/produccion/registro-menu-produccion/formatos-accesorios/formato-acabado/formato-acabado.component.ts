@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { forkJoin } from 'rxjs';
 import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
 import { TablaAuxiliarDetalle } from 'src/app/auxiliar/models/tabla-auxiliar-detalle';
 import { Planta } from 'src/app/maestros/models/planta';
@@ -8,6 +9,9 @@ import { FormatosService } from 'src/app/produccion/formatos.service';
 import { OrdenTrabajo } from 'src/app/produccion/models/orden-trabajo';
 import { ProduccionAccesorioRegistroAcabado } from 'src/app/produccion/models/produccion-accesorio-registro-acabado';
 import { OrdenTrabajoService } from 'src/app/produccion/orden-trabajo.service';
+import { AuthService } from 'src/app/seguridad/auth.service';
+import { UsuarioPlanta } from 'src/app/seguridad/models/usuario-planta';
+import { UsuarioService } from 'src/app/seguridad/usuario.service';
 
 @Component({
   selector: 'app-formato-acabado',
@@ -16,13 +20,12 @@ import { OrdenTrabajoService } from 'src/app/produccion/orden-trabajo.service';
 })
 export class FormatoAcabadoComponent implements OnInit {
 
+  usuarioPlanta: UsuarioPlanta;
+
   listado: ProduccionAccesorioRegistroAcabado[] = [];
 
   fecha: Date = new Date();
   responsable: string;
-
-  plantas: Planta[];
-  plantaSeleccionada: Planta;
 
   listadoOrdenesTrabajo: OrdenTrabajo[];
   listadoAcabados: TablaAuxiliarDetalle[];
@@ -32,7 +35,8 @@ export class FormatoAcabadoComponent implements OnInit {
   blnFilaAniadidaSinGuardar: boolean = false;
 
   constructor(
-    private plantaService: PlantaService,
+    private usuarioService: UsuarioService,
+    private authService: AuthService,
     private messageService: MessageService,
     private ordenTrabajoService: OrdenTrabajoService,
     private auxiliarService: AuxiliarService,
@@ -40,20 +44,24 @@ export class FormatoAcabadoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.auxiliarService.getListSelect('TIPACB').subscribe({
+
+    let fork = forkJoin([
+      this.auxiliarService.getListSelect('TIPACB'),
+      this.usuarioService.getUsuarioPlantaByUsuarioId(this.authService.usuario.id)
+    ])
+
+    fork.subscribe({
       next: res => {
-        this.listadoAcabados = res;
-      }
-    })
-    this.plantaService.getPlantasActivas().subscribe({
-      next: res => {
-        this.plantas = res;
+        this.listadoAcabados = res[0];
+        this.usuarioPlanta = res[1];
+        this.responsable = this.authService.usuario.nombreCompleto;
+        this.setListado();
       }
     })
   }
 
   setListado() {
-    this.formatoService.getListadoFormato(this.plantaSeleccionada.id, 10).subscribe({
+    this.formatoService.getListadoFormato(this.usuarioPlanta.planta.id, 10).subscribe({
       next: res => {
         if(res.listado) {
           let list: ProduccionAccesorioRegistroAcabado[] = res.listado
@@ -148,13 +156,19 @@ export class FormatoAcabadoComponent implements OnInit {
 
     acab.tiposAcabados = JSON.stringify(this.acabadosSeleccionados.map(inc => inc.tablaAuxiliarDetalleId.id));
 
-    this.formatoService.saveRegistroAcabadoAccesorio(this.plantaSeleccionada.id, acab).subscribe({
+    this.formatoService.saveRegistroAcabadoAccesorio(this.usuarioPlanta.planta.id, acab).subscribe({
       next: res => {
         this.messageService.add({severity:'success', summary:'Éxito', detail:'Registro de tubos y pines guardado correctamente.'});
         this.blnFilaAniadidaSinGuardar = false;
         this.acabadosSeleccionados = [];
         this.validarFila = -1;
         this.setListado();
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

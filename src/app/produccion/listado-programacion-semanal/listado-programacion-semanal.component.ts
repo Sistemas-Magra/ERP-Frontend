@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProgramacionSemanalService } from '../programacion-semanal.service';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ModalMaterialesRequeridosComponent } from './modal-materiales-requeridos/modal-materiales-requeridos.component';
 import { ModalListadoVersionesComponent } from './modal-listado-versiones/modal-listado-versiones.component';
@@ -43,6 +43,7 @@ export class ListadoProgramacionSemanalComponent implements OnInit {
     private router: Router,
     private programacionService: ProgramacionSemanalService,
     private dialogService: DialogService,
+    private messageService: MessageService,
   ) { }
 
   ngOnInit(): void {
@@ -80,6 +81,12 @@ export class ListadoProgramacionSemanalComponent implements OnInit {
     this.programacionService.getListado(this.anioFilter, this.mesFilter?.id).subscribe({
       next: res => {
         this.listado = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

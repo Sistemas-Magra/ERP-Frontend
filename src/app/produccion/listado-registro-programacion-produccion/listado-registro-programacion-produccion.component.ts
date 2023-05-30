@@ -6,7 +6,7 @@ import { PlantaService } from 'src/app/maestros/planta.service';
 import { ProduccionService } from '../produccion.service';
 import { forkJoin } from 'rxjs'
 import { DatePipe } from '@angular/common';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ModalFormatosComponent } from './modal-formatos/modal-formatos.component';
 import { Router } from '@angular/router';
@@ -38,7 +38,8 @@ export class ListadoRegistroProgramacionProduccionComponent implements OnInit {
     private produccionService: ProduccionService,
     private dialogService: DialogService,
     private pipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -92,6 +93,12 @@ export class ListadoRegistroProgramacionProduccionComponent implements OnInit {
 
       next: res => {
         this.listadosRegistrosProduccion = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
 
     })

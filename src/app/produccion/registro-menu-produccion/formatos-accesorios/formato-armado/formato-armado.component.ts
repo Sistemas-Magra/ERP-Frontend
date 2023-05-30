@@ -9,6 +9,9 @@ import { TablaAuxiliarDetalle } from 'src/app/auxiliar/models/tabla-auxiliar-det
 import { forkJoin } from 'rxjs';
 import { AuxiliarService } from 'src/app/auxiliar/auxiliar.service';
 import { ProduccionAccesorioRegistroArmado } from 'src/app/produccion/models/produccion-accesorio-registro-armado';
+import { UsuarioPlanta } from 'src/app/seguridad/models/usuario-planta';
+import { UsuarioService } from 'src/app/seguridad/usuario.service';
+import { AuthService } from 'src/app/seguridad/auth.service';
 
 @Component({
   selector: 'app-formato-armado',
@@ -16,6 +19,8 @@ import { ProduccionAccesorioRegistroArmado } from 'src/app/produccion/models/pro
   styleUrls: ['./formato-armado.component.css']
 })
 export class FormatoArmadoComponent implements OnInit {
+
+  usuarioPlanta: UsuarioPlanta;
 
   listado: ProduccionAccesorioRegistroArmado[] = [];
 
@@ -28,16 +33,14 @@ export class FormatoArmadoComponent implements OnInit {
   fecha: Date = new Date();
   responsable: string;
 
-  plantas: Planta[];
-  plantaSeleccionada: Planta;
-
   listadoOrdenesTrabajo: OrdenTrabajo[];
 
   validarFila: number = -1;
   blnFilaAniadidaSinGuardar: boolean = false;
 
   constructor(
-    private plantaService: PlantaService,
+    private usuarioService: UsuarioService,
+    private authService: AuthService,
     private messageService: MessageService,
     private ordenTrabajoService: OrdenTrabajoService,
     private auxiliarService: AuxiliarService,
@@ -46,7 +49,7 @@ export class FormatoArmadoComponent implements OnInit {
 
   ngOnInit(): void {
     let fork = forkJoin([
-      this.plantaService.getPlantasActivas(),
+      this.usuarioService.getUsuarioPlantaByUsuarioId(this.authService.usuario.id),
       this.auxiliarService.getListSelect('MEDVAR'),
       this.auxiliarService.getListSelect('MEDANI'),
       this.auxiliarService.getListSelect('NUMESP'),
@@ -56,7 +59,7 @@ export class FormatoArmadoComponent implements OnInit {
 
     fork.subscribe({
       next: res => {
-        this.plantas = res[0];
+        this.usuarioPlanta = res[0];
 
         this.listadoFierroEstructura = res[1]
         this.listadoFierroAnillo = res[2]
@@ -68,7 +71,7 @@ export class FormatoArmadoComponent implements OnInit {
   }
 
   setListado() {
-    this.formatoService.getListadoFormato(this.plantaSeleccionada.id, 8).subscribe({
+    this.formatoService.getListadoFormato(this.usuarioPlanta.planta.id, 8).subscribe({
       next: res => {
         if(res.listado) {
           let listadoAux: ProduccionAccesorioRegistroArmado[] = res.listado;
@@ -199,12 +202,18 @@ export class FormatoArmadoComponent implements OnInit {
     estructura.longitudesVarillasDiametro = JSON.stringify(estructura.listadoDiametrosVarillaAux);
     estructura.cantRoldanas = JSON.stringify(estructura.listadoDiametrosRoldanaAux);
 
-    this.formatoService.saveRegistroArmadoAccesorio(this.plantaSeleccionada.id, estructura).subscribe({
+    this.formatoService.saveRegistroArmadoAccesorio(this.usuarioPlanta.planta.id, estructura).subscribe({
       next: res => {
         this.messageService.add({severity:'success', summary:'Éxito', detail:'Registro de mezcla guardado correctamente.'});
         this.blnFilaAniadidaSinGuardar = false;
         this.validarFila = -1;
         this.setListado();
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Planta } from 'src/app/maestros/models/planta';
 import { PlantaService } from 'src/app/maestros/planta.service';
 import { ProduccionService } from '../produccion.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-visor-inventario-mensual',
@@ -47,7 +48,8 @@ export class VisorInventarioMensualComponent implements OnInit {
 
   constructor(
     private plantaService: PlantaService,
-    private produccionService: ProduccionService
+    private produccionService: ProduccionService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -59,6 +61,12 @@ export class VisorInventarioMensualComponent implements OnInit {
         this.mesSeleccionado = this.listMeses.find(m => m.id == (new Date()).getMonth() + 1);
 
         this.setMes()
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -169,6 +177,12 @@ export class VisorInventarioMensualComponent implements OnInit {
         this.listado = listadoFijo;
 
         console.log(this.listado)
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 

@@ -40,6 +40,12 @@ export class ModalDatosActaConformidadComponent implements OnInit {
     this.ordenTrabajoService.getProductosFromOrdenTrabajo(this.config.data.id).subscribe({
       next: res => {
         this.listado = res;
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
@@ -64,7 +70,13 @@ export class ModalDatosActaConformidadComponent implements OnInit {
 
     this.produccionService.descargarActaConformidad(sedeId, this.config.data.id, fechaInicio, fechaFin, list).subscribe({
       next: (blob: Blob) => {
-        FileSaver.saveAs(blob, 'archivo5.docx');
+        FileSaver.saveAs(blob, `Acta Conformidad ${this.config.data.pedido}-${this.config.data.cliente}.docx`);
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

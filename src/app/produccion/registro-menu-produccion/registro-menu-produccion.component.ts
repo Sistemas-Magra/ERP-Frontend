@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/seguridad/auth.service';
 import { UsuarioPlanta } from 'src/app/seguridad/models/usuario-planta';
 import { UsuarioService } from 'src/app/seguridad/usuario.service';
@@ -32,7 +33,8 @@ export class RegistroMenuProduccionComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -42,6 +44,12 @@ export class RegistroMenuProduccionComponent implements OnInit {
 
         this.optionListPostes = this.optionListPostes.filter(op => op.nrosPlantas.includes(this.usuarioPlanta.planta.id));
         this.optionListAccesorios = this.optionListAccesorios.filter(op => op.nrosPlantas.includes(this.usuarioPlanta.planta.id));
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }

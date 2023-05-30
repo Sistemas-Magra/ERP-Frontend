@@ -34,7 +34,7 @@ export class LoginComponent {
     private authService: AuthService,
     private moduloService: ModuloService,
     private messageService: MessageService,
-    private empresaService: EmpresaService
+    private empresaService: EmpresaService,
   ) { }
 
   ngOnInit(): void {
@@ -47,6 +47,12 @@ export class LoginComponent {
       next: res => {
         this.empresas = res;
         this.empresaSeleccionada = this.empresas[0];
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
 
@@ -99,6 +105,7 @@ export class LoginComponent {
 
             /*TODO: Traer esta info de la BD*/
             this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Ha iniciado sesión correctamente'});
+            window.location.reload()
             this.router.navigate(['/']);
             this.blnCargando = false;
           },

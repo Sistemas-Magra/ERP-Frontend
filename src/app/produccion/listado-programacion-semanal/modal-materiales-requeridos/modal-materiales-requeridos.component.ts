@@ -6,6 +6,7 @@ import { FuncionesComunesService } from 'src/app/commons/funciones-comunes.servi
 import { Planta } from 'src/app/maestros/models/planta';
 import { PlantaService } from 'src/app/maestros/planta.service';
 import { forkJoin } from 'rxjs';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-modal-materiales-requeridos',
@@ -32,7 +33,8 @@ export class ModalMaterialesRequeridosComponent implements OnInit {
     private programacionService: ProgramacionSemanalService,
     private plantaService: PlantaService,
     private pipe: DatePipe,
-    private funcionesComunes: FuncionesComunesService
+    private funcionesComunes: FuncionesComunesService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -45,6 +47,8 @@ export class ModalMaterialesRequeridosComponent implements OnInit {
         this.plantas = res[0];
         this.plantaSeleccionada = this.plantas[0];
         this.buscar();
+      }, error: err => {
+        this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
       }
     })
   }
@@ -115,6 +119,12 @@ export class ModalMaterialesRequeridosComponent implements OnInit {
 
         this.listado= res;
         this.listadoShow = JSON.parse(JSON.stringify(this.listado));
+      }, error: err => {
+        if(err.status == 409) {
+          this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+        } else {
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+        }
       }
     })
   }
