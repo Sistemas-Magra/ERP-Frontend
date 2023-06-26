@@ -70,7 +70,6 @@ export class ModalHijosEmpleadoComponent implements OnInit {
     this.hijos.forEach( h => {
       h.fechaNacimiento = new Date(h.fechaNacimientoStr);
     })
-    console.log(this.hijos)
 
     this.ref.close(this.hijos);
   }

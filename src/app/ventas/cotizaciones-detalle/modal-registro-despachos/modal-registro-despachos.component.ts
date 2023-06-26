@@ -57,7 +57,7 @@ export class ModalRegistroDespachosComponent implements OnInit {
 
     let despacho: OrdenVentaDespacho = new OrdenVentaDespacho();
     if(this.despachos.length > 0) {
-      //console.log(this.funcionesComunes.agregarDias(this.pipe.transform(this.despachos[this.despachos.length-1].fechaPropuesta, 'yyyy-mm-dd'), 1))
+      
       despacho.minDate = new Date(this.funcionesComunes.agregarDias(this.pipe.transform(this.despachos[this.despachos.length-1].fechaPropuesta, 'yyyy-MM-dd'), 1) + ' 00:00:00.00000')
     }
     this.despachos.push(despacho);

@@ -44,6 +44,10 @@ export class RegistroProduccionComponent implements OnInit {
 
   id: number;
 
+  blnCargando: boolean = false;
+
+  stickerCalidadInicio: string;
+
   constructor(
     private authService: AuthService,
     private encargadoPlantaService: EncargadoPlantaService,
@@ -86,6 +90,16 @@ export class RegistroProduccionComponent implements OnInit {
       }
     })
     
+  }
+
+  asignarStickers() {
+    let count: number = 0;
+    this.listadoProduccion.forEach((p, i) => {
+      if(p.indConformidad) {
+        p.stickerCalidad = (Number(this.stickerCalidadInicio) + count).toString();
+        count = count + 1;
+      }
+    })
   }
 
   validarEncargado() {
@@ -242,6 +256,10 @@ export class RegistroProduccionComponent implements OnInit {
   }
   
   asignarFila(i) {
+    if(this.blnFilaAniadidaSinGuardar) {
+      return;
+    }
+
     this.validarFila = i;
   }
 
@@ -268,18 +286,24 @@ export class RegistroProduccionComponent implements OnInit {
   }
 
   guardar(i: number) {
+
+    this.blnCargando = true;
+    
     if(!this.listadoProduccion[i].ordenTrabajo) {
       this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: `Debe asignar una orden de trabajo.`})
+      this.blnCargando = false;
       return;
     }
 
     if(!this.listadoProduccion[i].ordenTrabajoDetalle) {
       this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: `Debe asignar un producto.`})
+      this.blnCargando = false;
       return;
     }
 
     if(!this.listadoProduccion[i].stickerProduccion) {
       this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: `Debe asignar un sticker de producción.`})
+      this.blnCargando = false;
       return;
     }
 
@@ -295,11 +319,14 @@ export class RegistroProduccionComponent implements OnInit {
         this.produccionPlanta = res.object;
         this.listadoProduccion = this.produccionPlanta.detallePostes;
         this.blnFilaAniadidaSinGuardar = false;
+        this.blnCargando = false;
       }, error: err => {
         if(err.status == 409) {
           this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});
+          this.blnCargando = false;
         } else {
           this.messageService.add({severity:'error', summary:'Error', detail: 'Error por parte del servidor.'});
+          this.blnCargando = false;
         }
       }
     })

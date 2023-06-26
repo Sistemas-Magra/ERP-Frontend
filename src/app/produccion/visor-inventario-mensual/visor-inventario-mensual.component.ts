@@ -102,7 +102,7 @@ export class VisorInventarioMensualComponent implements OnInit {
     })
 
     this.listDiasPlanta.forEach((p, i) => {
-      if(i <= 3) {
+      if(i <= this.plantas.length - 1) {
         this.listDiasPlantaItems.push({tipo:1, nombre: 'S.I.', codigo: `${p.codigo}`});
       } else {
         this.listDiasPlantaItems.push({tipo:1, nombre: 'Ing.', codigo: `${p.codigo}ING`});
@@ -176,7 +176,6 @@ export class VisorInventarioMensualComponent implements OnInit {
 
         this.listado = listadoFijo;
 
-        console.log(this.listado)
       }, error: err => {
         if(err.status == 409) {
           this.messageService.add({severity:'warn', summary:'Advertencia', detail:err.error.mensaje});

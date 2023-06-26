@@ -4,6 +4,7 @@ export class VehiculoEmpresaTransporte {
     id: number;
     placaDelantera: string;
     placaTrasera: string;
+    stringBusqueda: string;
     tipoVehiculo: TablaAuxiliarDetalle;
     idUsuarioCrea: number;
     idUsuarioModifica: number;

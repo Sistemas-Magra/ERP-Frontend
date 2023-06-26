@@ -100,7 +100,7 @@ export class CotizacionesDetalleComponent implements OnInit {
 
         let numInd: number = sessionStorage.getItem("indEditar")?Number(sessionStorage.getItem("indEditar")):null;
         sessionStorage.removeItem("indEditar");
-        console.log(numInd)
+        
         this.blnEditar = (numInd == 0);
 
         if(!this.ordenVenta.id || this.ordenVenta.id == 0) {
@@ -165,7 +165,7 @@ export class CotizacionesDetalleComponent implements OnInit {
   }
 
   showPreviewEspTec(event, i: number) {
-    console.log(event)
+    
     if((event.target as HTMLInputElement).files[0]) {
       this.ordenVenta.detalle[i].especificacionesTecnicasFile = (event.target as HTMLInputElement).files[0];
       this.ordenVenta.detalle[i].especificacionesTecnicas = this.ordenVenta.detalle[i].especificacionesTecnicasFile.name;
@@ -360,7 +360,7 @@ export class CotizacionesDetalleComponent implements OnInit {
           this.messageService.add({severity:'warn', summary:'Advertencia', detail: res.mensaje});
           return;
         } else {
-          console.log(res)
+          
           this.cliente.id = res.id
           this.cliente.razonSocial = res.nombre
           this.cliente.situacionSunat = res.condicion

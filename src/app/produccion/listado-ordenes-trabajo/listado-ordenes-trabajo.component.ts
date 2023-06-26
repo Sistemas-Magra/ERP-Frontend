@@ -111,7 +111,6 @@ export class ListadoOrdenesTrabajoComponent implements OnInit {
   }
 
   verAvance(id: number) {
-    console.log(id);
     this.ref = this.dialogService.open(ModalAvanceComponent, {
       data:{
         id

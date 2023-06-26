@@ -92,6 +92,7 @@ export class ListadoRegistroProgramacionProduccionComponent implements OnInit {
     ).subscribe({
 
       next: res => {
+        console.log(res)
         this.listadosRegistrosProduccion = res;
       }, error: err => {
         if(err.status == 409) {

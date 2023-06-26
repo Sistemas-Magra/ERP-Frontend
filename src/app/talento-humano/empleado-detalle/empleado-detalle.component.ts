@@ -153,7 +153,7 @@ export class EmpleadoDetalleComponent implements OnInit {
                 empl.fechaIngresoStr = this.pipe.transform(empl.fechaIngreso, 'dd MMM yyyy');
                 
                 empl.fechaInicioPruebaStr = this.pipe.transform(empl.fechaInicioPrueba, 'dd MMM yyyy');
-                //console.log(empl.fechaInicioPruebaStr)
+                
                 empl.fechaFinPruebaStr = this.pipe.transform(empl.fechaFinPrueba, 'dd MMM yyyy');
 
                 empl.edad = this.funcionesComunes.calcularEdad(this.pipe.transform(empl.fechaNacimiento, 'yyyy-mm-dd'));
@@ -270,8 +270,6 @@ export class EmpleadoDetalleComponent implements OnInit {
   setCodigo() {
     this.empleado.codigo = '';
 
-    console.log(this.areaSelect)
-
     this.empleado.codigo += this.empleado.categoria?this.empleado.categoria.abreviatura:'';
     this.empleado.codigo += this.empleado.subArea?this.empleado.subArea.abreviatura2:'';
 
@@ -300,7 +298,6 @@ export class EmpleadoDetalleComponent implements OnInit {
 
     this.ref.onClose.subscribe(hjs => {
       if(hjs) {
-        console.log(hjs)
         this.empleado.horarios = hjs;
       }
     })

@@ -37,6 +37,22 @@ export class OrdenTrabajoService {
     );
   }
 
+  autocompletePedido(term: string): Observable<OrdenTrabajo[]> {
+    return this.http.get<OrdenTrabajo[]>(`${this.urlEndPoint}/autocomplete-pedido/${term}`).pipe(
+      map(ots => {
+
+        ots.forEach(ot => {
+          ot.autocompleteShow = `${ot.ordenVenta.codigo} | ${ot.ordenVenta.cliente.razonSocial.toUpperCase()}`
+        })
+
+        return ots;
+      }),
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
   autocomplete(term: string): Observable<OrdenTrabajo[]> {
     return this.http.get<OrdenTrabajo[]>(`${this.urlEndPoint}/autocomplete/${term}`).pipe(
       map(ots => {

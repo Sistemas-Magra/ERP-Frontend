@@ -48,7 +48,7 @@ export class ModalRegistroCesesComponent implements OnInit {
 
     this.empleadoService.getPeriodosCeseActivos().subscribe({
       next: res => {
-        console.log(res)
+        
         this.cese.periodoCts = res.cts;
         this.cese.periodoGratificacion = res.grati;
       }, error: err => {

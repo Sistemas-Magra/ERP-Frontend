@@ -38,7 +38,6 @@ export class ModalListadoVersionesComponent implements OnInit {
   }
 
   verVersion(id: number) {
-    console.log('a')
     let url = this.router.serializeUrl(this.router.createUrlTree([`/produccion/visor/programacion-semanal/version/${id}`]));
     window.open(url, '_blank');
   }

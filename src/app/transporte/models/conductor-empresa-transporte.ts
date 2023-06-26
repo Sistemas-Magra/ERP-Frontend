@@ -5,6 +5,7 @@ export class ConductorEmpresaTransporte {
     nombres: string;
     apellidoPaterno: string;
     apellidoMaterno: string;
+    stringBusqueda: string;
     tipoDocumentoIdentidad: TablaAuxiliarDetalle;
     nroDocumentoIdentidad: string;
     licencia: string;

@@ -10,12 +10,21 @@
                 </div>
             </div>
         </div>
-        <div class="col-4">
-            <label class="col-form-label" *ngIf="encargado">Encargado: {{encargado}}</label>
+        <div class="col-4" *ngIf="encargado">
+            <label class="col-form-label">Encargado: {{encargado}}</label>
+        </div>
+        <label class="col-form-label col-1" *ngIf="blnCalidad">Sticker de Calidad Inicial</label>
+        <div class="col-1" *ngIf="blnCalidad">
+            <input type="text" pInputText [(ngModel)]="stickerCalidadInicio">
+        </div>
+        <div class="col-2">
+            <div class="float-end">
+                <p-button *ngIf="blnCalidad" [disabled]="!stickerCalidadInicio" (click)="asignarStickers()" label="Asignar" title="Asignar stickers de calidad correlativamente" styleClass="default-button" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
         </div>
         <div class="col-6">
             <div class="float-end">
-                <p-button *ngIf="blnCalidad" label="Guardar" title="Guardar registros de calidad" styleClass="default-button" (click)="calidad()" [style]="{width: '90px', height: '26px'}"></p-button>
+                <p-button *ngIf="blnCalidad" (click)="calidad()"label="Guardar" title="Guardar registros de calidad" styleClass="default-button" [style]="{width: '90px', height: '26px'}"></p-button>
             </div>
         </div>
     </div>
@@ -42,7 +51,7 @@
                     <tr (click)="asignarFila(i)" [ngClass]="{'selected': validarFila == i}">
                         <td class="text-center" *ngIf="!blnCalidad">
                             <div class="col-12 botones">
-                                <button *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" pButton pRipple type="button" (click)="guardar(i)" icon="pi pi-save" class="p-button-rounded p-button-primary btn-body"></button>
+                                <button *ngIf="blnFilaAniadidaSinGuardar && validarFila == i" [disabled]="blnCargando" pButton pRipple type="button" (click)="guardar(i)" icon="pi pi-save" class="p-button-rounded p-button-primary btn-body no-affect"></button>
                             </div>
                         </td>
                         <td class="text-center">{{prod.nroProduccion | number:'2.0-0'}}</td>
@@ -73,11 +82,11 @@
                         </td>
                         <td class="text-center">
                             <input *ngIf="blnCalidad && !prod.idUsuarioCalidad" pInputText class="custom-input-table" type="text" [disabled]="!blnCalidad || !prod.indConformidad" [(ngModel)]="prod.stickerCalidad">
-                            <label *ngIf="!blnCalidad || prod.idUsuarioCalida" class="col-form-label">{{prod.stickerCalidad}}</label>                            
+                            <label *ngIf="!blnCalidad || prod.idUsuarioCalidad" class="col-form-label">{{prod.stickerCalidad}}</label>                            
                         </td>
                         <td>
                             <input *ngIf="blnCalidad && !prod.idUsuarioCalidad" pInputText class="custom-input-table" type="text" [disabled]="!blnCalidad || prod.indConformidad" [(ngModel)]="prod.observacion">
-                            <label *ngIf="!blnCalidad || prod.idUsuarioCalida" class="col-form-label">{{prod.observacion}}</label>
+                            <label *ngIf="!blnCalidad || prod.idUsuarioCalidad" class="col-form-label">{{prod.observacion}}</label>
                         </td>
                     </tr>
                 </ng-template>

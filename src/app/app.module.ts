@@ -94,10 +94,18 @@ import { ProtocoloPruebaCalidadComponent } from './produccion/protocolo-prueba-c
 import { ModalDatosCartaCalidadComponent } from './produccion/listado-ordenes-trabajo/modal-datos-carta-calidad/modal-datos-carta-calidad.component';
 import { ModalDatosActaConformidadComponent } from './produccion/listado-ordenes-trabajo/modal-datos-acta-conformidad/modal-datos-acta-conformidad.component';
 import { ListadoProtocoloPruebaComponent } from './produccion/listado-protocolo-prueba/listado-protocolo-prueba.component';
+import { RegistroFormularioComponent } from './despacho/registro-formulario/registro-formulario.component';
+import { ListadoFormularioComponent } from './despacho/listado-formulario/listado-formulario.component';
 
 registerLocaleData(localeES);
 
 const routes: Routes = [
+
+  //Despacho
+  { path: 'despacho/listado-formulario', component: ListadoFormularioComponent, pathMatch: 'full', data: {title: 'Listado de formularios', menu: 'Despacho | Listado de formularios'} },
+  { path: 'despacho/registro-formulario', redirectTo: 'despacho/registro-formulario/0', pathMatch: 'full', data: {title: 'Detalle de formulario', menu: 'Despacho | Detalle de formulario'} },
+  { path: 'despacho/registro-formulario/:id', component: RegistroFormularioComponent, pathMatch: 'full', data: {title: 'Detalle de formulario', menu: 'Despacho | Detalle de formulario'} },
+  
   //Producción
   { path: 'produccion/listado-protocolo-prueba', component: ListadoProtocoloPruebaComponent, pathMatch: 'full', data: {title: 'Listado de Protocolo de Prueba de Calidad', menu: 'Producción | Listado de Protocolo de Prueba de Calidad'} },
   { path: 'produccion/protocolo-prueba', redirectTo: 'produccion/protocolo-prueba/0', pathMatch: 'full', data: {title: 'Protocolo de Prueba de Calidad', menu: 'Producción | Protocolo de Prueba de Calidad'} },
@@ -205,6 +213,8 @@ const routes: Routes = [
     ModalDatosCartaCalidadComponent,
     ModalDatosActaConformidadComponent,
     ListadoProtocoloPruebaComponent,
+    RegistroFormularioComponent,
+    ListadoFormularioComponent,
   ],
   imports: [
     CardModule,

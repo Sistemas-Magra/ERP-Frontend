@@ -14,6 +14,14 @@ export class CotizacionService {
 
   constructor(private http: HttpClient) { }
 
+  autocomplete(term:string): Observable<OrdenVenta[]> {
+    return this.http.get<OrdenVenta[]>(`${this.urlEndPoint}/autocomplete/${term}`).pipe(
+      catchError(err => {
+        return throwError(() => {return err});
+      })
+    );
+  }
+
   downloadFile(filename: string, ind: number): Observable<any> {
     return this.http.get(`${this.urlEndPoint}/descargar-archivos/${ind}/${filename}`, { responseType: 'blob' }).pipe(
       catchError(err => {

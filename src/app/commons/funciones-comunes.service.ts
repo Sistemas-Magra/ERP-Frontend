@@ -78,8 +78,6 @@ export class FuncionesComunesService {
   agregarTiempo(fecha: string, ind: number, cantidad: number): string {
     let fechaResult: string;
 
-    console.log(fecha)
-
     let dia: number = fecha.split[2];
     let mes: number = fecha.split[1];
     let anio: number = fecha.split[0];

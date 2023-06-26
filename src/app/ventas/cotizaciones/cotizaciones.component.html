@@ -61,7 +61,11 @@
                         <td class="text-uppercase text-center" [style]="'background-color: ' + emp.color + ' !important; color: ' + emp.fcolor + ' !important; font-weight: bold'">{{emp.est}}</td>
                         <td class="text-uppercase text-center">{{emp.tdoc}}</td>
                         <td class="text-uppercase">{{emp.ndoc}}</td>
-                        <td class="text-uppercase">{{emp.cliente}}</td>
+                        <td class="text-uppercase">
+                            <label class="cliente">
+                                {{emp.cliente}}
+                            </label>
+                        </td>
                         <td class="text-uppercase text-center">{{emp.fecha_entrega_base | date:'dd MMM yyyy'}}</td>
                         <td class="text-uppercase">{{emp.contacto}}</td>
                         <td class="text-uppercase text-center" [title]="emp.tipo_pago">{{emp.tipo_pago_abrv}}</td>

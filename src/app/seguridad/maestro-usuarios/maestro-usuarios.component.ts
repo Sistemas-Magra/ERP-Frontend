@@ -148,7 +148,6 @@ export class MaestroUsuariosComponent implements OnInit {
   }
 
   asignarEmpleado(i: number) {
-    console.log(this.empleadoSelected)
     this.usuarios[i].empleado_id = this.empleadoSelected.id;
     this.usuarios[i].tip_doc = this.empleadoSelected.tipoDocumentoIdentidad.abreviatura;
     this.usuarios[i].nro_doc = this.empleadoSelected.nroDocumentoIdentidad;

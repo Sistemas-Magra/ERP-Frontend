@@ -152,7 +152,7 @@ export class ModalRegistrarAsistenciaComponent implements OnInit {
       this.indVerInactivos?1:0
     ).subscribe({
       next: res => {
-        console.log(res)
+        
         this.blnEditando = false;
         this.empleados = res;
 

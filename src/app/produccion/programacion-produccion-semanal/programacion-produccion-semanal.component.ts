@@ -98,7 +98,7 @@ export class ProgramacionProduccionSemanalComponent implements OnInit {
             this.diasAux = res[0];
 
             this.dias = res[1].versionesProgramacionSemanal.find(ps => ps.version == res[1].version).detallePlantas[0].detalleCliente[0].detalleDiarios.map(d => new Date(`${d.fecha} 00:00:00.0000`));
-            //console.log(this.dias)
+            
             this.vigente = res[1];
             this.progSem = JSON.parse(JSON.stringify(this.vigente.versionesProgramacionSemanal.find(ps => ps.version == res[1].version)));
             this.progSem.id = 0; 

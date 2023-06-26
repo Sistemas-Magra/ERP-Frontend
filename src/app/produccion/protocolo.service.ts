@@ -24,19 +24,19 @@ export class ProtocoloService {
   getListado(cliente: string, ordenTrabajo: string, producto: string, fecha: string): Observable<any[]> {
     let url: string = `${this.urlEndPoint}/get-listado`;
 
-    if(!cliente || cliente.length == 0) {
+    if(cliente) {
       url += `&cl=${cliente}`;
     }
 
-    if(!ordenTrabajo || ordenTrabajo.length == 0) {
+    if(ordenTrabajo) {
       url += `&ot=${ordenTrabajo}`;
     }
 
-    if(!producto || producto.length == 0) {
+    if(producto) {
       url += `&pr=${producto}`;
     }
 
-    if(!fecha || fecha.length == 0) {
+    if(fecha) {
       url += `&f=${fecha}`;
     }
 
