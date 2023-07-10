@@ -13,6 +13,44 @@ export class FormularioService {
 
   constructor(private http: HttpClient) { }
 
+  generarRemision(formulario: Formulario): Observable<any> {
+    let url: string = `${this.urlEndPoint}/generar-remision`;
+
+    return this.http.put(url, formulario, { responseType: 'blob' }).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+
+  }
+
+  generarProvisional(formulario: Formulario): Observable<any> {
+    let url: string = `${this.urlEndPoint}/generar-provisional`;
+
+    return this.http.put(url, formulario, { responseType: 'blob' }).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+
+  }
+
+  updateAsignacion(formularios: Formulario[], despachoId: number): Observable<any> {
+    return this.http.put(`${this.urlEndPoint}/update-asignacion/${despachoId}`, formularios).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
+  getFormulariosByDespacho(fecha: Date): Observable<Formulario[]> {
+    return this.http.get<Formulario[]>(`${this.urlEndPoint}/list-despacho?f=${fecha}`).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  } 
+
   getById(id: number): Observable<Formulario> {
     return this.http.get<Formulario>(`${this.urlEndPoint}/find/${id}`).pipe(
       map(form => {

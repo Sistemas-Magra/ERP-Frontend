@@ -11,6 +11,7 @@ import { FormularioService } from '../formulario.service';
 import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/seguridad/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TablaAuxiliarDetalle } from 'src/app/auxiliar/models/tabla-auxiliar-detalle';
 
 @Component({
   selector: 'app-registro-formulario',
@@ -31,6 +32,8 @@ export class RegistroFormularioComponent implements OnInit {
 
   blnSST: boolean = true;
 
+  revisado: TablaAuxiliarDetalle;
+
   constructor(
     private otService: OrdenTrabajoService,
     private authService: AuthService,
@@ -44,7 +47,7 @@ export class RegistroFormularioComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.blnSST = ['ROLE_ASIST_SEGURIDAD', 'ROLE_SEGURIDAD'].every(rol => this.authService.usuario.rolesAuthorities.includes(rol)) 
+    this.blnSST = ['ROLE_ASIST_SEGURIDAD', 'ROLE_SEGURIDAD'].every(rol => this.authService.usuario.rolesAuthorities.includes(rol));
 
     let hoy: Date = new Date();
 
@@ -52,7 +55,8 @@ export class RegistroFormularioComponent implements OnInit {
 
     let fork = forkJoin([
       this.empresaTransporteService.getAll(),
-      this.auxiliarService.getDetalleById('ESTFRM', 1)
+      this.auxiliarService.getDetalleById('ESTFRM', 1),
+      this.auxiliarService.getDetalleById('ESTFRM', 3)
     ])
 
     fork.subscribe({
@@ -67,8 +71,9 @@ export class RegistroFormularioComponent implements OnInit {
               this.estadoId = 1;
             } else {
               this.formularioService.getById(id).subscribe({
-                next: res => {
-                  this.formulario = res;
+                next: resf => {
+                  this.revisado = res[2];
+                  this.formulario = resf;
                   this.estadoId = this.formulario.estado.tablaAuxiliarDetalleId.id;
                 }
               })
@@ -176,6 +181,10 @@ export class RegistroFormularioComponent implements OnInit {
     }console.log(this.formulario)
 
     if(this.formulario.id) {
+
+      if(this.blnSST) {
+        this.formulario.estado = this.revisado;
+      }
 
       this.formularioService.update(this.formulario).subscribe({
         next: res => {

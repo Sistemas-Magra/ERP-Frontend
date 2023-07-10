@@ -2,6 +2,7 @@ import { TablaAuxiliarDetalle } from "src/app/auxiliar/models/tabla-auxiliar-det
 
 export class VehiculoEmpresaTransporte {
     id: number;
+    marca: string;
     placaDelantera: string;
     placaTrasera: string;
     stringBusqueda: string;

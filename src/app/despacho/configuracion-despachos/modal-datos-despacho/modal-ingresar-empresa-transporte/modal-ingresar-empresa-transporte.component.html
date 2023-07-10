@@ -1,0 +1,39 @@
+<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
+    <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
+        <div class="col-11 float-start mt-1"><span>Añadir empresa de transportes</span></div>
+        <div class="col-1 btn-close-modal" (click)="close()">
+            <div class="float-end">
+                <i class="pi pi-times me-1"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="float-end">
+                <p-button (click)="guardar()" label="Guardar" styleClass="default-button" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <label class="col-2 col-form-label">Tipo Documento</label>
+        <div class="col-4">
+            <p-dropdown [options]="tiposDocumentoSelect" [(ngModel)]="empresaTransporte.tipoDocumentoIdentidad" placeholder="Seleccione" optionLabel="nombre" class="no-affect" [autoDisplayFirst]="false"></p-dropdown>
+        </div>
+        <label class="col-3 col-form-label">Nro Documento</label>
+        <div class="col-3">
+            <input (keydown.enter)="buscarEmpresa()" [(ngModel)]="empresaTransporte.nroDocumentoIdentidad" type="text" pInputText>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <label class="col-2 col-form-label">Razón Social</label>
+        <div class="col-10">
+            <input disabled [(ngModel)]="empresaTransporte.razonSocial" type="text" pInputText>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <label class="col-2 col-form-label">Nombre Com.</label>
+        <div class="col-10">
+            <input [disabled]="blnHabilitar" [(ngModel)]="empresaTransporte.nombreComercial" type="text" pInputText>
+        </div>
+    </div>
+</div>

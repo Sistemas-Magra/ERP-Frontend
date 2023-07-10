@@ -1,0 +1,45 @@
+<div class="container-fluid" appDraggable dragTarget=".p-dynamic-dialog" dragHandle=".custom-dialog-header">
+    <div class="row mt-3 px-0 custom-dialog-header" style="height: 35px">
+        <div class="col-11 float-start mt-1"><span>Añadir conductor</span></div>
+        <div class="col-1 btn-close-modal" (click)="close()">
+            <div class="float-end">
+                <i class="pi pi-times me-1"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="float-end">
+                <p-button (click)="guardar()" label="Guardar" styleClass="default-button" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <label class="col-2 col-form-label">Tipo Documento</label>
+        <div class="col-4">
+            <p-dropdown [options]="tiposDocumentoSelect" [(ngModel)]="conductor.tipoDocumentoIdentidad" placeholder="Seleccione" optionLabel="nombre" class="no-affect" [autoDisplayFirst]="false"></p-dropdown>
+        </div>
+        <label class="col-3 col-form-label">Nro Documento</label>
+        <div class="col-3">
+            <input (keydown.enter)="buscarConductor()" [(ngModel)]="conductor.nroDocumentoIdentidad" type="text" pInputText>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <label class="col-2 col-form-label">Nombre</label>
+        <div class="col-4">
+            <input [(ngModel)]="conductor.nombres" type="text" pInputText>
+        </div>
+        <div class="col-3">
+            <input [(ngModel)]="conductor.apellidoPaterno" type="text" pInputText>
+        </div>
+        <div class="col-3">
+            <input [(ngModel)]="conductor.apellidoMaterno" type="text" pInputText>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <label class="col-2 col-form-label">Licencia</label>
+        <div class="col-4">
+            <input [(ngModel)]="conductor.licencia" type="text" pInputText>
+        </div>
+    </div>
+</div>

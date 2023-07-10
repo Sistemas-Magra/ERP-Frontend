@@ -3,7 +3,7 @@
         <div class="col-7">
             <div class="row">
                 <label class="col-6 col-form-label"><b style="font-size: 20px;">DATOS FORMULARIO</b></label>
-                <div class="col-6" *ngIf="estadoId == 1">
+                <div class="col-6" *ngIf="estadoId == 1 || (blnSST && estadoId == 2)">
                     <div class="float-end">
                         <p-button (click)="guardar()" label="Guardar" title="Guardar registros de calidad" styleClass="default-button" [style]="{width: '90px', height: '26px'}"></p-button>
                     </div>

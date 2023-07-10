@@ -96,12 +96,19 @@ import { ModalDatosActaConformidadComponent } from './produccion/listado-ordenes
 import { ListadoProtocoloPruebaComponent } from './produccion/listado-protocolo-prueba/listado-protocolo-prueba.component';
 import { RegistroFormularioComponent } from './despacho/registro-formulario/registro-formulario.component';
 import { ListadoFormularioComponent } from './despacho/listado-formulario/listado-formulario.component';
+import { ConfiguracionDespachosComponent } from './despacho/configuracion-despachos/configuracion-despachos.component';
+import { ModalReasignacionFormulariosComponent } from './despacho/configuracion-despachos/modal-reasignacion-formularios/modal-reasignacion-formularios.component';
+import { ModalDatosDespachoComponent } from './despacho/configuracion-despachos/modal-datos-despacho/modal-datos-despacho.component';
+import { ModalIngresarEmpresaTransporteComponent } from './despacho/configuracion-despachos/modal-datos-despacho/modal-ingresar-empresa-transporte/modal-ingresar-empresa-transporte.component';
+import { ModalIngresarVehiculoComponent } from './despacho/configuracion-despachos/modal-datos-despacho/modal-ingresar-vehiculo/modal-ingresar-vehiculo.component';
+import { ModalIngresarConductorComponent } from './despacho/configuracion-despachos/modal-datos-despacho/modal-ingresar-conductor/modal-ingresar-conductor.component';
 
 registerLocaleData(localeES);
 
 const routes: Routes = [
 
   //Despacho
+  { path: 'despacho/despachos', component: ConfiguracionDespachosComponent, pathMatch: 'full', data: {title: 'Datos de despachos', menu: 'Despacho | Datos de despachos'} },
   { path: 'despacho/listado-formulario', component: ListadoFormularioComponent, pathMatch: 'full', data: {title: 'Listado de formularios', menu: 'Despacho | Listado de formularios'} },
   { path: 'despacho/registro-formulario', redirectTo: 'despacho/registro-formulario/0', pathMatch: 'full', data: {title: 'Detalle de formulario', menu: 'Despacho | Detalle de formulario'} },
   { path: 'despacho/registro-formulario/:id', component: RegistroFormularioComponent, pathMatch: 'full', data: {title: 'Detalle de formulario', menu: 'Despacho | Detalle de formulario'} },
@@ -215,6 +222,12 @@ const routes: Routes = [
     ListadoProtocoloPruebaComponent,
     RegistroFormularioComponent,
     ListadoFormularioComponent,
+    ConfiguracionDespachosComponent,
+    ModalReasignacionFormulariosComponent,
+    ModalDatosDespachoComponent,
+    ModalIngresarEmpresaTransporteComponent,
+    ModalIngresarVehiculoComponent,
+    ModalIngresarConductorComponent,
   ],
   imports: [
     CardModule,

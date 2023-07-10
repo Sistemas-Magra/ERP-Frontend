@@ -6,8 +6,12 @@ import { ConductorEmpresaTransporte } from "src/app/transporte/models/conductor-
 import { TablaAuxiliarDetalle } from "src/app/auxiliar/models/tabla-auxiliar-detalle";
 
 export class Formulario {
+
 	id: number;
 	fecha: Date;
+	nroRemision: string;
+	horaInicio: Date;
+	horaFin: Date;
 	destino: string;
 	cantReglas: number;	
 	cantTacos: number;	
@@ -30,5 +34,8 @@ export class Formulario {
 	vehiculo: VehiculoEmpresaTransporte;    
 	conductor: ConductorEmpresaTransporte;
 	estado: TablaAuxiliarDetalle;
+	motivoTraslado: TablaAuxiliarDetalle;
 	detalle: FormularioDetalle[] = [];
+	
+	indAsignacion: boolean;
 }

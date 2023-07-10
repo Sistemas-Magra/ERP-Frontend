@@ -13,6 +13,22 @@ export class EmpresaTransporteService {
 
   constructor(private http: HttpClient) { }
 
+  createUpdate(empresaTransporte: EmpresaTransporte): Observable<EmpresaTransporte> {
+    return this.http.post<EmpresaTransporte>(`${this.urlEndPoint}/create-update`, empresaTransporte).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
+  getFromSunat(nroDocumento: string): Observable<any> {
+    return this.http.get<any>(`${this.urlEndPoint}/sunat/${nroDocumento}`).pipe(
+      catchError(e => {
+        return throwError(() => e);
+      })
+    );
+  }
+
   getAll(): Observable<EmpresaTransporte[]> {
     return this.http.get<EmpresaTransporte[]>(`${this.urlEndPoint}/all`).pipe(
       catchError(e => {

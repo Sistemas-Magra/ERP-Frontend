@@ -1,0 +1,103 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <label class="col-1 col-form-label">Fecha</label>
+                <div class="col-2">
+                    <p-calendar (onSelect)="setFecha($event)" [(ngModel)]="fechaFilter" appendTo="body" dateFormat="dd M yy"></p-calendar>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="float-end">
+                <p-button *ngIf="estadoDespachoId == 1" (click)="asignar()" label="Asignar" styleClass="default-button" [style]="{width: '90px', height: '26px'}"></p-button>
+                <p-button *ngIf="estadoFormularioSeleccionadoId == 2 || estadoFormularioSeleccionadoId == 3" (click)="guiaBorrador()" label="Borrador" styleClass="default-button" [style]="{width: '90px', height: '26px'}"></p-button>
+                <p-button *ngIf="estadoFormularioSeleccionadoId == 3" (click)="guiaRemision()" label="Remision" styleClass="default-button" [style]="{width: '90px', height: '26px'}"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-7">
+            <div class="row">
+                <label class="col-12 col-form-label"><b style="font-size: 20px !important;">Formularios</b></label>
+            </div>
+            <div class="row">
+                <div class="col-12" style="--height-table: 85vh">
+                    <p-table [value]="formularios" responsiveLayout="scroll">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="--header-table: 40px" *ngIf="estadoDespachoId == 1"></th>
+                                <th style="--header-table: 40px">N</th>
+                                <th style="--header-table: 120px">Remisión</th>
+                                <th style="--header-table: 60px">H.I.</th>
+                                <th style="--header-table: 60px">H.F.</th>
+                                <th style="--header-table: 100px">Fecha</th>
+                                <th style="--header-table: 100px">Pedido</th>
+                                <th>Cliente</th>
+                                <th style="--header-table: 120px">Estado</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-form let-i="rowIndex">
+                            <tr (dblclick)="irDetalle(form.id)" (click)="setFormulario(i)" [ngClass]="{'selected': fila == i}">
+                                <td class="text-center" *ngIf="estadoDespachoId == 1">
+                                    <p-checkbox binary="true" [(ngModel)]="form.indAsignacion"></p-checkbox>
+                                </td>
+                                <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
+                                <td class="text-center">{{form.nroRemision}}</td>
+                                <td class="text-center">{{form.horaInicio | date:'HH:mm'}}</td>
+                                <td class="text-uppercase">{{form.horaFin | date:'HH:mm'}}</td>
+                                <td class="text-uppercase text-center">{{form.fecha | date:'dd MMM yyyy'}}</td>
+                                <td class="text-uppercase text-center">{{form.ordenTrabajo.ordenVenta.codigo}}</td>
+                                <td class="text-uppercase">{{form.ordenTrabajo.ordenVenta.cliente.razonSocial}}</td>
+                                <td class="text-uppercase last-column">{{form.estado.nombre}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="row">
+                <label class="col-12 col-form-label"><b style="font-size: 20px !important;">Detalle</b></label>
+            </div>
+            <div class="row">
+                <div class="col-12" style="--height-table: 85vh">
+                    <p-table [value]="listadoDetalle" responsiveLayout="scroll">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="--header-table: 40px" *ngIf="[2, 3].includes(estadoFormularioSeleccionadoId)">
+                                    <button (click)="addDetalle()" pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-success p-button-text plus-header"></button>
+                                </th>
+                                <th style="--header-table: 40px">N</th>
+                                <th>Producto</th>
+                                <th style="--header-table: 80px">Cantidad</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-det let-i="rowIndex">
+                            <tr (dblclick)="irDetalle(form.id)" (click)="filaProducto = i" [ngClass]="{'selected': filaProducto == i}">
+                                <td class="text-center" *ngIf="[2, 3].includes(estadoFormularioSeleccionadoId)">
+                                    <div class="col-12 botones">
+                                        <button (click)="quitar(i)" pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger btn-body"></button>
+                                    </div>
+                                </td>
+                                <td class="text-center">{{i + 1 | number: '2.0-0'}}</td>
+                                <td class="text-uppercase">
+                                    <div>
+                                        <p-autoComplete *ngIf="!det.id" (onSelect)="setProducto($event, i)" (completeMethod)="searchDetalle($event)" [(ngModel)]="det.ordenTrabajoDetalle" [suggestions]="ordenesTrabajoAutocomplete" field="ordenVentaDetalle.producto.nombre" placeholder="Busque por nro de pedido"></p-autoComplete>
+                                    </div>
+                                    <label *ngIf="det.id" class="text-uppercase">{{det.ordenTrabajoDetalle.ordenVentaDetalle.producto.nombre}}</label>
+                                </td>
+                                <td class="text-center last-column">
+                                    <div class="text-center">
+                                        <p-inputNumber *ngIf="[1, 2, 3].includes(estadoFormularioSeleccionadoId)" [(ngModel)]="det.cantidad"></p-inputNumber>
+                                    </div>
+                                    <label *ngIf="![1, 2, 3].includes(estadoFormularioSeleccionadoId) && estadoDespachoId > 1" class="text-center">{{det.cantidad | number:'2.0-0'}}</label>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
